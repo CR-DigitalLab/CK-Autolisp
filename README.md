@@ -13,6 +13,23 @@
 | [catalog/05_再配布可否の確認結果.md](catalog/05_再配布可否の確認結果.md) | **各サイトの利用規約を直接読んで確認した、再配布OK／不可の判定**（01〜03より優先） |
 | [collected/](collected/INDEX.md) | **再配布OKと確認できたファイル本体 1,936個**（GitHub 24リポジトリ＋Webサイト等 9か所） |
 
+## 世界のAutoLISP一覧（採点付き Excel）
+
+コマンドの説明文をもとに、4項目（非代替性・斬新さ・時短効果・汎用性、各25点）でAIが採点した一覧です。
+
+| ファイル | 内容 | 件数 |
+|---|---|---|
+| [catalog/00_世界のAutoLISP総合一覧_採点.xlsx](catalog/00_世界のAutoLISP総合一覧_採点.xlsx) | **全地域の総合版**（重複をまとめ済み。アイデア集・分野別TOP10・地域別集計つき） | 6,942 |
+| catalog/list_01_英語圏_前半_採点.xlsx | Lee Mac、draftsperson.net、JTB World ほか | 696 |
+| catalog/list_02_英語圏_後半_採点.xlsx | CAD Forum、ParaCADD、Cadalyst、eSurveying ほか | 1,686 |
+| catalog/list_03_日本_採点.xlsx | Vector、note、ブログ ほか | 380 |
+| catalog/list_04_中国語圏_採点.xlsx | 明经CAD社区、@lisp、晓东CAD家园 ほか | 655 |
+| catalog/list_05_ロシア語圏_採点.xlsx | dwg.ru、geodesist.ru、autolisp.ru ほか | 673 |
+| catalog/list_06_ベトナム・東南アジア_採点.xlsx | kho-lisp-cad、lisp.vn、CADViet ほか | 631 |
+| catalog/list_07_ヨーロッパ_採点.xlsx | 仏・独・波・伊ほか | 488 |
+| catalog/list_08_その他の地域_採点.xlsx | 韓国・中東・中南米・ブラジル ほか | 1,292 |
+| catalog/list_09_GitHub_採点.xlsx | GitHub の公開リポジトリ | 509 |
+
 ## 集め方のルール
 
 - ファイル本体を保存したのは、**再配布の許可が明記されているものだけ**です（MIT・GPLなどのライセンス、サイトの規約、ファイル冒頭の許可文のいずれか）。
