@@ -1,0 +1,72 @@
+;; (c)1987                R&J Computer Service
+;                            RR #3  Box 183
+;                          Albion, IN  46701
+;  Phone:                Voice  (219) 636-2460
+;                         Data  (219) 636-3153
+;                   24hrs 2400, 1200, 300 Baud 8-N-1
+;   Trig.LSP figures Triangles given any 2 variables (except 2 angles)
+;                        Written by John Kitt
+; We are NOT responsable for the performance or accuracy of this LISP routine
+;  You are encouraged to copy and distribute this LISP routine
+;  provided this header section IS NOT REMOVED.  For continued
+;  support and new LISP routines you are asked to mail a Registration
+;  fee of $15.00 to the above address.  Thank You!!!
+(defun c:trig ()
+(command "vslide" "trig")
+(setq A 90.0
+      B(getreal "Enter Angle B: ")
+      C(getreal "Enter Angle C: ")
+      sa(getreal "Enter Side a: ")
+      sb(getreal "Enter Side b: ")
+      sc(getreal "Enter Side c: "))
+(if (/= B nil) (setq C (- A B)))
+(if (/= C nil) (setq B (- A C)))
+(if (/= C nil) (progn
+(if (/= sc nil) (progn
+(if (= sa nil) (progn
+(setq sa (/ sc (sin (/ (* C pi) 180))))
+))))))
+(if (/= B nil) (progn
+(if (/= sb nil) (progn
+(if (= sa nil) (progn
+(setq sa (/ sb (sin (/ (* B pi) 180))))
+))))))
+(if (/= C nil) (progn
+(if (/= sa nil) (progn
+(if (= sc nil) (progn
+(setq sc (* sa (sin (/ (* C pi) 180))))
+))))))
+(if (/= sc nil) (progn
+(if (/= sb nil) (progn
+(if (= sa nil) (progn
+(setq sa (sqrt (+ (* sc sc) (* sb sb))))
+))))))
+(if (/= sc nil) (progn
+(if (/= sa nil) (progn
+(if (= sb nil) (progn
+(setq sb (sqrt (- (* sa sa) (* sc sc))))
+))))))
+(if (/= sb nil) (progn
+(if (/= sa nil) (progn
+(if (= sc nil) (progn
+(setq sc (sqrt (- (* sa sa) (* sb sb))))
+))))))
+(if (= C nil) (progn
+(setq C (/ (atan (/ sc sb)) (/ pi 180)))
+(setq B (- A C))
+))
+(setq AA (angtos (* pi (/ A 180.0)) 1 4))
+(setq BA (angtos (* pi (/ B 180.0)) 1 4))
+(setq CA (angtos (* pi (/ C 180.0)) 1 4))
+(setq saa (rtos sa 2 4))
+(setq sba (rtos sb 2 4))
+(setq sca (rtos sc 2 4))
+(terpri)
+(prompt "Angle A = ") (prin1 AA)
+(prompt "      Angle B = ") (prin1 BA)
+(prompt "     Angle C = ") (prin1 CA)
+(terpri)
+(prompt " Side a = ") (prin1 saa)
+(prompt "        Side b = ") (prin1 sba)
+(prompt "        Side c = ") sca
+)

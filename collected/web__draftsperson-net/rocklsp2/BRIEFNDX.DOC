@@ -1,0 +1,140 @@
+
+A short listing of lisp files - See Index.doc for explanations and notes.
+   
+ABC  Puts text entities in vertical alphabetical order.
+ACH  Chgtext for attributes.
+ALIGN  Converts text to aligned text.
+AT  Quick attribute string changer.
+ATTNAME  Changes an attribute to the drawing name, without path.
+ATTX  Text changer - works on text and unblocked attributes.
+AXE  Removes first or last word from text or add a new one.
+BATCH  A simple batch and script file writer.
+BEEP  Makes a beep.
+BLAM  Explodes a block and replaces all of its attributes with text.
+BLCHG  Inserts a new block at each insertion of an old one.
+BLG  Resets the bulge factor in each segment of a polyline to a new value.
+BLOCKED  Changes an attribute in every insertion of one block.
+BOO   Zoom extents, draw a temporary box around the previous view.
+BOOM   Zoom previous, draw a temporary box around the previous view.
+BOX   A better than usual rectangle drawer.
+BOXX   A debugging aid for LYNX. (see LYNX )
+CENTRE   Converts text to centre justified text.
+CHEC   Cyclic recursion checker.  Looks busy while you waste time.
+CHG   Directly edit entity data listing.
+CHGX   Directly edit entity data listing, allows subentity access.
+CLEANER   Anytime complete drawing purge.
+CLK   Draws a clock, set to the correct time.
+CT   Multiple text lines, prefix, incremented letter, suffix.
+CURL   Moves entities to the current layer.
+DAB   Draws a line with breaks at intervals and blocks in them.
+DEROT   Derotates blocks and text.
+DIRT   Writes a names only dir listing to a file.  Alphabetic, no extensions.
+DIRTX   Writes Dir to file, more options than Dirt.lsp.
+EARTH   Draws a circle round the drawing the same size as the Earth.
+ED   Edit text entities while in a drawing using your choice of editors.
+EXPL   Explodes blocks with different X, Y and Z scale factors.
+FIBL   Locates all inserts of a block in the drawing.
+FIND   Find files from within a drawing.
+FINDX  Find files, checks for other extensions.
+FINTX   Finds text strings, mark entities containing them.
+FIT   Converts text to fitted text.
+GET   Prints the data for a selected entity to the screen.
+HT   Text height changer.  Allows example selection.
+HVB   Moves text insertion points vertically to lie on same horizontal line.
+IHI   Inserts a circle on a line and trim out the centre.
+IHI2   Inserts a block on a line and chop out the centre.
+IHI3   Inserts a circle, trim out the centre, erase and insert a block.
+INF   Prints (to the screen) various useful information about the drawing.
+JACK   Inserts a block at a scale equal to Dimscale.
+L   Error handler, sysvar initializer and lisp loader.
+LAC   Composite line (10 units long) & circle (2 units diameter) maker.
+LAC1   Converts existing lines to line & circle.  10 & 2, as Lac.lsp
+LACC   Line & circle maker, input length, gap, diameter.
+LADD   Combines two lines of text.
+LC   Layer change with screen menu.
+LCH   Moves objects to a new layer by selecting an entity thereon.
+LCS   Changes text to lower case.
+LD   Lisp loader.
+LEFT   Converts text to left justified text.
+LIC   Change a line, move the end closest to the pick point.
+LIX   Sets the limits to the extents.
+LSET   Pick an object and thus set the current layer.
+LT   Changes linetype by example selection.
+LTR   Write personal letters from within AutoCAD.
+LYNX   Combines a number of lines into one.
+MIDDLE   Converts text to middle justified text.
+MVA   Moves the lower left point of the drawing to 0,0.
+NAMB   Get just the name of a picked block.
+NT   Incremented numbers with text.
+NUM   Changes existing text to sequential numbers.
+NUMTX   A variation of Num: allows a prefix and a suffix.
+ONE  Prints the equivalent of a numeral in English.
+OTX   Text at a chosen spacing and angle.  Defaults for everything.
+PID   Adds a prefix or suffix (or both) to a text string.
+PKILL   Locates and optionally removes all point entities from a drawing.
+PL   Plot initiate utility.  Uses most recent defaults.  See Plonk.
+PLANT   Automatic plant maker.
+PLDT   Changes a selected attribute in a selected block to the date.
+PLONK   Automatic plot file generator - stores plot info in drawing.
+PNEUM   Pneumatic line constructor.
+PROP   Sets the X, Y and Z scales in a number of blocks to 1.
+PROPS   Like Prop, sets scales to existing X, Y, or Z or to another number.
+QUONSET   Sets an attribute to the drawing name (without path).
+RA   Redraw with timer.
+RAN   Random number generator.
+RIGHT   Converts text to right justified text.
+RT   Reaction time tester.
+RTALL   Reverses the order of letters in every text string in a drawing.
+RTX   Reverses just one text string.
+SC   Style change with screen menu.
+SCR   Script loader.
+SDEL   Get selection set, erase only entities of a specified type.
+SHUX   Text vertical spacing adjuster.
+SING   Break the first line of two selected.
+SIX   Lottery ticket number generator (for the 649 format).
+SL   Erases the second last entity created.
+SLYNX   Same as Lynx.lsp but puts lines on snap and on the current layer.
+SNAKE   Puts entities on snap, mashes to fit.
+SNAME   Puts the drawing name in the upper right hand corner of the screen.
+SNAPPER   Moves the insertion point of entities to the nearest snap point.
+SPARE   Removes spaces from both ends of text strings.
+SPRAY   Wraps text around entities.
+SPYR   Automatic spiral pattern drawer.
+SQ   Sequential text changer.
+ST   Short style changer.  No screen menu.
+STAR   Superimpose the drawing on a slide.
+SWX   Switch positions of two groups of entities.
+TACH   Sucks text out of a text entity and put it into an attribute.
+TB   Terminal block drawer.
+TBTX   Terminal block drawer with prefix and suffix and at angles.
+TCH   Changes 1 or more text lines to a string, allows example selection.
+TCHS  Single text changer.  One less keystroke than TCH.
+TOGGLE   Toggles a system variable between 0 and 1.
+TTC   Replace text: same string & height, current style & layer, centred.
+TTF   Text to fit.
+TTL   Text to left.
+TTM   Text to middle.
+TTR   Text to right.   See also Centre, Left, Right, Fit, Middle and Align.
+TXD   Changes existing text to date - the long format: JULY 12, 1969.
+TXMD   Text to metric date - DD/MM/YY format.
+TXKILL   Finds empty text strings ("" or " ") and optionally eradicates them.
+TXN   Text to title without path.
+TXS   Global text size changer - you specify initial and desired sizes.
+TXTT   Text to title with path.
+TXX   Short, fast sequential text changer.
+UC   Convertx text to upper case.
+VB   Fit multiple text between two theoretical vertical lines.
+VBC   Centre multiple text on a vertical line.
+VBHX   Centre multiple text on a line if it's in the current text style.
+VBL   Left justify multiple text on a vertical line.
+VBM   Middle justify multiple text on a vertical line.
+VBR   Right justify multiple text on a vertical line.
+VVB   Respace a column of text vertically.
+WMX   Move a word to the next line, or the previous one, or to a new line.
+WT   Multiple width scale factor change.
+XING   Multiple crossing locator and breaker.
+XX   Shells out to a text editor with the file last loaded with Ld.lsp.
+ZA   Zoom All with timer.
+ZE   Zoom Extents without a regen.
+ZP   Zoom Previous with timer.
+ZVS   Zoom to the virtual screen limits with no regen.

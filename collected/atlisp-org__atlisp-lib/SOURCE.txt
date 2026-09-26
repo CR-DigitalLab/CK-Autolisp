@@ -1,0 +1,5 @@
+取得元: https://github.com/atlisp-org/atlisp-lib （中国の @lisp 関数ライブラリ、AutoCAD/中望CAD/浩辰CAD対応）
+コミット: f1889e06aae990f85507e123fad6b2aaeaaea7c2
+取得日: 2026-09-26
+ライセンス: MIT（LICENSE 同梱）
+収録: src/ フォルダのみ。他作者の名前を含む2ファイル（src/list/remove-index.lsp, src/list/sublist.lsp）は除外

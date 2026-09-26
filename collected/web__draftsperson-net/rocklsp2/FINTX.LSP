@@ -1,0 +1,31 @@
+  ; Case sensitive text string and substring locator.
+  ; Copyright Rocket Software 1991
+  ; Who says text editors have all the fun?
+ (DEFUN C:FINTX ( / hi ss num nuf ln loc rad len so txt txa sta pa)
+  (setvar "cmdecho" 0)
+  (setq hi (getvar "highlight"))
+  (setq ss (ssget "X" '((0 . "TEXT"))))
+  (setq num 0)
+  (setq nuf 0)
+  (setq ln (strlen (setq loc (getstring t "String to locate: "))))
+  (setq rad (/ (- (car (getvar "extmax")) (car (getvar "extmin"))) 25))
+  (setq len (strcat "/" (itoa (sslength ss))))
+  (while (setq so (ssname ss 0))
+         (setq txt (cdr (assoc 1 (setq txa (entget so)))))
+         (setq num (1+ num))
+         (grtext -2 (strcat (itoa num) len))
+         (setq sta 1)
+         (while (= ln (strlen (setq st (substr txt sta ln))))
+                (if (= st loc)
+                    (progn
+                          (setq sta (1+ sta))
+                          (setq nuf (1+ nuf))
+                          (setq pa (cdr (assoc 10 txa)))
+             (grdraw (polar pa (/ pi 4) rad) (polar pa (* 1.25 pi) rad) 7)
+             (grdraw (polar pa (* pi 0.75) rad) (polar pa (* pi 1.75) rad) 7))
+                    (setq sta (1+ sta))))
+         (ssdel so ss))
+  (write-line (strcat "Occurrences found: " (itoa nuf)))
+  (setq ss nil)
+  (setvar "highlight" hi)
+  (PRINC))

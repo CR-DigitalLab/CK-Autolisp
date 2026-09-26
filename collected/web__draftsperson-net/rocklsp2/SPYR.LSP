@@ -1,0 +1,45 @@
+  ; Spiral generator
+  ; By SW for Rocket Software  Copyright 1991
+  ; Only sick people want everything to be useful.  Anyway, this is
+  ; good for making slide shows to run while your computer isn't working.
+  ; Or you aren't.  Or you wish you weren't.
+ (DEFUN C:SPYR ( / blip snp orth pa len ang fn xx aa pb pa)
+   (setvar "cmdecho" 0)
+   (setq blip (getvar "blipmode"))
+   (setvar "blipmode" 1)
+   (setq snp (getvar "snapmode"))
+   (setvar "snapmode" 0)
+   (setq orth (getvar "orthomode"))
+   (setvar "orthomode" 0)
+   (command "color" 5)
+   (setq pa (getpoint "Start point:\n"))
+   (setq len (getdist pa "Segment length:\n"))
+   (setq ang (getangle pa "Start angle:\n"))
+   (if (null incr) (setq incr 2.49583))
+   (setq deg (/ (* incr 180) pi))
+   (setq tt (strcat "Angle increment <" (rtos deg) ">:\n"))
+   (setq fn (getangle pa tt))
+   (if fn (setq incr fn))
+   (if (null decr) (setq decr 0.99))
+   (setq fn (getdist pa (strcat "Length multiplier <" (rtos decr) ">:\n")))
+   (if fn (setq decr fn))
+   (setq xx (getint "Number of segments (X 100) <3>:\n"))
+   (if xx
+       (setq xx (* 100 xx))
+       (setq xx 300))
+   (setq aa 0)
+   (repeat xx
+          (setq pb (polar pa ang len))
+          (command "line" pa pb "")
+          (setq len (* len decr))
+          (setq ang (+ ang incr))
+          (setq aa (1+ aa))
+          (if (= (/ aa 2) (/ aa 2.0))
+              (command "color" 5)
+              (command "color" 6))
+          (grtext -2 (itoa aa))
+          (setq pa pb))
+   (setvar "blipmode" blip)
+   (setvar "snapmode" snp)
+   (setvar "orthomode" orth)
+  (princ))

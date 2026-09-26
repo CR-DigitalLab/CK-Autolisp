@@ -1,0 +1,28 @@
+ ;  Chg - change entity data directly. 
+ ;  By SW for Rocket Software  Copyright 1990
+ ;  Caution: Do not let this program fall into the wrong hands. (Eat the disk.)
+ (DEFUN C:CHG ( / aa as au zz xx rr)
+   (command "undo" "mark")
+   (setq aa (entget (car (entsel "Pick entity to change:"))))
+   (print aa)
+   (setq as (getint "\nAssociation number to replace: "))
+   (if (>= 9 as)
+       (setq au (getstring "New (string) value: ")))
+   (if (and (<= 10 as) (>= 37 as))
+       (setq au (getpoint "New point: ")))
+   (if (and (<= 38 as) (>= 59 as))
+       (setq au (getreal "New (real number) value: ")))
+   (if (and (<= 60 as) (>= 79 as))
+       (setq au (getint "New (integer) value: ")))a
+   (if (and (<= 210 as) (>= 239 as))
+       (setq au (getpoint "New point: ")))
+   (if (= 999 as)
+       (setq au (getstring t "New (string) value: ")))
+   (if (null au) (setq au "xxx"))
+   (setq zz (cons as au))
+   (if (setq xx (assoc as aa))
+       (setq rr (entmod (subst zz xx aa)))
+       (setq rr (entmod (append aa (list zz)))))
+   (if rr (write-line "Modification successful. ")
+          (write-line "Unable to make such a change."))
+ (PRINC))

@@ -1,0 +1,4 @@
+取得元: https://www.paracadd.com/lisp/MXPLODE.LSP , https://www.paracadd.com/lisp/XSTATUS.LSP
+取得日: 2026-09-26
+許可の根拠（各ファイル冒頭）: "Permission to use, copy, modify, and distribute this software ... for any purpose and without fee is hereby granted..."
+※ ParaCADDの他のファイルは "All rights reserved" のため収録していません。

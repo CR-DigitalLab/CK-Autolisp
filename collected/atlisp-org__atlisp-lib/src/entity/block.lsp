@@ -1,0 +1,25 @@
+(defun entity:block (ss name insertionpoint / block)
+  "将选择集、图元表、对象表创建为块。"
+  (cond
+   ((p:ename-listp ss)
+  (setq ss (vla:objarray (mapcar (quote vlax-ename->vla-object)
+				   ss))))
+   ((p:vla-listp ss)
+  (setq ss (vla:objarray ss)))
+   ((p:picksetp ss)
+  (setq ss (pickset:to-array ss))))
+  (print (type ss))
+  (setq block (vla-add (vla-get-blocks *doc*)
+		       (vlax-3d-point insertionpoint)
+		       name))
+  (vla-copyobjects *doc* ss block)
+  ;; (vla-insertblock *ms* (vlax-3d-point insertionpoint)
+  ;; 		   (vla-get-name block)
+  ;; 		   1 1 1 0)
+  (if (vl-catch-all-error-p
+       (setq return (vl-catch-all-apply
+		     '(lambda()
+		       (foreach obj (vlax-safearray->list ss)
+			(vla-delete obj))))))
+      (vl-catch-all-error-message return))
+  block)

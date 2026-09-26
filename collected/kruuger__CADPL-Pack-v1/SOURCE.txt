@@ -1,0 +1,5 @@
+取得元: https://github.com/kruuger/CADPL-Pack-v1 （ポーランド CAD.pl フォーラムの関数ライブラリ）
+コミット: beb0ca9bbb93a1516e29ce14ce80eba5ecd58e48
+取得日: 2026-09-26
+ライセンス: GNU GPL（README.md: "Przedstawione funkcje i procedury są oparte na licencji GNU"）
+※ 改変して配布する場合は、改変後のソースもGPLで公開する必要があります。

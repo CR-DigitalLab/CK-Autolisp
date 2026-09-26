@@ -1,0 +1,35 @@
+   ;  Whole drawing text reverser
+   ;  Copyright 1990   Rocket Software
+   ;  Thinking of seeking employment elsewhere...?
+ (defun C:RTALL ( / CC LLL ZZ ZZA LENA NTXB)
+  (setq e (entnext))
+  (setq lll (entget e))
+  (if (= (cdr (assoc 0 lll)) "TEXT")
+      (progn
+            (setq zza "")  
+            (setq zz (cdr (assoc 1. lll)))
+            (setq  lena (strlen zz))
+            (while  (/= 0 lena)
+                    (setq ntxb (substr zz lena 1))
+                    (setq lena (1- lena))
+                    (setq zza (strcat zza ntxb)))
+            (entmod (subst (cons 1 zza) (cons 1 zz) lll))
+      )
+  )
+  (While (entnext e)
+         (setq lll (entget (entnext e)))
+         (if (= (cdr (assoc 0 lll)) "TEXT")
+             (progn
+                   (setq zza "")  
+                   (setq zz (cdr (assoc 1. lll)))
+                   (setq  lena (strlen zz))
+                   (while  (/= 0 lena)
+                           (setq ntxb (substr zz lena 1))
+                           (setq lena (1- lena))
+                           (setq zza (strcat zza ntxb)))
+                   (entmod (subst (cons 1 zza) (cons 1 zz) lll))
+             )
+         )
+         (setq e (entnext e))
+  )
+     (PRINC))

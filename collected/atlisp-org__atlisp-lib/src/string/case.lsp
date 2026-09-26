@@ -1,0 +1,13 @@
+(defun string:case (str mode)
+  "大小写替换，mode: 1=大写, 2=小写"
+  (vl-list->string (mapcar (quote (lambda (x)
+          (cond ((= mode 1)
+                 (if (and (>= x 97) (< x 123))
+                   (- x 32)
+                   x))
+                ((= mode 2)
+                 (if (and (>= x 65) (< x 91))
+                   (+ x 32)
+                   x))
+                (t x))))
+      (vl-string->list str))))

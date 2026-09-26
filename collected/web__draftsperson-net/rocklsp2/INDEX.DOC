@@ -1,0 +1,1367 @@
+This file is an alphabetical listing of the Lisp files contained in this
+package, with explanations and notes on various topics.
+If you are looking for something to give you a general idea of whether
+or not any of this is of use, try the files CHG, SQ, TCH, WMX, VBC, LYNX
+or XING.
+
+Note for 2nd release: The original RockLisp files are dated 03/15/91, newly
+added and updated ones retain the dates of their creation or revision; also
+I have marked them in this file with this clever tag: (New).  My two
+favourites are SPRAY.LSP and SPYR.LSP, but if you need something a bit more
+practical try BLAM.LSP or AT.LSP and ACH.LSP which are simple but very
+useful.  Your best bet, though, is just to browse through this file and see
+if anything strikes your fancy:
+
+
+
+ABC.LSP
+Puts text entities in vertical alphabetical order.  The text strings are
+written to a file which is alphabetized using the Dos Sort command, then
+the text is placed back into the entities starting with the one with the
+highest Y coordinate and working down.  The Sort command has several
+options which could be used to alter this routine in a variety of ways.
+
+ACH.LSP (New)
+Input a text string, what you would like it changed to, and select an
+attribute.  This routine will change the first occurrence of the old string
+in the attribute to the new string.  If you run it again you will be offered
+your previous two strings as defaults, which is handy if the attribute has
+several copies of the string in it or if you want to make the same changes
+on more than one attribute.  Basically similar to Chgtext.lsp (which comes
+with AutoCAD so you should know how it works).
+
+ALIGN.LSP
+Convert text to aligned text: select the text string, pick two endpoints.
+If you happen to know what aligned text is for then this may be of use.
+
+AT.LSP (New)
+Replaces the text string displayed by an attribute without going through the
+rather convoluted sequence of inputs demanded by Attedit.  Also offers the
+new text string as the default the next time it is run, so you can make a
+number of attributes say the same thing.  Makes editing blocks so much
+easier that it may even stop the uninitiated from exploding them in
+frustration.  See also ACH.LSP
+
+ATTNAME.LSP
+Changes an attribute to the drawing name, without path.  Saves a little
+time and maybe ameliorates slightly the situation described in the following
+section.  Also an example of how a lisp routine can avoid needless complexity
+by using a built-in Autocad command.  See also QUONSET.LSP.
+
+ATTX.LSP
+Text replacer - works on text and the attributes left after a block has been
+exploded.  This may seem like a useless ability; however there are a number of
+misguided souls who insist on using attributes instead of text in title blocks.
+This prevents them from being moved around, which is a good idea in theory,
+but it also makes them difficult to adjust if the title does not coincide
+with the preconceptions of the designer regarding text layout, length, etc.,
+and difficult to edit if one is not generally familiar with attributes.
+Inevitably someone will take the easy way out and explode the block, and
+one never knows whether one is dealing with attributes, exploded attributes,
+or real text.  This bit of lisp is a brief attempt to deal with the problem.
+It may of course be incorporated into any routine which deals with supposed
+text entities if the frequency of weird title blocks seems to so dictate.
+
+AXE.LSP
+Cartesian text editor.  This allows one to add text to the beginning or end
+of an existing text entity, or remove the first or last word.  Choosing
+among these options is done by picking points respectively to the right or
+left and above or below the point by which the entity was selected.  Those
+who hear this described are act to dismiss it as the work of an individual
+not strongly anchored in reality; this is quite possibly true but Axe is also
+a very useful command.  The principle of choosing between alternatives with
+the digitizer rather than the keyboard is also one worth keeping in mind.
+See also Pid.lsp.
+
+BATCH.LSP (New)
+A simple batch and script file writer.  This was designed to be used
+whenever you want to apply a series of similar commands to a group of files
+or other named entities.  Place the file names or other variables in a text
+file (the default name is Varia.ble, but you can input a different one) and
+the series of instructions or commands in another (default Template.txt) and
+run BATCH.  The program creates a new file (default Fruit.bat) and copies
+the template file into it, substituting the first variable name for each
+question mark (?) that it finds, and repeats this process with successive
+variables until it runs out of them.  After that you can of course manually
+edit the file to put finishing touches on it and to check for errors.
+The ability to specify template and variable file names allows you to keep a
+variety of stock ones on hand and combine them as dictated by circumstances.
+ Notes:  1.  Bear in mind that this can be used to construct batch files
+             having nothing whatsoever to do with AutoCAD.  (It could
+             also be used to write rather repetitive poetry...)
+         2.  If you wish to put a blank line in your template file put
+             a space on it or BATCH will ignore it.
+         3.  The Lisp routine DIRT.LSP can be used to construct variable
+             files from directory listings.
+         4.  See also BLOCKED.LSP, CLEANER.LSP, PLDT.LSP.
+
+BEEP.LSP (New)
+Makes a beep.  Designed to notify the operator that a script or batch file
+is finished.  Run it several times if you are unusually inattentive.
+
+BLAM.LSP (New)
+Explodes a block and replaces all of its attributes with text, deleting any
+which consist solely of " " or "".  You are then free to edit them as your
+heart desires, which despite the perverse dreams of block addicts is what
+CAD is all about.  Great for title blocks (though I could probably be shot
+for such a treasonous thought) and for freeing non-attribute entities trapped
+like flies in amber.
+
+BLCHG.LSP
+Block changer.  Inserts a specified new block at each insertion of a
+specified old one, matches rotation and X and Y scales on an individual
+basis, and erases the old blocks.
+
+BLG.LSP (New)
+While amusing myself using Chgx to alter the bulge factors in segments of an
+ellipse I decided to write a brief routine which steps through an entire
+polyline and resets all of them to the same value.  In retrospect it is
+quite similar to several available revision cloud makers but it has one
+added ability: you can specify the bulge factor.  By making a thirty or
+forty sided polygon (with the polygon command, in case you had forgotten)
+and changing the bulge to say thirty five you can produce some very
+spirograph-like entities; also squares, pentagons and so-on with a bulge of
+six, minus six or something in that range produce rather interesting
+geometric patterns.  Or you can use it to make clouds.
+
+BLOCKED.LSP (New)
+Finds every insertion of a specific block and changes a specific attribute
+to a new text string.  The block name, attribute name, and text are prompted
+for rather than (as in PLDT.LSP) built in, making this ideal for use in
+batch files, which is what it was designed for.
+Text is easier to manipulate than attributes and thus in my opinion is
+superior for uses not involving the export of data from drawing files, but
+in cases where it is liable to be changed in a fairly consistent manner in a
+number of drawings (and especially where positioning varies) this routine
+makes wholesale alterations with a script file reasonably painless , thus
+justifying the use of the irritating things (attributes, not script files).
+
+BOO.LSP
+A variation of BOOM.  (See below.)  The same command, but does a Zoom
+Extents using the same mechanism as ZE.LSP.  If you feel silly typing Boo
+and can think of a better alternative, change it.  Booe, Boa...?
+
+BOOM.LSP
+The name derives from BOx and zoOM, in case you were wondering.  Zooms
+Previous and draws a box around the view from which the zoom was performed.
+(The box is erased by a Redraw.)  If you ever have to edit a lot of similar
+details and have trouble remembering where exactly you were, this routine
+is invaluable. It's also a good thing to have if you're not very interested
+in what you're doing.
+
+BOX.LSP
+A "draw a box by picking the two opposite corners" routine.  Everyone has
+one of these, but none of them seem to use the Getcorner function to
+display all four sides of the box before it is drawn.  This one does.
+
+BOXX.LSP
+A debugging aid for LYNX.  Draws a box exactly enclosing one or more
+selected lines.  (see LYNX.LSP)
+
+CENTRE.LSP
+Convert text to centre justified text.  Hit Return to use the original
+insertion, pick two points and the text will be placed at a point halfway
+between them, or pick a point and Return and the text will be centred on
+that point.  If you can't be bothered to read all this then just try it out.
+See also Align.lsp, Left.lsp, Fit.lsp, Middle.lsp and Right.lsp.
+
+CHEC.LSP
+Cyclic recursion checker.  This doesn't actually do anything, but it gives
+the impression that it is, and something very technical at that.  A trial
+run will prove more informative than an attempted explanation.
+Note: 1.  This routine requires the file Chec.dwg (which is included).
+      2.  If you use fixed height text with this it should be three
+          units high.
+
+CHG.LSP
+A simple and yet inspired program.  Pick an entity, Chg returns its database
+listing, tell it which association list to change and it prompts for the
+correct type of input, gives the modified data back to AutoCAD, and tells
+whether or not the new data was accepted and the entity changed. 
+This is simple enough, but it gives the user a much greater ability to
+change existing entities than the standard edit commands allow; also it
+is useful for testing in advance what that new routine you're writing will
+really do to an entity, and it lets you play with entity data and find out
+what various bits of the association list really control.  It is also
+a good way to generate ideas for new lisp routines.
+Cautionary notes:  1. Sometimes (rarely) AutoCAD will accept the modified
+                      association list, but will not actually change the
+                      entity - in effect the list snaps back to the original
+                      value as soon as the command ends.  If the program says
+                      that the modifications were OK but nothing happens, use
+                      Chg or GET.LSP to see if anything really changed.
+                   2. If you use Chg to alter the (8 . "layername")
+                      association list and the layer you name does not 
+                      exist, it will be created.  Be careful.
+
+CHGX.LSP
+This is a slightly more elaborate version of CHG.LSP.  It allows one to step
+through subentities one at a time and modify a selected one.  It is more
+powerful than CHG, but a little less elegant to use, if you care about that
+sort of thing.
+
+CLEANER.LSP (New)
+A brief implementation of the ability of the Wblock command to block an
+entire drawing, thus deleting all unreferenced blocks, layers, styles, etc.
+This usually reduces file size significantly, as an extreme case I have seen
+600k files reduced to 95k: the operator had imported five 100k files while
+searching for a single block, then used the resulting drawing as a
+prototype.  The Purge command can of course take care of individual
+instances, but CLEANER can be run at any time in the editing session and
+also lends itself to use with batch files, which even if your drawings are
+fairly lean can free a startling amount of memory in short order.
+The skeptical may point out that you don't need a Lisp routine to Wblock
+a whole drawing.  True, but this is fast, easy to remember, and points out
+the possibility to those who may not have known of it.
+A note on batch file use: because CLEANER quits the drawing while still in
+AutoLISP, control is not handed back to the batch file and the process
+terminates.  This can be avoided by deleting the line (COMMAND "QUIT" "Y")
+and putting the QUIT Y command in the batch file itself.  If you use END
+instead of QUIT then you will overwrite the purged version of the drawing
+created by WBLOCK and nothing will be changed.
+This routine was suggested and the method explained by MI in the course of a
+phone call.  The result is invaluable but I no longer recommend programming
+on the phone as a relaxing pastime.
+
+CLK.LSP
+Draws a clock, set to the correct time.  I have used a circle as the face,
+but a line has been included in the file to insert a block called "clk"
+if you want to draw one.  (You will have to move the semicolon from the
+beginning of the "insert" line to the beginning of the "circle" line)
+People always ask on seeing this if the clock continues to keep time once
+it is inserted.  It doesn't.  But feel free, if you can think of a reason.
+
+CT.LSP
+Inserts multiple lines of text.  You supply a letter, text to put before and
+after, spacing, height (if the current text style is not that wretched fixed
+height substance), number of letters by which to increment the specified one,
+etc.  If the routine runs out of alphabet it starts over, placing an A in
+front of the variable letter.  The next time the leading A is incremented to
+B, and so on, for a total possible of 676 lines.
+See also NT.LSP which does the same thing with numbers (but can handle more
+than 676 lines).
+
+CURL.LSP
+Moves selected entities to the current layer.  I have been informed that
+this is of no use whatsoever, here it is anyway.
+
+DAB.LSP
+Line and block inserter.  Constructs a line with breaks at intervals into
+which a block is inserted.  One can specify block scale, size of space to
+leave for the block, line segment length, etc.  There are other routines
+available which can do this, this one is faster than the ones I have seen
+and dispenses with the thirty or forty required inputs.
+See also LAC.LSP, LAC1.LSP and LACC.LSP.
+
+DEROT.LSP
+Derotates blocks.  If you really can't figure out what that means, try
+it out.  Revision note: Derot will now also work with Text.  If you
+want to derotate lines, use LYNX.LSP with ortho on.  Circles and points
+you will have to handle on your own.
+
+DIRT.LSP (New)
+Writes a directory listing to a text file and edits the file leaving nothing
+but an alphabetical list of file names without extensions.  Subsets of the
+directory listing can be selected using Dos wild cards etc.  This program
+was designed to create variable files for use with Batch.lsp.
+A modification of Dirtx (see below).
+
+DIRTX.LSP
+Copies the specified directory listing to a file, optionally sorts
+alphabetically, and optionally removes everything but the file name and
+extension and replaces any spaces between them with a period.
+I wrote this specifically to create the basic list of file names which I
+edited into this text file.  It is probably not all that useful except as
+a demonstration of AutoLisp's ability to issue commands to Dos and to
+directly manipulate text files.  On the other hand, it's aesthetically
+pleasing to run.
+
+EARTH.LSP
+Draws a circle centred on the current view and having the same diameter
+as the Earth.  Immensely useful.  If you don't try it at least once
+then you're not human.  (Assumes that your drawing units are millimetres,
+but values for other units are provided in case you want to change this.)
+
+ED.LSP
+Several popular Lisp packages advertise something like: "Full function text
+editing within Autocad."  After wondering for some time how this could be
+done the following obvious solution came to me as I sat in a daze before
+a foot-thick stack of scrawled blueprints: copy the text string to an
+external text file, shell out, edit the file with a text editor, re-enter
+Autocad, read the text file, and substitute the new string for the old
+one in the text entity.  This does all of that automatically (except for
+selecting the text string and deciding what you want it to say - there
+seemed to be little call for a program which made arbitrary alterations to
+a randomly selected text entity).
+While it was my intention to make all of these routines ready to use with
+no modification to them or the system, this one uses a special shell
+command and a text editor.  Since I don't own the rights to a text editor
+you will have to use your own.  (You could use Edlin if nothing else is
+available, but then you could also wash your clothes by beating them on
+a flat rock and forage for nuts and berries...)
+The line: (command "XXX" "edtex") uses the shell command "XXX" to shell
+out to a text editor.  You will have to add the line:
+XXX,editor,200000,File to edit: ,4
+to your Acad.pgp file, where "editor" is the name of the fastest loading
+simple text editor available which produces pure ascii output.  (If your
+text editor loads and runs too slowly this routine will be too irritating
+to be useable.)
+If you are not familiar with the shell command file Acad.pgp see
+the file Sample.pgp which is included with this package.
+
+EXPL.LSP
+For those times when you get the irritating "Can't explode that block
+because the X scale factor is 0.002 and the Y is 137" message.  This sets
+the Y and Z scales equal to the X and explodes the block, which is not a
+perfect solution but is probably as good as one can hope for until AutoCAD
+allows different X and Y scales for objects other than blocks.  (Actually I
+suppose one could write something to descale blocks, explode them, reblock
+the individual entities, reinsert them using the previous scale factors and
+then descale, explode and edit them on an individual basis.  Go ahead.  You
+don't even have to credit me for the idea.)  Expl can also be used to window
+an area and explode all of the blocks in it.
+
+FIBL.LSP
+Find blocks - prompts for a block name, then inserts a temporary X over
+the insertion point of each occurrence.  This routine does not do a Zoom All
+before placing the X's, since many people object to programs which force a
+regen which may be either unnecessary or very time consuming, but it is a
+good idea to have the entire drawing on screen before searching it.
+
+FIND.LSP
+An implementation of AutoLisp's Findfile function.  Finds a specified file 
+and sets the ff variable which is used as the default for LD, XX, SCR.
+
+FINDX.LSP
+This is a variation of the above.  If the specified find is not found it
+searches for the same name with alternate extensions from a list (which
+can be edited) contained within the lisp file.
+
+FINTX.LSP
+Find text.  Similar to FIBL.LSP - input a text string, this puts an X at
+the insertion point of any text entity which contains it.  The search is
+case sensitive, I had considered making this optional but I believe that
+a routine which requires answering too many prompts will likely not be
+used: witness the plethora of Lisps available to copy text while rotating
+it and changing the layer to one created on the spot.  Such things are
+occasionally useful but by the time the need arises one has invariably
+forgotten them.  (One can of course edit out unneeded options and set the
+defaults to something useful.  You can draw your own conclusions if the
+result exactly duplicates an existing AutoCAD command.)
+If a different feature is really needed a second program is often a better
+option.  If it isn't used often enough to rate a place on the digitizer
+you can bury it (and the load command) in the third layer of the pull-down
+menus.
+Later note:  The problem of remembering the names and functions of lisp
+routines is one which I should probably address, given the number of the
+things included here.  As mentioned above, a command is of limited use if
+you can't remember its name when you need it.  A couple of approaches
+suggest themselves:
+    1. Rename the routines you might actually use to something you can
+       remember.
+    2. Make a set of pull-down icon menus with a brief description in each
+       of the lisp routine it will run.
+    3. Draft a wall chart of all of your available lisps sorted by name
+       or function or type of entity affected and nail it to the wall
+       beside your monitor.  Make it reasonably attractive so that people
+       will ask you for copies rather than shred it in your absence.
+    4. Put little tiny descriptions on your digitizer.  Text is more
+       readable than those irritating little pictures, anyway.  If you
+       must use ideograms make some which have some relation to what they
+       are supposed to indicate (not that the ones from the standard
+       AutoCAD menu aren't as elegant as they are informative).
+    5. Print out a copy of the file Briefndx.doc which I have thoughtfully
+       included.
+
+FIT.LSP
+Converts text to fitted text: select text, pick two endpoints.  Uses the
+original insertion as the default for one end (or both if you want text of
+zero width).  See also Align.lsp, Left.lsp, Fit.lsp, Middle.lsp, Right.lsp
+and Vb.lsp.
+
+GET.LSP
+Prints the data for a selected entity to the screen.  The default is the
+entity after the last one selected, so a polyline or block can be stepped
+through one part at a time.  (See CHG.LSP to actually edit entities in this
+manner.)
+
+HT.LSP
+Text height changer.  Select one or more entities, change them to a chosen
+height.  Also works on fixed height text, and will ignore non-text entities
+so you can window an area and change only the text.  (Revised: now allows
+picking an entity of the desired height.)  See also Wt.lsp which does the
+same thing with text width scale factors.
+
+HVB.LSP
+Horizontal Venetian Blind.  Rearranges text so that it's all at the same
+level vertically, without moving it horizontally.  (Yes, it should have been
+called VVB.LSP, but the name was already taken.  You can rename it if you
+really want.  Actually, unless you are in the position of having to routinely
+enter commands from the keyboard, longer names generally seem to provide
+a better clue to what the program actually does.)  Pick the text, specify
+a point, and choose whether you want to align it by the text insertion point
+or on the left end of the text line (or what would be the left end if it were
+upright - this feature is intended for use with rotated text).  Unlike VB.LSP
+etc., this merely moves text - the registration is not altered.
+
+IHI.LSP
+(This and the next two files are included as examples of different line
+breaking block inserters.  The different methods used can be easily changed
+or recombined to make routines appropriate to specific uses.)
+Insert a circle on a line and break out the centre, using the trim command.
+This was written for a purpose, although I was never told what that might
+be.  Again, included mainly as an example.  Possibly "-0-0-0-.LSP" would
+have been a more informative name, but most people rightly loathe file and
+program names with dashes, underscores etc. in them.
+
+IHI2.LSP
+Insert a block on a line and chop out the centre.  Uses a slightly different
+technique from the above, possibly more useful.  The width of the cut can
+be adjusted fairly easily by modifying the line containing the Break command.
+
+IHI3.LSP
+Insert a circle, trim out the centre, erase the circle and insert a block
+in its place.
+
+INF.LSP
+Prints (to the screen) various useful information about the drawing,
+punctuation, wildlife, etc.
+
+JACK.LSP (New)
+Inserts a block at a scale equal to Dimscale.  Written so that drawings
+which have been scaled can still be worked on without losing all sense
+of proportion (if you thought to set dimscale to the scale factor).
+See also SING.LSP.  (Thanks for the idea, Jack.)
+
+L.LSP
+This is not a program which does anything remarkable or unusual, but if you
+aren't aware of the possibility of such a thing, it...they...that not good.
+There are three sections:
+       1. The error handler. This replaces AutoLisp's standard error handler
+          with one which merely tells you the nature of the error - usually
+          that you cancelled a lisp routine in the middle - rather than
+          spitting out about five screens of text.  (If you are debugging
+          Lisp routines you can remove this or temporarily disable it with
+          a row of semicolons.)
+       2. The Sysvar initializer.  Turns on the status line co-ordinate
+          display, sets snap to a realistic value, sets the limits to
+          the extents, turns off the ucs icon, etc.  Again, you can add
+          more or remove any you don't need.
+       3. Lisp loader.  Loads selected lisp routines without having to
+          copy them into ACAD.LSP and then update them each time they
+          are modified.
+You can load this manually by typing (load "L") and then type L at the
+"Command:" prompt to run it, or you can copy it into ACAD.LSP and then
+put (DEFUN S::STARTUP () (C:L)) at the end which will run it automatically.
+(The S::STARTUP function does not work with Autocad releases earlier than
+nine, if you are using an older AutoCAD version you will have to type the
+"L" in manually.  Actually, typing "L" is not all that strenuous and allows
+one to save time by not loading the lisp routines when they aren't needed.)
+None of this is particularly Earth-shaking, but it saves a little time and
+trouble, and it is handy if you don't have access to the ACAD.LSP file and
+want to use your own Lisps.  (Why anyone would encrypt ACAD.LSP is beyond
+me, but the lust for secrecy sometimes outgrows the theoretical desire to
+accomplish anything.)
+
+LAC.LSP
+Asks for two endpoints, then draws a series of line segments and circles
+between them.  The line length is fixed at 10 and the circle diameter at 2,
+which avoids having to mess with defaults and allows the program to run
+rapidly, if those dimensions happen to be what you had in mind.
+If you want to change the line length and circle diameter you can edit
+the file (cautiously) or use Lacc: see below.
+
+LAC1.LSP (New)
+Converts existing lines to line and circle composites.  Sounds a bit like
+overkill but is nice to have if you are working with two parties who have
+conflicting ideas on linetype standards as I was when I wrote it.
+Line length is 10, circle diameter 2, just like LAC.LSP, upon which it is
+largely based.
+
+LACC.LSP
+Which allows you to specify the line length, circle diameter, gap between
+the two, and endpoints, with a performance penalty that is pretty minimal
+unless you are still using an XT.
+
+LADD.LSP
+Combines two lines of text.  Pick the base line, pick the second, this will
+add the second one onto the end of the first; also it removes any excess
+spaces from between the two (see also SPARE.LSP).  Designed for those
+situations where WMX.LSP might be a bit tedious.
+
+LC.LSP
+Layer change with screen menu.  This one will only handle as many layers as
+will fit on the screen menu.  You could probably devise a multi-page menu if
+you are addicted to hundreds of layers...I could, too, but so far no suitable
+incentive has put in an appearance.
+
+LCH.LSP
+Select objects, pick an object on the desired layer, move the former to
+coincide in that respect with the latter.
+
+LCS.LSP
+Change text to lower case.  (See also UC.LSP - This one was going to be
+called LC, but the name was already taken.)
+
+LD.LSP
+Lisp loader.  Saves trying to get the command right when you aren't awake yet,
+and shares the ff default variable with XX, FIND, and SCR, in an attempt to
+make repeated editing and reloading of files a little less tedious.  I use
+these all the time.  (Looking back, this isn't that clear.  These four
+programs all use the global variable ff to store the name of the last file
+edited, so that when another one is used it will present the same file name
+as the default.  They will also add the appropriate extension if none is
+provided.  This is pretty simple, but it saves a lot of aggravation.)
+
+LEFT.LSP
+Convert text to left justified text; specify a new insertion point or by
+default use the original one.  If you want to move left justified text using
+the insertion as the base point this is quicker than the move command.
+See also Align.lsp, Left.lsp, Fit.lsp, Middle.lsp, Right.lsp and Vbl.lsp
+
+LIC.LSP (New)
+An alternative to the Change command for those times when the wrong end
+of the line you are editing snaps over to the new point.  LIC moves the
+end closest to the pick point, not the one closest to the change point,
+which in my opinion gives a greater degree of control.
+
+LIX.LSP
+Sets the limits to the extents.  Useful if you find the grid occupying
+only a postage stamp sized area of your screen, if your Zoom All produces
+mostly empty space, or if plotting to limits produces a handy wallet-sized
+picture.  A batch file which runs through a number of drawings Zooming to
+extents and then using MVA.LSP and LIX can cure a variety of irritations.
+
+LSET.LSP
+Pick an object and thus set the current layer.  Also tells you what layer
+you were on and what layer you are on.  You could just pay attention to
+the status line, but your mind might be having coffee or you just might
+have my fondness for commands that tell you what you have just done as
+opposed to what you think you have just done.
+
+LT.LSP
+Change linetype by object selection.  Select some entities, pick one of the
+desired linetype, the previous ones will be changed to match.  The default
+linetype (continuous) is not always explicitly contained in the entity
+database, so this creature adds that entry to the entity data list if it
+can't find it, and then modifies it as required.  All of the books on Lisp
+which I have come across claim that this is impossible, so this may not work
+with earlier releases (pre-10).  Then again, maybe I imagined the whole thing.
+
+LTR.LSP
+Accepts a file name.  If the file exists, writes the last line to the status
+line.  It then writes all text typed in into the file, starting a new line
+with each <Return>.  A Return with no input terminates the procedure, and the
+filename is saved as the ff variable common to XX (and also LD, FIND and SCR)
+so that you can pick up where you left off.  This might be useful for writing
+batch files or something, but mostly it was designed to allow one to write
+letters while appearing to be working in AutoCAD.
+
+LYNX.LSP (Revised)
+(Update note: After using Lynx in a number of drawings I became aware of
+two shortcomings in its design:
+    1. It puts the line on snap even though you may have liked it the way
+       it was.  This is a major irritation if you change snap settings often.
+    2. The resulting line is placed on the current layer regardless of which
+       layer the original ones occupied.
+I have modified Lynx so that it makes the combined line match the first one
+selected with respect to colour, linetype and layer, and have removed and
+enlarged the snap adjuster into a stand-alone routine: Snake.lsp.
+The original version of Lynx is still included under the name Slynx.)
+
+A rather elaborate program (or should I use the more stylish "application"?)
+which combines a number of line segments into one.  This was originally
+intended to deal with lines which overlay each other (assume that I make
+some comment here about people who do that sort of thing) and evolved into
+a device for repairing lines which had been mistakenly cut, connecting pieces
+of logic diagrams, etc.
+Since in order to be able to handle a variety of possible situations this
+program has to make certain assumptions about what is desired (and also
+because you might want to modify it) I will include a brief outline: Lynx
+compares all endpoints of the lines it is shown and finds the greatest and
+smallest X and Y value.  In effect it constructs a box around the lines.
+(Should you wish to modify Lynx, the included Lisp routine Boxx actually
+draws this box and can be used to see how well your modifications work.)
+It also checks the angle of the lines to see if the majority of them are
+angled to the right or the left or are horizontal or vertical, and determines
+if snap and ortho are on.  Then Lynx draws a line from the upper left corner
+of the box to the lower right corner, or from the lower left to upper right,
+depending on the predominant angle of the selected lines.  If they lean right
+and left in equal numbers (though I have no idea why you would in such a case
+want to combine them) or if ortho is on the line is drawn down the middle of
+the box in whichever direction is the longest.  It has, of course, erased the
+original lines before doing all of this.
+A couple of further points:
+         1.  I didn't really understand how this thing worked until after I
+             had it running, so it should (if you wish) be easier to modify
+             than it was to write.
+         2.  Lisp stands for (Yeah, Lost in...) List Processing.  Why then
+             will the Min and Max functions not accept a list as input?
+             Surely this is the only logical way of passing them information.
+             Is this why one almost never comes across a routine which makes
+             use of them?
+
+MIDDLE.LSP
+Convert text to middle justified text.  Fairly self explanatory but if it
+really baffles you get an adult to take a look.  See also Align.lsp,
+Left.lsp, Fit.lsp, Middle.lsp and Right.lsp.
+
+MVA.LSP
+Moves the lower left point of the drawing to 0,0.  If you have macros to
+insert a block or edit text at a specific point, this might come in handy.
+Like many of these, it will only be of use to those who share their drawings
+with the careless or unbalanced.
+
+NAMB.LSP (New)
+Pick a block, this prints its name on the command line and at the bottom of
+the screen menu.  You could List the block, hit pause, read the name, and
+let the rest of the information scroll past, but this is simpler.
+(If you remove the semicolons from in front of the three lines toward the
+end of the file it will become a bit more emphatic.  Handy if you want to
+irritate someone.)
+
+NT.LSP
+Incremented numbers with text.  See CT.  I have never used this, or even
+seen a vague theoretical need for it, but my old buddy MI felt that it
+would be better for me to spend several hours writing and debugging it
+than for him to spend several minutes working without it.
+It's interesting to watch, though.
+
+NUM.LSP
+Change existing text to sequential numbers given a start and increment.
+This can also handle negatives and reals, should the urge strike you.
+Created because it's generally easier to modify existing entities than to
+manufacture a variety of new ones.  (Revised: now works even if Luprec is
+set to 0, and saves the latest number as the default if used again.)
+
+NUMTX.LSP
+A variation of Num: allows a prefix and a suffix; otherwise similar.
+
+ONE.LSP
+Pick a text entity which contains only a number, this uniquely useful
+routine prints the English equivalent on the command line.  (In case you
+find this inexplicably difficult to understand, it would convert 1234 to
+"one thousand two hundred and thirty four".)  I have not bothered to add a
+routine to remove punctuation, spaces and letters from the string before
+translating it, choosing instead to regard One as the core around which an
+almost infinite variety of programs can be constructed.
+As it stands, One can handle numbers of up to about thirty six digits.  If
+you wish to use it with larger ones you will have to add the names for the
+next few to the end of the list.  You might also wish to examine the ones
+which I have included - the designations for anything over a million are
+still not universally accepted, and I have not hesitated to take a stand
+where convention fails.
+
+OTX.LSP
+Text at your spacing and angle.  Originally intended to get around AutoCAD's
+inability to place successive lines of text at a user specified separation,
+this routine now allows the operator to specify insertion, registration type,
+line spacing, text height, text string angle, and the angle between the
+insertion points of consecutive lines of text.  This may sound needlessly
+complex, but it allows one to place text for example in horizontal lines
+5mm apart in a vertical array, or at a 35 degree angle to the vertical
+spaced 7mm apart proceeding to the right.  Running through it about twice
+should leave the average user completely familiar with its capabilities
+and yet still slightly in awe.
+In case the plethora of prompts becomes tedious I have included a default
+value for each criterion, which can be edited to one more suited to the
+user given a little care and a text editor.  (Alternately you could build
+them into your menu structure.)
+For the sake of completeness it was felt neccessary to include a default
+text string, and so that this should not pall too rapidly I have used my
+random number generator with a list of phrases to add some variety (See
+RAN.LSP).  My apologies to anyone who was a German army officer in an old
+war movie.
+
+PID.LSP (New)
+Invented while working on the diagrams of the same name, this routine adds a
+prefix or suffix (or both) to a text string.  If you miss or press Return or
+have yet to define the two, you will be prompted to do so.  If you want to
+get rid of a default a single space is interpreted as an empty string:
+nothing is added or appended as the case may be.  This is quite a useful bit
+of Lisp, the hardest part is remembering that it exists when it is needed.
+See also Axe.lsp.
+
+PKILL.LSP
+A handy routine which removes all point entities from a drawing.  Places a
+large (temporary) X over each point entity in the drawing, even if they are
+invisible, then asks if you would like to delete them.
+This suggested itself after one of many conversations with MI concerning
+drawings which when zoomed to extents shrink down to postage stamp size in
+one corner of the screen and continue to so do even after several
+repetitions.  The evil one says he has had good success blocking the desired
+areas and then importing the resulting block into an existing blank drawing.
+However, he recently mentioned having found a drawing which was full of
+points which had been set so as not to display (Pdmode = 1), but which
+occupied a large and apparently empty area.  Since you can't get hold of
+an invisible point by windowing it, you can either setvar pdmode to 0 and
+regen, or use Pkill.
+If you use points for something other than snap nodes (i.e. you are heavily
+into pointilism) you might want to avoid this program.
+Also see SDEL.LSP and TXKILL.LSP.
+
+PL.LSP
+Plot initiate utility.  Uses most recent defaults, and names the plot
+file by combining the initials of the user (These are stored in the file
+Name.txt which will be created if it is not found) with the last five
+characters of the drawing name, or the letters after a backslash if one
+is found before five letters are counted.  As written the routine places
+the plot file in the directory D:\PLOT\, this can of course be changed.
+If you change plot parameters with some frequency this will be of limited
+use, but it provides a model for building lisp files which write and then
+run script files.  It could presumably be expanded into a program which
+prompts for plot size etc. and runs the plot while avoiding the more common
+plotting errors, or copied and modified into several routines for various
+sizes, scales, etc.  See Plonk.lsp for a further development of this idea.
+
+PLANT.LSP (New)
+This is the program you have been dreaming of: an automatic plant maker.
+It could probably be refined to some extent, but the lack of any conceivable
+use has stifled further R&D.  The plants produced tend to be rather
+geometric, the larger ones - the ones with a higher number of iterations -
+usually appear more plant-like but take longer to draw; three is a good
+starting number.  A block named "Leaf" is inserted at the end of each branch,
+one is provided so that the program won't crash when you run it without
+reading the instructions; you can substitute a more elaborate block of your
+own if you wish, a simple one (such as the one provided) will insert faster,
+an important consideration for large plants and old computers.  Each plant
+is different so you may have to draw a few to get one that you like.
+
+PLDT.LSP
+Change a selected attribute in a selected block to the date.  This was
+written to automatically date-stamp drawings as part of a plot tracking
+system, hence the name: PLot DaTe.  Unlike other methods which use a text
+string placed at a standard point, this program will find the appropriate
+block anywhere in the drawing, regardless of scale or placement, it will
+also find and alter multiple copies.  (Strangely enough, I can actually
+think of a use for multiple date-stamping.)
+The block which will be altered must be called REVDATE and the attribute
+ATTDATE unless, as usual, you want to edit the file.  Actually, it could
+be edited into a variety of automatic block change programs.
+
+PLONK.LSP (New)
+Automatic plot file generator.  A further development of Pl.lsp, Plonk
+extracts plot parameters from the block Qaplot (included) and writes a
+script file which runs the plot command, changing the settings at the same
+time.  This allows saving of plot settings in the drawing file: once they
+are correct you don't have to go through the whole procedure by hand or
+forget and plot a postage stamp, and a drawing can be used as a prototype
+for another of the same size and scale and will still plot correctly.
+The block is edited with DDATTE which allows the plot data to be examined
+without running a plot and changed repeatedly and in an order other than
+that dictated by the plot command.
+Qaplot.dwg consists solely of invisible attributes, thus it does not mess up
+the appearance of the drawing and can't be accidentally erased (Plonk allows
+you to edit or erase it, or you could insert a visible entity in the block
+drawing to use as a pick point).
+This version of Plonk will write the plot to a file, if your plotter
+requires a slightly different input sequence you may wish to edit Plonk or
+modify Qaplot, the file is commented fairly thoroughly.
+
+PNEUM.LSP (New)
+Pneumatic line constructor.  Inserts block PNEU90 in vertical lines and
+PNEU0 in horizontal ones, both on 12 unit spacing.  The idea is that the
+sets of diagonal slashes commonly used to denote pneumatic lines for some
+reason look wrong if the slashes placed on vertical lines are the same as
+the slashes on the horizontal ones.  Rather than try to change the standard
+form, I wrote this.  Both blocks are provided, or you can make your own.
+
+PROP.LSP
+Block reproportioner.  Sets the X, Y, and Z scales in a block to 1.  Can be
+used with DEROT.LSP to restore blocks to their original state.  I suppose
+you could just reinsert them, but one likes to have a special routine.
+Anyway, this is less tedious.
+Technical note: this routine reproportions the block in question by
+modifying the head entity for the insertion.  This does not change the
+attributes, though.  One could fairly easily modify the program to step
+through the attribute subentity data and descale them individually but they
+would still be out of position with respect to the rest of the block.  The
+obvious answer is a routine which moves them individually to the correct
+insertion point; I would have written one but have instead occupied my time
+wondering whether anyone would actually want to descale a block with
+attributes.
+See also Props.lsp which for your convenience is the next entry.
+
+PROPS.LSP (New)
+Similar to Prop but allows you to either make all of the scales match either
+the existing X, Y, or Z factor for each block selected or input another
+number.
+
+QUONSET.LSP (New)
+Sets the attribute Quonset in the block Qname to the drawing name without
+the path.  This was designed to be called by (S::STARTUP) so that drawings
+would always bear the correct file name - a matter of some importance if you
+are working with more than four drawings.  The block Qname is included; it
+consists solely of the attribute Quonset. You can of course modify it or
+make your own.
+Note that the attribute is updated even if it is not on the screen, so you
+can put it anywhere you want (or even use multiple copies) and you don't
+have to do a Zoom Extents before running this routine.  Also see PLDT,
+ATTNAME, TXMD, TXD, TXN, and TXTT.
+
+RA.LSP
+Redraw with timer.  Fairly useless, which is why I have included the
+similar files ZP.LSP and ZA.LSP.  You will be surprised by how little time
+a redraw really takes.  Maybe.
+
+RAN.LSP
+Random number generator.  This is the basis of SIX and of the varying text
+string selector used in TCH and OTX.  There is not much random about
+computers, so the microsecond at which the command was entered (or at
+which it reached the actual program line involved) is used.  I can't
+think of any practical applications, but one could probably write some
+nice gambling programs or games to run in Autocad.
+
+RIGHT.LSP
+Convert text to right justified text.  The default insertion point is the
+original or you can pick a new one - it's one of those decisions which the
+program can't make for you.  See also Align.lsp, Left.lsp, Fit.lsp,
+Middle.lsp, Right.lsp and Vbl.lsp
+
+RT.LSP
+Reaction time tester.  Also uses RAN in several places.  The figures used
+for determining what is an acceptable reaction time are only estimates
+based on a limited sample (myself) so don't draw too many conclusions
+from your results.
+
+RTALL.LSP
+Reverse the order of letters in every text string in a drawing.  This
+confuses some people, so listen: it doesn't mirror image them, it
+reverses the order - "Hi gang" becomes "gnag iH".  Running it a second
+time will restore the original state of affairs.  As suggested in the
+file header, this is of no use (I seem to say that a lot) unless you
+have already found another job.
+
+RTX.LSP
+Reverse one text string.  Same as the above, but you can give it a try
+without doing the whole drawing.  The CAD equivalent of doodling.
+
+SC.LSP
+Style change with screen menu.  I'm quite fond of this one.  (I am told
+that it will crash Lightning Zoom, so ST.LSP is provided which is similar
+but won't.  On the other hand you might try it out once before assuming
+the worst - I may have been misinformed by the thumbfingered.)
+Select text strings, pick a style from the screen menu.  Any further
+explanation would be superfluous.
+
+SCR.LSP
+Script loader.   Shares ff default with XX, LD, and Find.  Basically
+completes the edit aid foursome.  Will add the .scr extension and run
+as the default the last file edited with XX.
+
+SDEL.LSP (New)
+A departure from tradition: a program written for my own use.  This routine
+lets you select items using the standard procedure and then prompts for a
+type of entity - Line, Circle, Insert (Block), Text, etc., and erases from
+the drawing all objects of that type that are in the selection set.  If you
+want it can also delete every entity of a given type from the entire drawing.
+Not the type of thing one uses every day, but (like dynamite) likely to come
+in handy if you know it's there.
+
+SHUX.LSP
+Text vertical spacing adjuster.  Similar to VVB.LSP (and written because
+the first person to whom I gave VVB was somewhat unappreciative...maybe even
+outright critical).   Select text and pick the new points for the top of
+the top line and the bottom of the bottom one, this routine will
+space them all evenly between.  I can't see any use for this at all,
+and I've seen it used.  Still, somebody likes it, so here it is.
+(I was recently informed that a large percentage of my lisps deal with the
+manipulation of text.  This is so: the largest amount of (and in my opinion
+the most tedious) time spent working in Autocad is that spent creating and
+editing text entities.  Also Lisp lends itself to text manipulation and yet
+most users seem to confine themselves to three dimensional corinthian column
+generators and other programs of not unlimited general usefulness.)
+(Later note: The top point is the top of the upper case characters in the
+top line - if there are only lower case ones there will be a gap.  You
+could allow for this.)
+
+SING.LSP (New)
+A variation of XING, SING breaks the first line of two selected.  This was
+suggested by Brian (whose last name escapes me), and while I initially
+bridled at the implied criticism of XING, it is actually a good idea.  SING
+can't handle more than one intersection at a time, but it:
+  1.  Allows you to break either the vertical or horizontal line,
+  2.  Breaks linetypes other than continuous with no danger of missing
+      the line, and
+  3.  Can be modified to make breaks in proportion to the rest of the
+      drawing (specifically in drawings which have been scaled) by setting
+      Dimscale to the desired scale factor and replacing the line: (setq cc 2)
+      with: (setq cc (* 2 (getvar "dimscale")))
+      The 2 can in either case be replaced with your favourite break width.
+      See also JACK.LSP which inserts a block at Dimscale.
+
+SIX.LSP
+Lottery ticket number generator (for the 649 format).  For reasons
+presumably having to do with the internal workings of Intel's chips,
+running this several times in succession will often produce similar
+though not identical numbers.  So run it only once at a time, and content
+yourself with the thought that randomness lies not in uniqueness but in
+lack of predictability.  And remember me if you win.
+
+SL.LSP
+Erase the second last entity created.  Surprisingly useful, but only if it
+is quicker than just hitting Erase and the offending entity; it basically
+has to be on the digitizer menu.  See various notes herein on the
+desirability of customizing AutoCAD.
+
+SLYNX.LSP
+The original version of Lynx which adjusts lines to the current snap unit
+(if snap is on) and places the resulting line on the current layer.
+See Lynx.lsp.
+
+SNAKE.LSP (New)
+Similar to Snapper, but with one difference: this one not only moves the
+insertion point of entities to the nearest snap point, it alters their
+dimensions to make them fit.  Both ends of a line are put on snap, as are
+both endpoints of fitted or aligned text and all vertices of a polyline; the
+centre of a circle is snapped and the radius is altered to the nearest
+multiple of the current snap, all four corners of a solid or trace are put
+on snap.  Arcs, point entities, block insertions and centre, middle, right
+and left justified text entities are moved unaltered to the nearest snap
+point.  Unlike Snapper, Snake will usually leave corners of rectangles etc.
+connected even if it alters their shape.  Despite this it is best used with
+a degree of caution, especially on polylines such as polygons, doughnuts and
+ellipses.
+
+SNAME.LSP
+Prints the last eight digits of the drawing name in the upper right hand
+corner of the screen (that is, at the top of the screen menu area where
+it usually says AutoCAD).  Since any program containing the (grtext)
+command will return things to normal (as will in most cases a shell) this
+is generally intended to be used as (S::STARTUP) in ACAD.LSP as a quick check
+on whether you have entered the correct drawing or built into some other
+command which is used fairly often if you wish the name to be continuously
+displayed (it is built into TXTT.LSP).  I'm not sure why Autocad doesn't
+do this automatically - while it's nice to see the program name displayed
+at all times I forget which drawing I called up a lot more often than I
+forget that I'm in AutoCAD.
+
+SNAPPER.LSP
+Puts entities (back...) on snap, by moving their insertion point to the
+nearest multiple of Snapunit.  Observe that this does not change entities,
+just moves them.  Also, it will ignore polylines (including donuts and
+ellipses) since putting each vertex on snap would most likely produce an
+entity having little resemblance to the original, besides which the time
+required to write such an ability into the program is not offset by the
+minimal likelyhood of anybody ever requiring it.  Arcs are moved so that
+their centre point is on snap; traces are moved but bear in mind that each
+segment is a separate entity and will be moved as such.  As far as the
+complex 3D entities go, you're on your own.  I would recommend that you save
+the drawing before trying anything rash.  See also Snake.lsp.
+
+SPARE.LSP
+Space remover.  Eradicates those free-floating spaces which mysteriously
+show up on the ends of text strings.  If you use one of the VB's and the
+text seems not to be correctly positioned as a result then you probably
+should try this.
+
+SPRAY.LSP (New)
+This program takes text from a file, from an existing text entity, or from
+the keyboard (if you can type) and places it at intervals along an existing
+line, circle, arc or polyline; if none of these suit you it will construct a
+circle of appropriate size.  Text can be placed in a variety of ways
+depending on the entity used as a base: clockwise or counterclockwise around
+a circle or arc, away from or towards the origin of a polyline, and upside
+down or upright on a line.
+If the source is a file Spray can extract one line (incrementing the line
+number after each use) or use the entire thing, but bear in mind that a file
+will crash Spray if it's too long for the available memory - specifically
+the heap space, which depends on your machine and settings.  This shouldn't
+be a problem if you use this feature as a way of preparing text before
+applying it to an entity rather than trying to plaster Command.com onto
+three hundred foot circles.  (Later note: a way around this just occurred to
+me but it'll have to wait for the next revision.  If you really need it,
+call me.)  There are other prompts and options but they are better tried out
+than explained.  (I try to write programs so that the defaults will produce
+some kind of result even if the user has no idea what the routine does.
+There may be those who would argue that if one doesn't know what a program
+does it may not be a wise idea to run it, or that this approach contributes
+to software piracy, but I treat them with the indifference they deserve.)
+Spray works well with LTR.LSP - you can write a text file with LTR (or with
+a word processor if you want to use conventional methods) and wrap it around
+various entities, or dump the whole file into a drawing with Import.lsp
+(which is included with AutoCAD) and then suck selected lines onto nearby
+entities with Spray.
+Your employer is probably not going to ditch his word processing package for
+this method even when you point out that AutoCAD comes a lot closer than the
+majority of word processors to what has come to be known as WYSIWYG. (By the
+way, with the exception of the military, who make up strings of initials
+with the express intention of using them as words, only small children and
+cretins try to pronounce acronyms.)  Still, Spray can dress up your less
+serious correspondence and may even have some use of which your company
+would approve, if you're concerned about that sort of thing.  It was, I seem
+to recall, created for a purpose but history tends to obscure that sort
+of thing if the program takes more than a day or two to write...
+Spray requires the blocks CW.DWG and CCW.DWG which are included.  Each
+consists of a letter "X", which Spray inserts and then changes to the
+required letter.  If you want to change the style, colour, height, etc. of
+the text you can either change the finished product using one of the variety
+of lisps in this package or edit the blocks.  (The blocks use a text height
+of six drawing units; this will probably not be appropriate if a unit
+represents something other than a millimetre.)
+Bear in mind that Autocad drawings can be imported into Word Perfect using a
+variety of methods.  (See Bill Fane's excellent article in the March 1990
+Cadalyst.)
+
+SPYR.LSP (New)
+A fascinating routine which came into being by accident while I was
+attempting to write PLANT.  Spyr prompts for a start point, segment length,
+start angle, angle increment, length multiplier, and number of segments.
+Then it draws lines, incrementing the angle and length each time.  The
+result is one of a variety of patterns which are much more interesting to
+see than to read about.  The increments (which are the heart of the matter)
+are used as defaults the next time around in case you want to do the same
+thing again or try some close variation.
+I recently occupied a few idle minutes by making a number of spirals with
+Spyr, making slides of them (with the Mslide command, in case you can't be
+bothered to look it up), and writing (with BATCH.LSP) a script file to
+display the slides in a repeating loop to the amazement of my colleagues,
+none of whom have ever read the manual.  The general format of the script
+file, in case you are interested, is:
+vslide slidename
+delay 1000
+vslide anotherslidename
+delay 1000
+RSCRIPT
+(The delays are optional.)
+
+SQ.LSP
+Sequential text changer.  Select text entities, each one will be highlighted
+in turn at which point you can type in a replacement string or <Return>
+to leave the existing one unchanged.  As usual, ignores entities other
+than text.  Probably the routine I use most often.  (And TCH.LSP)
+
+ST.LSP
+Short text style changer.  No screen menu, but: 1) it won't crash lightning
+zoom and 2) it allows example selection instead.  (See SC.LSP)
+
+STAR.LSP (New)
+This routine suggested itself after I stumbled into SPYR.LSP.  It displays a
+slide file (default "Star" or the most recent one used) and selects the
+entire drawing.  This leaves you with the drawing you were working on
+superimposed on the background of your choice.  It has been suggested that
+one can copy drawings without importing them by making a slide of the
+original, running Star, and then tracing over the desired portion, an
+interesting idea if not one for which uses spring unbidden to the mind like
+gazelles.  The original inspiration was purely aesthetic, though.  Bear in
+mind that a REDRAW, PAN or ZOOM will erase the slide.
+
+SWX.LSP
+Switch positions of two groups of entities by selecting one group, a
+basepoint, the second group, and another basepoint.  Easier than moving
+one group out of the way, putting the second group in its place, and moving
+the first group to where the second one used to be.
+Generally this one doesn't get rave reviews - largely I think because it
+seems to require a brain to use.  Actually a modicum of common sense will
+suffice, if you have any this is worth at least a try: I use it all the time.
+
+TACH.LSP
+Suck a text string out of a text entity and inject it into an attribute.
+
+TB.LSP
+Terminal block drawer.  Draws a series of connected boxes, each with a text
+line, you specify text height, box height, box width, starting number,
+number of terminals and of course the ubiquitous "Start point:".  This will
+not handle real numbers (the ones with decimal places) but negatives are OK
+if your terminal blocks are peculiarly named.
+See TBTX.LSP below.
+
+TBTX.LSP (New)
+A slightly more elaborate version of TB.LSP, this allows text before and
+after the incremented number, and prompts for the angle at which to draw the
+block.  I'm not too sure about the ability to draw angled terminal blocks
+but the text feature seems useful; anyway both modifications were requested
+by someone who was really using the thing which is a fairly forceful argument.
+I have left the original TB in for those uses which don't require text or
+angles since, as mentioned elsewhere, I think that a program should have as
+few prompts as is practical.  (I would even recommend that if you find a
+certain prompt superfluous you edit the routine either to make the most
+common value the default or to remove the prompt entirely.)
+
+TCH.LSP
+Change one or more lines of text to a single text string which is either
+typed in or copied from an existing text string by picking it.  One of the
+few truly indispensable Lisps.
+A variety of programs to mash most qualities of text (or other entities)
+can be based on this structure.  (You can use GET.LSP to find out just what
+part of the association list you need to alter.)
+
+TCHS.LSP
+Single text changer.  Written (really) because certain parties object to the
+extra <Return> needed to tell TCH that the selection set is complete.
+At the same time it will repeat at a <Return> and thus is superior (for that
+purpose) to the Change command or any menu driven work-around.
+
+TOGGLE.LSP (New)
+A simple device for toggling system variables between 0 and 1; intended
+for incorporation into menus.  You can either call Toggle or just use a
+menu line based on the form:
+[Toggle Highlight](setvar "Highlight" (abs (1- (getvar "Highlight"))))
+This method doesn't tell you what it just did, but it is transparent,
+which can be useful if changes to the variable take effect before the
+command is finished (which is not the case with highlight).
+
+TTC.LSP
+This and the next five listings - TTF, TTL, TTM, and TTR - will alter the
+registration type of a line of text.  Actually what they do is extract the
+text string from the entity data, erase the original entity, and construct a
+new one of the desired registration with its insertion on the specified
+point.  If the current text style, colour, width scale factor, rotation or
+layer are not the same as those of the original entity then the newly
+created text line will also differ in the appropriate respect, this can be
+useful if you are trying to standardise a number of text entities but if you
+wish it is relatively simple to modify a program so that it either changes
+the characteristic in question, refuses to touch an entity in which it
+differs from the current value, or prompts before making the change.
+(VBHX.LSP, which checks to see that the current text style is the same as
+that of a selected entity before attacking it, is included as an example.)
+(Note: see also Align.lsp, Centre.lsp, Fit.lsp, Left.lsp, Middle.lsp and
+Right.lsp which change the existing entity rather than constructing a new
+one and thus leave style, layer etc. unaltered.)
+
+A quick aside:
+As I may have mentioned before, the use of fixed height text is analogous
+to the use of a diesel locomotive on the highway - the lack of steering
+will save a lot of time which might be wasted on decisions concerning
+trajectory.  These routines will handle fixed height text, but if the set
+height is not the same as that of the text being rejustified, things may
+change a little more than you wanted.  This is not a problem which arises
+with variable height text styles.  Just in case there is someone reading
+this who doesn't know what I am ranting about: when one switches text styles
+Autocad prompts for a variety of things, among them text height.  If you
+reply for instance "3" then the text height will be set at three drawing
+units, you will not be prompted for a height when writing text, and Change
+will not offer you the option of specifying a new height.  If on the other
+hand you respond "0" then you will be asked for a height when writing a
+line of text, you will be able to change it with Change, your life will
+be easier and more rational and your co-workers will respect you and maybe
+even voice the misguided theory that you know what you are doing.  If you
+hate those few extra keystrokes enough to actually do something about them,
+then add an "Insert 2.5mm text" option to your menu.  Mine has text options
+in the standard heights for right, left, centred, and fitted text, not to
+mention the invaluable HT.LSP.
+Modifying the menu is not as complicated as it appears, by the way.  A chimp
+could do it.  Maybe even your boss.  You can even shell out of Autocad and
+make changes on the fly.  (Keep a backup copy of the original in case the
+new version doesn't work as planned, just to save yourself from panic until
+you can fix it.)
+The Autocad manual - which despite a fair amount of unwarranted criticism
+from a variety of sources is well laid out and almost invariably clearly
+written - has a section on menu modification which has everything you really
+need to know.  Modifying the pulldowns is a good place to start: you don't
+have to replot the tablet overlay, and mistakes usually only affect the
+pulldown you altered.  Anyway, to return to the subject at hand, the other
+four TT's:
+
+TTF.LSP - Text to fit.  (My God!  The version of this in the last release
+                         didn't work.  This one does.  Sorry about that.)
+TTL.LSP - Text to left.
+
+TTM.LSP - Text to middle.
+
+TTR.LSP - Text to right.
+
+
+TXD.LSP
+Text to date.  Pick a line of text, this will change it to the date - the
+long format: JULY 12, 1969.  If you wish to use abbreviations you can edit
+the Lisp file.  For that matter you can make up your own month names if you
+are so inclined.
+This file contains the lines:     (if (= (substr (cdr zz) 1 4) "ASB:")
+                                      (setq dd (strcat "ASB: " dd)))
+
+They check whether the original text started with "ASB:" and if so add
+it to the start of the new string.  This can be edited to find any desired
+string and add it or another to the new text.  (The number 4 in the first
+line must be changed to the length of the string to be found.)  Alternately
+the second line can be used alone to unconditionally add any desired string.
+You will have to remove the last ")".
+
+TXMD.LSP
+Text to metric date.  Similar to the above, but in the DD/MM/YY format.
+I'm not sure what is metric about this since it's not in kiloseconds or
+deciyears, the powers that be haven't threatened to imprison people who
+won't use it, and it isn't common knowledge that if we all believed in it
+wholeheartedly we could be just like the Japanese.  Nonetheless, that's what
+it's called, and here it is.
+
+TXKILL.LSP (New)
+Similar to Pkill, this finds empty text strings ("" or " ") which according
+to rumour can cause trouble with Zoom Extents.  If they are the problem, if
+you begrudge the small amount of memory they consume, or if they just
+irritate you Txkill can eradicate them.  It prompts first just in case you
+want them for some reason...
+See also Sdel.lsp and Pkill.lsp.
+
+TXN.LSP
+Text to title without path.  The title will be as you entered it to call
+up the drawing.  This is not a process which allows much room for creativity,
+but if you want the result to be capitalised you have to enter it that way.
+(Or use UC.LSP, or modify this to do it automatically.)  See also TXTT.LSP
+and QUONSET.LSP.
+
+TXS.LSP
+Global text size changer - you specify initial and desired sizes, and
+anything in the drawing of the initial size will be changed to the desired
+one.  There are a couple of these floating around, and while I would like
+to be able to say that everything in here was mystically inspired by a
+source of ideas that only I have access to, it was actually suggested by
+MI, who has an amazing talent for ferreting out half-baked lisps from
+unlikely sources and who was dissatisfied with a similar routine which
+changed every text line in a drawing to one height (a useful ability if
+your output device is a daisy wheel printer).
+If you want to edit out the "Eat leaden death" effect (while we're on
+the subject of half-bakedness) just take out the (grclear) line.  It is
+harmless, though: a redraw will restore things.
+
+TXTT.LSP
+Text to title with path.  Same idea as TXN.LSP and QUONSET.LSP.
+
+TXX.LSP
+Very short SQ - sequential text changer.  Included in case you want something
+a bit faster and easier on memory and without the debriefing at the end.
+
+UC.LSP
+Convert text to upper case.  Similar to LCS.LSP.
+
+VB.LSP
+Venetian blind - multiple text rejustify to fit.  Most of the comments for
+the TT?.LSP routines apply here.  This takes a number of lines of text and
+fits them between two specified points while keeping the original vertical
+placement in the drawing.  The VB's are very nice for cleaning up sloppy
+columns of text, especially since they change everything to the current
+height and style.  I once had occasion to work on a set of drawings done
+by a party who did not use snap, considered all text styles to be identical,
+and who liked to mix variable and fixed height text.  VBC enabled me to
+clean the average drawing up in about five minutes, which impressed both
+the boss and my fellow employees who had refused to have anything to do
+with the situation.  (An unretouched testimonial by an innocent party.)
+Another trick worth keeping in mind if you're bored: Type VB, window the
+whole drawing and then watch all of the text suck into a single column.
+Then tell your supervisor it just happened by itself.
+The variants:
+
+VBC.LSP - Venetian blind centred.  This one allows you to pick two points
+and centres the text on a point halfway between them.  Designed this way
+because it largely gets used to centre text in boxes.  If you only want to
+specify one point, pick twice on the same spot.  Or edit the routine.
+(If you are only dealing with one entity, by the way, TTM.LSP will centre
+text horizontally and vertically: pick the points on diagonally opposite
+corners of the box in question.)
+
+VBHX.LSP - Venetian blind centred; ignores text if the current text style
+is not the same as that of the text entity.  See TTC.LSP for an explanation
+of the need for this general form.
+The other VB's:
+
+VBL.LSP - Venetian blind left justified.
+
+VBM.LSP - Venetian blind middle justified.
+
+VBR.LSP - Venetian blind right justified.
+
+VVB.LSP
+Vertical venetian blind.  Takes a column of text and respaces it vertically.
+You specify the start point and the vertical spacing.  Note that this does
+not move text horizontally, only vertically.
+
+WMX.LSP
+Move a word to the next line, or the previous one, or to a new line.
+This program occurred to me after working with several connected lines
+of text and realizing that text handling was not Autocad's strongest point.
+(It still isn't.)  It emulates one of the most useful features of a word
+processor - it can remove a word from the end of one line and move it to
+another.  If the first line selected is above the second then the last word
+in the upper line is moved to the beginning of the next.  If the first line
+is below the second then the action is exactly reversed.  If no second line
+is selected then a new one is constructed and the user is prompted for a
+start point.  Spaces are inserted automatically.
+Notes: 1.  If you just want to join two lines of text together see LADD.LSP.
+       2.  Since WMX uses the Subst and Entmod functions it can move a word
+           from one line to another in a different style with no trouble.
+       3.  Wmx can also suck up an individual word and put it on the end of
+           a line of text.
+       4.  Where does a word begin or end?  At a space, so you can't chop
+           text at a dash or ampersand (unless you modify the routine).
+This, SQ, TCH and the indispensable Chgtext enable one to perform most of
+the more basic functions of a word processor while in the drawing editor.
+(See also SC.LSP.)  If that's not enough check out ED.LSP.
+
+WT.LSP
+Multiple width scale factor change.  Similar to HT.LSP but changes width.
+Mostly useless, occasionally invaluable.
+
+XING.LSP
+Crossing locator and breaker.  Select a number of lines.  This will find the
+intersections between them (if any) and put a two unit break in the vertical
+line of each crossing unless it is an endpoint in which case it will be
+untouched.  Not only is this much faster than doing it by hand (it prints
+the elapsed time in case you are in doubt), it is more uniform than your
+co-workers who think that snap is in infringement on their freedom of
+expression (Just in case you agree with this odd viewpoint, a wrench is
+an infringement on your freedom to remove spark plugs with your bare hands.
+Need I continue?) and is much more interesting to watch (unless they are
+strikingly good looking or belong to a cult which requires the wearing of
+a gorilla suit at all times).
+It can also be modified - for instance to insert a block or other entity
+at line intersections, not to ignore endpoints, to break the horizontal
+line or to use a wider perforation (see note 3).
+Cautionary notes:
+       1.  Since the Break command requires a pick rather than an entity
+          name, you must be zoomed in closely enough that Autocad won't hit
+          the wrong line at the intersection.  In practice that isn't that
+          close, a little experimentation will demonstrate rough limits.
+       2.  If your lines aren't on snap then they may either overlap slightly
+          in which case endpoints will be treated as intersections and cut,
+          or they may not meet in which case there will be no intersection
+          and nothing will happen.  You just can't place lines to sixteen
+          decimal places by eye.
+       3.  If you are working in inches a two unit gap may be too large.  If
+          you are are doing an 8.5 X 11 drawing of an object that's sixty
+          feet long a two inch gap may be two small.  If your line is the
+          same length as the gap it will be totally obliterated, and if it's
+          a lot shorter then Break won't be able to find it and XING will
+          crash.  (This won't damage your drawing but it is irritating.)
+These make it seem that XING is a command that is never likely to work.
+On the contrary, it is a very useful and reliable routine and only modesty
+prevents my running on at some length about it.
+See also SING.LSP.
+
+XX.LSP
+Shells out and fires up a word processor with the file specified by the ff
+default.  (See LD.LSP) If no extension is specified it adds ".lsp".  Very
+useful if you are editing lisp files or repeatedly editing any text file
+from within Autocad.  (Why XX?  Because it's easy to find on the keyboard.)
+The line: (command "xxx" fn) uses the command "xxx" to shell out to a text
+editor.  As with ED.LSP you will have to add the line:
+XXX,editor,200000,File to edit: ,4
+to your Acad.pgp file, where "editor" is the name of a text editor.
+If you are not familiar with the shell command file Acad.pgp see Sample.pgp.
+
+ZA.LSP
+Zoom All with timer.  A companion to RA.LSP and ZP.LSP.  This might save you
+from going berserk with boredom, but actually a little constructive idleness
+is safer.  Or writing some Lisp.  Or going for coffee in another city.
+
+ZE.LSP
+Zoom Extents by doing a Zoom Window using the Extmin and Extmax system
+variables as the corners.  Saves doing Zoom previous six times, or doing
+a Zoom All if your computer has forgotten the first three zooms you did.
+If you have not forced a regen zooming inward, this shouldn't force one
+going out (and if it does you would have had to do one anyway).  Also a
+Zoom Previous will undo the effect of this, whereas it won't undo the
+effect of another Zoom Previous.  (See also ZVS.LSP)
+
+ZP.LSP
+Zoom Previous with timer.  See also ZA.LSP and ZP.LSP.  The original version
+of this had a line: (write-line "Command: Zoom")
+and another: (write-line "Zoom: All/Nothing/Hi mom/Infinite/Oblivion/(x): P")
+or whatever the prompt is so as to give the impression that I had actually
+entered the proper command, my superiors taking a dim view of Lisp for some
+reason not clear to me (or, I imagine, to them).  You can insert some version
+of them before the line (command "zoom" "p") if you're bored or paranoid.
+
+ZVS.LSP
+Zoom to the virtual screen limits with no regen - i.e.  zoom out as far as
+possible on a redraw.  Doesn't always zoom out as far (or as accurately)
+as ZE.LSP but then also doesn't risk a regen.

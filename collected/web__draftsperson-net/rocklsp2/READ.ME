@@ -1,0 +1,124 @@
+
+   RockLisp (Version 2) by Rocket Software  Copyright 1991
+   This shareware package contains:
+
+
+        1.  A number of Lisp files for use with AutoDesk's AutoCAD
+            drafting package.
+        2.  The file Index.doc which is an alphabetical listing of
+            the Lisp files with a brief explanation of each (and the
+            occasional editorial comment).
+        3.  The file Sample.pgp which is an explanation of AutoCAD's
+            Acad.pgp file for those who have yet to fathom its fairly
+            simple intricacies.
+        4.  The file Custom.doc which contains a few thoughts (a brief
+            tirade, actually) on AutoCAD customization.
+        5.  The file Briefndx.doc which contains a one-line description
+            of each lisp routine so that you can find the one you want
+            if the name escapes you.
+
+  A few notes:
+  
+        1.  These routines were written for a variety of purposes.  They
+            are not all intended to be universally useful, so don't be
+            alarmed if there seem to be a lot which are of no use to you.
+            There are also a certain number of routines which seem to be
+            merely variations on a theme, which they are: not everyone
+            wants to start modifying programs, and I would rather write
+            a close variation than clutter up a routine with endless inputs
+            in an attempt to anticipate every conceivable eventuality.
+
+        2.  If you are of a serious turn of mind please forgive those
+            files which are purely frivolous.  Similarly persons in
+            positions of authority could be benificent enough to
+            ignore those which seem aimed solely at undermining their
+            control of the masses.
+
+        3.  Common needs breed common solutions.  I know of at least
+            one item contained herein which has been duplicated elsewhere,
+            there may be others.
+
+        4.  These programs are ready to use as is, but as I have stated in
+            a number of places, you are welcome to cut and chop them to
+            suit your needs.  If you lack either the inclination or the
+            time I could probably be persuaded by an interesting idea
+            or a small amount of cash.
+
+
+  Miscellaneous ramblings:
+
+  The procedure, before I forget, for loading Lisp files is to type at the
+Acad "Command:" prompt: (load "filename"). If you are loading for outside
+the current directory you will have to add a path, as in (load "A:\filename").
+You don't have to add the ".lsp" extension, but it doesn't hurt.
+If you like a Lisp routine well enough to want to load it with each drawing,
+copy it into the Acad.lsp file, it will then load automatically each time
+you enter the drawing editor. You should try to keep from dumping everything
+even vaguely interesting in, though: the larger the file the longer it takes
+to load, and even on a fast computer a large Acad.lsp can take an irritating
+amount of time.
+
+  There are other procedures to load files only if they are actually needed,
+such as putting: (IF (NOT C:UC) (LOAD "C:/ACAD/UC.LSP")) in the menu
+structure before the appropriate command - in this case "UC".  These are
+detailed in a variety of books on AutoCAD modification, and I will not
+duplicate them here.  (I would like to recommend a book but the majority of
+them seem dedicated not to teaching the user the methods he requires but to
+convincing him to construct some elaborate structure they have devised for
+purposes he most likely does not share.)
+
+  Also it is worth reading the Lisp manual on the (S::STARTUP) command:
+basically you place (S::STARTUP () various stuff) inside ACAD.LSP in the
+same format as (DEFUN C:ROUTINENAME () various stuff), and as soon as the
+drawing editor is ready to go it runs the routine automatically; thus you
+can use (S::STARTUP () (C:QUONSET)) and AutoCAD will automatically run
+Quonset when you load a drawing, (assuming that Quonset is already loaded).
+See also the notes on L.lsp in Index.doc which detail another method of lisp
+loading.
+
+  Although I have tested each of these routines on several computers and
+would obviously not release any which was not to the best of my knowledge
+both complete and harmless, it is a good idea to save any drawing before
+trying a previously untested procedure of any type, i.e. don't shell out
+of Autocad after three hours of otherwise unrecorded inspiration and then
+run a virus removal program.
+
+  Speaking of viruses, the computer on which this was written is tested
+frequently and has so far always been free of them. For those who think that
+viruses are not of much concern or interest, I agreed wholeheartedly until
+quite recently.  (Even if the thought of having to format your hard disk and
+then dig up new copies of all that software you never use doesn't dismay
+you, possibly the thought of being lynched by your associates who think you
+infected them might give you pause.)
+
+  Other important stuff:
+
+   1. I would like to thank Mark Igglesden for the ideas which led to
+      a number of these lisp routines, for a combination of rationality
+      and technical expertise which is sadly lacking in the CAD business,
+      and most importantly for ongoing criticism which prevented them
+      from being released with a variety of major shortcomings.
+
+   2. Money.  This is shareware: if you use these things, even grudgingly
+      and cursing my name at every step, you should send me some.
+      I have set the price of this package at $25, which I feel is pretty
+      inexpensive.  If you have more than one user the price is $20 each;
+      for large numbers call me.  (Forgive me for not including a nice
+      order form you can print out - I am not convinced that they incline
+      people to send money any more than a little note like this.  If you
+      disagree please include a note to that effect with your check.)
+
+   3. Feel free to distribute this package as widely as you wish, but
+      dish out the whole thing, not just individual files.
+
+   4. I like to get feedback on this stuff - comments (preferably
+      favourable), suggestions, interesting software, epic novels with
+      myself as the protagonist, boxes of blank 1.2 Megabyte diskettes,
+      surplus hard drives, etc., etc.
+
+   5. My mailing address: Simon White (or Rocket Software if you want
+      it to look official), 333, 22nd Ave SW, Calgary, Alberta, Canada
+      T2S 0H3.  Phone: (403) 229-1568
+      I can also be reached on Genii as S.WHITE36.
+
+

@@ -1,0 +1,160 @@
+(defun curve:optimize-lwpl (ent / segs res closed n1 n2 n3 fuzz)
+  "优化多段线顶点。当连续多点共线或共圆时，减少顶点。连续 5 点以上共圆（相邻两段夹角 175~185 度）的多点折线转为一段圆弧。优化顺时针的多段线有问题待修复。优化会丢失宽度信息！！"
+  "优化后的新图元"
+  (setq fuzz 1.0e-06)
+  (setq segs (mapcar
+               'cons
+               (curve:pline-3dpoints ent)
+               (curve:pline-convexity ent)))
+  ;; 连续共圆(5点以上)的多点折线合并为一段圆弧
+  (setq segs (curve:optimize-lwpl-cocircle-all segs fuzz))
+  ;; 当闭合时
+  (setq n1 (car segs))
+  (setq res (cons n1 nil))
+  (setq segs (cdr segs))
+  (setq n2 (car segs))
+  (setq res (cons n2 res))
+  (setq segs (cdr segs))
+
+  (while (setq n3 (car segs))
+    (cond
+      ((and
+         (= 0 (cdr n1))
+         (= 0 (cdr n2))
+         (equal
+           (angle
+             (car n1)
+             (car n2))
+           (angle
+             (car n2)
+             (car n3))
+           fuzz)
+         (setq res (cons n3 (cdr res)))))
+      ((and
+         (/= 0 (cdr n1))
+         (/= 0 (cdr n2))
+         (equal
+           0
+           (distance
+             (curve:bulge2o
+               (car n1)
+               (car n2)
+               (cdr n1))
+             (curve:bulge2o
+               (car n2)
+               (car n3)
+               (cdr n2)))
+           fuzz))
+       (setq res (cons
+                   (cons
+                     (car n1)
+                     (curve:o2bulge
+                       (car n1)
+                       (car n3)
+                       (curve:bulge2o
+                         (car n1)
+                         (car n2)
+                         (cdr n1))))
+                   (cddr res)))
+       (setq res (cons n3 res)))
+      (t (setq res (cons n3 res))))
+    (setq n1 (cadr res))
+    (setq n2 (car res))
+    (setq segs (cdr segs)))
+  (if (= 1 (setq closed (entity:getdxf ent 70)))
+    ;;闭合时，检测最后一点,
+    (progn
+      (setq n3 (last res))
+      (cond
+        ((and
+           (= 0 (cdr n1))
+           (= 0 (cdr n2))
+           (equal
+             (angle
+               (car n1)
+               (car n2))
+             (angle
+               (car n2)
+               (car n3))
+             fuzz)
+           (setq res (cdr res))))
+        ((and
+           (/= 0 (cdr n1))
+           (/= 0 (cdr n2))
+           (equal
+             0
+             (distance
+               (curve:bulge2o
+                 (car n1)
+                 (car n2)
+                 (cdr n1))
+               (curve:bulge2o
+                 (car n2)
+                 (car n3)
+                 (cdr n2)))
+             fuzz))
+         (setq res (cons
+                     (cons
+                       (car n1)
+                       (curve:o2bulge
+                         (car n1)
+                         (car n3)
+                         (curve:bulge2o
+                           (car n1)
+                           (car n2)
+                           (cdr n1))))
+                   (cddr res)))))
+      (setq n1 (car res))
+      (setq n2 (last res))
+      ;; 检测第一点
+      (setq n3 (cadr (reverse res)))
+      (cond
+        ((and
+           (= 0 (cdr n1))
+           (= 0 (cdr n2))
+           (equal
+             (angle
+               (car n1)
+               (car n2))
+             (angle
+               (car n2)
+               (car n3))
+             fuzz)
+           (setq res (reverse (cdr (reverse res))))))
+        ((and
+           (/= 0 (cdr n1))
+           (/= 0 (cdr n2))
+           (equal
+             0
+             (distance
+               (curve:bulge2o
+                 (car n1)
+                 (car n2)
+                 (cdr n1))
+               (curve:bulge2o
+                 (car n2)
+                 (car n3)
+                 (cdr n2)))
+             fuzz))
+         (setq res (cons
+                     (cons
+                       (car n1)
+                       (curve:o2bulge
+                         (car n1)
+                         (car n3)
+                         (curve:bulge2o
+                           (car n1)
+                           (car n2)
+                           (cdr n1))))
+                   (cddr res)))))))
+  (setq res (reverse res))
+  (entity:make-lwpline-bold
+    (mapcar
+      'car
+      res)
+    (mapcar
+      'cdr
+      res)
+    0
+    closed
+    0))

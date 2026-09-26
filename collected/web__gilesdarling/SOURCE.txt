@@ -1,0 +1,4 @@
+取得元: https://www.gilesdarling.me.uk/lisproutines.shtml （作者: Giles Darling、英国の道路設計向け）
+取得日: 2026-09-26
+許可の根拠（サイトの文言）: "You're welcome to download, use, copy, amend, and adapt these files, but at your own risk."
+※ 「複製・改変」は明記されていますが「配布」という語はありません。心配な場合はこのフォルダを削除してください。

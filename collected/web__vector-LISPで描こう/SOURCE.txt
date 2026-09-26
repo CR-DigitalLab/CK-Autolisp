@@ -1,0 +1,6 @@
+取得元: https://www.vector.co.jp/soft/win95/business/se164533.html （LISPで描こう!! v1.06）
+ファイル: https://ftp.vector.co.jp/23/63/1888/lktbs106.lzh
+取得日: 2026-09-26
+許可の根拠（同梱 readme.doc 第5章）: 「未改変のアーカイブはアーカイブ内に変更を加えない事を条件に自由に転載･転記を行う事が出来ます｡」
+→ 書庫（.lzh）を無改変のまま収録しています。解凍して使ってください（Windowsなら 7-Zip や Lhaplus などで開けます）。
+※ 中の BDRAW.ZIP はシェアウェアです。改変したものの公開は禁止されています。

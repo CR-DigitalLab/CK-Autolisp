@@ -1,0 +1,40 @@
+  ;  Layer Change with screen menu.
+  ;  by SW for Rocket Software  Copyright 1991
+  ;  A set of menu commands also works,
+  ;  but this will handle drawings with nonstandard layers.
+ (DEFUN C:LC ( / SS CC NUM LLL LLN ZZ TT e)
+  (setvar "cmdecho" 0)
+  (setq b (cdr (assoc 2 (tblnext "layer" t))))
+  (setq a (cdr (assoc 2 (tblnext "layer"))))
+  (if (not (eq a nil))
+      (progn
+            (setq b (list a b))
+            (while (not (eq a nil))
+                   (setq a (cdr (assoc 2 (tblnext "layer"))))
+                   (if (not (eq a nil)) (setq b (cons a b))))
+            (grtext 0 "SELECT  ")
+            (grtext 1 "LAYER   ")
+            (grtext 2 "        ")
+            (setq num 2)
+            (setq nb b)
+            (while b
+                    (setq num (1+ num))
+                    (setq a (car b))
+                    (setq b (cdr b))
+                    (grtext num a)
+            )
+            (setq x 1)
+            (while (< x 4)
+                   (grtext (+ num x) "        ")
+                   (setq x (1+ x))
+            )
+            (prompt "Select layer from screen menu" )
+            (setq xnn (grread))
+            (if (= (car xnn) 4)
+                (setq xn (- (cadr xnn) 3))
+                (setq xn (- (cadr (grread)) 3)))
+            (setq cc (nth xn nb))
+            (command "layer" "set" cc ""))
+  (write-line "There is only one layer."))
+  (grtext)
+  (PRINC))

@@ -1,0 +1,15 @@
+取得元: https://draftsperson.net/lisproutines/ （一覧 https://blog.draftsperson.net/free-lisp-routines/ ）
+取得日: 2026-09-26
+収録方針: サイト全体の再配布規約はないため、各ファイルの冒頭（ヘッダ）に再配布許可が書かれているものだけを収録。
+          ファイルは一切改変していません（改変禁止の条件付きのものがあるため、編集しないでください）。
+フォルダ名 = 元の書庫名（例: 90lsp = 90lsp.zip から取り出したもの）
+
+許可の種類:
+- 大半: "Permission to use, copy, modify, and distribute this software for any purpose and without fee is hereby granted, provided that the above copyright notice appears in all copies..."（著作権表示を残すこと・無償であること）
+- BC.LSP / civili / lisput / handylsp の INFINI.LSP / grabbag の ROA.LSP: パブリックドメイン宣言
+- grabbag の FILE/TEXTED/TXTHGT/MISC、handylsp の MISC/PROP1/TEXTED/XLINE: 「非営利・無改変なら複製・配布可」
+- grabbag の ESLIDE.LSP: 「元の形のまま無償でなら配布可」
+- cabine / rafter / truss: 「2つのファイルを一緒にし、ヘッダを残せば自由に複製可」→ 2ファイルとも収録
+- rocklsp2: 1991年のシェアウェア一式。READ.ME「Feel free to distribute this package as widely as you wish, but dish out the whole thing」→ 一式すべて無改変で収録
+- Best_Of_Lisp の Flatten$.lsp: 「無償なら配布自由」
+- CAD_Tools / MBA: Autodesk社のBonusツール（上記の典型的な許可文つき）。"object code form" に限定されたファイルは除外

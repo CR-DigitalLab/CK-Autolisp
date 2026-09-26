@@ -1,0 +1,35 @@
+   ;  Venetian Blind 
+   ;  Multiple text rejustifier (to fit).
+   ;  Copyright 1991  Rocket Software
+ (DEFUN C:VB ( / ss xa ee num txa nn yy zz st en styl fh hh tt)
+  (setvar "cmdecho" 0)
+  (command "undo" "mark")
+  (prompt "Pick text strings:")
+  (setq ss (ssget)
+        xa (car (setq cc (getpoint "\nPick startpoint:")))
+        ee (car (getpoint cc "\n   ...and otter:"))
+        num 0
+        tt (getvar "textstyle")
+        fh (cdr (assoc 40 (tblsearch "style" tt))))
+  (while (setq txa (ssname ss 0))
+         (setq nn (entget txa))
+         (if (= (cdr (assoc 0 nn)) "TEXT")
+             (progn (setq yy (cddr (assoc 10 nn))
+                          zz (cdr (assoc 1 nn))
+                          num (1+ num)
+                          hh (cdr (assoc 40 nn))
+                          st (cons xa yy )
+                          en (cons ee yy ))
+                    (entdel txa)
+                    (if (= fh 0.0)
+                        (command "text" "f" st en hh zz)
+                        (command "text" "f" st en zz))))
+         (ssdel txa ss))
+   (setq ss nil)
+   (if (> num 0)
+       (progn    
+             (if (= num 1)
+                 (prompt "\n1 line fitted")
+                 (prompt (strcat "\n " (ITOA num) " lines fitted")))
+             (prompt "\n   ...by Nubian slave girls.")))
+ (PRINC))

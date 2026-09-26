@@ -1,0 +1,3 @@
+取得元: https://www.manusoft.com/dl/dwgver.lsp , https://www.manusoft.com/dl/isx64.lsp
+取得日: 2026-09-26
+許可の根拠（各ファイル冒頭）: "This software may be freely modified, distributed, or used for any purpose."

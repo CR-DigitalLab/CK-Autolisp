@@ -1,0 +1,5 @@
+取得元: https://www.cadforum.cz/dl/ascpoint.lsp , https://www.cadforum.cz/dl/roughen.lsp , https://www.cadforum.cz/dl/truegear.zip（TRUEGEAR.LSP）
+取得日: 2026-09-26
+許可の根拠（各ファイル冒頭）:
+- ascpoint.lsp / TRUEGEAR.LSP: "Permission to use, copy, modify, and distribute this software ... without fee is hereby granted..."
+- roughen.lsp: GNU General Public License（改変して配布する場合はGPLに従うこと）

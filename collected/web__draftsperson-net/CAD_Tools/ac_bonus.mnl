@@ -1,0 +1,163 @@
+;;;     AC_BONUS.MNL
+;;;     Copyright (C) 1997 by Autodesk, Inc.
+;;;
+;;;     Created 2/21/97 by Dominic Panholzer
+;;;
+;;;     Permission to use, copy, modify, and distribute this software
+;;;     for any purpose and without fee is hereby granted, provided
+;;;     that the above copyright notice appears in all copies and 
+;;;     that both that copyright notice and the limited warranty and 
+;;;     restricted rights notice below appear in all supporting 
+;;;     documentation.
+;;;
+;;;     AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS.  
+;;;     AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF 
+;;;     MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC. 
+;;;     DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE 
+;;;     UNINTERRUPTED OR ERROR FREE.
+;;;
+;;;     Use, duplication, or disclosure by the U.S. Government is subject to 
+;;;     restrictions set forth in FAR 52.227-19 (Commercial Computer 
+;;;     Software - Restricted Rights) and DFAR 252.227-7013(c)(1)(ii) 
+;;;     (Rights in Technical Data and Computer Software), as applicable. 
+;;;
+;;;     This file is loaded automatically following the menu ACDBONUS.  
+
+
+
+; Place the bonus pulldowns next to the help pulldown
+
+(menucmd "p10=+AC_BONUS.pop1")
+
+; If POPUP.ARX already loaded, mark the menu item
+
+(if (member "popup.arx" (arx))
+  (menucmd "Gac_bonus.id_bnspopup=!.")
+)
+
+
+; ------------------ POPUP LOAD/UNLOAD FUNCTION ------------------
+; This routine works in conjuction with the Bonus\Tools\Popup
+; menu item. The menu item works as a toggle for loading and 
+; unloading POPUP.ARX by using this routine.
+; ----------------------------------------------------------------
+
+; If POPUP.ARX already loaded, mark the menu item
+
+(if (member "popup.arx" (arx))
+  (menucmd "Gac_bonus.id_bnspopup=!.")
+)
+
+(defun c:bonuspopup ()
+ (bonuspopup)
+)
+
+(defun bonuspopup ()
+  (if (member "popup.arx" (arx))
+    (progn
+      (arxunload "popup.arx")
+      (menucmd "Gac_bonus.id_bnspopup=")
+      (prompt "\nType 'bonuspopup' to reload.")
+    )
+    (progn
+      (if (findfile "popup.arx")
+        (progn
+          (arxload "popup.arx")
+          (menucmd "Gac_bonus.id_bnspopup=!.")
+        )
+        (prompt "\nPOPUP.ARX not found. Check your installation directories.")
+      )
+    )
+  )
+  (princ)
+)
+
+; --------------------- ABOUT DIALOG DRIVER ----------------------
+; This routine works in conjuction with BNSABOUT.DCL. It loads
+; and displays the information about the bonus tools stored in
+; BNSABOUT.TXT
+; ----------------------------------------------------------------
+
+(defun c:bnsabout ( / bonusinfo DCL_IDX FIL FP LIN X Y LST)
+
+  (defun bonusinfo (VAL X Y)
+    (and 
+      (= VAL 4)
+      (< 14 X 18)
+      (< 8 Y 14)
+      (if (new_dialog "bnsInfo" DCL_IDX)
+        (progn
+          (setq LST (list "Theo Armour" "Kurt Chase" "Bob Callori"
+                          "Jerry Coley" "Liz Derr" "John Freeman" 
+                          "Jessica Freiberg" "Joshua Harris"
+                          "Randy Kintzley" "Bill Kramer" "Phil Kreiker"
+                          "Duff Kurland" "Henry Lee" "Abhijit Oak"
+                          "Dominic Panholzer" "Jason Pratt"
+                          "Scott Prentice" "Jim Sudduth" "Greg Robinson"
+                          "Paul Vine" "Frank Whaley" "Daniel Yu"
+                          "Your name here?"
+                    );list
+          );setq
+          (mpoplst "lstTeam" LST)
+          (action_tile "accept" "(done_dialog 1)")
+          (setq RETURN (start_dialog))
+         )
+        (alert "Unable to display dialog box")
+      )
+    )
+  )
+  
+  (if (> (setq DCL_IDX (load_dialog "BNSABOUT")) 0)
+    (progn
+      (if (new_dialog "bnsAbout" DCL_IDX)
+
+        (progn
+
+          (if (setq FIL (findfile "BNSABOUT.TXT"))
+            (progn
+              (setq FP (open FIL "r"))
+              (start_list "lstAbout")
+              (while (setq LIN (read-line FP))
+                (add_list LIN)
+              )
+              (end_list)
+              (close FP)
+            )
+          )
+
+          (setq X (dimx_tile "imgAbout")
+                Y (dimy_tile "imgAbout")
+          )
+          (start_image "imgAbout")
+          (slide_image 0 0 X Y "bnsabout")
+          (end_image)
+
+
+          (action_tile "accept" "(done_dialog 1)")
+          (action_tile "imgAbout" "(bonusinfo $reason $X $Y)")
+          (action_tile "help" "(done_dialog 2)")
+
+
+          (setq RETURN (start_dialog))
+
+        ) ; end progn
+        (alert "Unable to display dialog box")
+      ) ; end if new dialog
+      (unload_dialog DCL_IDX)
+    )
+    (alert "Unable to load BNSABOUT.DCL")
+  )
+  
+  (if (= RETURN 2)
+    (progn
+      (prompt"\nLoading Bonus help file...")
+      (help "ac_bonus.hlp")
+    )
+  )
+  
+  (princ)
+);defun
+
+(prompt "\nAutoCAD bonus Menu loaded.")
+
+(princ)

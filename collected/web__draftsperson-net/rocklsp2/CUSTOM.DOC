@@ -1,0 +1,146 @@
+
+I think that a brief diatribe on the subject of customization is in order:
+
+AutoCAD needs to be customized - once one is aware of the possibilities
+inherent in modifying and adding to the basic program, it becomes apparent
+that it was designed and written without trying to add every concievable
+feature in the expectation that each purchaser would modify the program and
+add the commands and functions he required.  A simple and very powerful
+solution to an otherwise unmanageable variety of needs.
+
+Unfortunately having realized this brilliant conception almost no mention
+was made of the intent or of the possibilities.  AutoCAD is sold and used in
+its packaged form, and at best its potential is ignored.  The menu is
+sometimes slightly altered to put the stamp of the corporate ego on it, or
+to use the valuable upper areas to insert a small variety of blocks;
+occasionally the more generic commands are inflated from one square to two
+in case someone can't hit a half-inch square at point blank.
+And there it sits.
+
+What should Autodesk have done?  I can't fault them for wanting to supply a
+program which could be run without diving head first into customizing, but
+the standard menu could have been better laid out, and they might have
+included a couple of different ones just to point out that variations were
+in fact possible.  They also could have revamped it in one of the later
+releases, assuming that they aren't convinced that it's already perfect.
+Certainly it's not practical to design one interface to suit all of the
+things one can do with Autocad, but then, as mentioned, that wasn't really
+the idea, though it has inevitably become the accepted state of affairs.
+
+The obvious point, of course, is that they should be pushing customization
+to the hilt, not just burying it in the back of the manual: Why don't they
+offer special sessions to their dealers so that they can teach the end users
+how to customize Autocad, put a more elaborate and forceful section in the
+manual on modifications (or even make a special pamphlet to include with it
+which operators could copy and keep at their desks - quite often the manuals
+are too sacred for the users to actually touch), mention the point in their
+advertising, ask for comments and ideas about the matter in their
+questionnaires, and generally try to get people to use Autocad rather than
+just tolerate it.
+
+A few related points:
+
+      1.  If you have version 1 of this package you will recognize portions
+of this note as having been attached to the entry for SL.LSP in the index
+file.  I have tried to offer some constructive suggestions here rather than
+just rant as I did last time.
+
+      2.  I seem to criticise Autocad a lot.  You may ascribe my ire to
+irritation at at the few rough spots in what is otherwise such a well
+designed product.  As for the manual, it should recieve the "Shining example
+amid an endless sea of drivel" award - it is about the only well written
+instruction book I have ever seen included with a program.  Those who
+criticise it for not being a tutorial are missing the point.
+
+      3.  Speaking of customizing, I can understand the urge to protect
+programming secrets, but the ability to encrypt Lisp files is, in my
+experience, most often used by zealous supervisors to prevent operators from
+making legitimate changes.  Forgive me if I discount as paranoid fantasies
+the claims by management that their people can't be trusted to not wreck the
+files/network/organizational structure/coffee machine etc.  If your
+employees are really destructive idiots rather than intelligent people
+reduced to a comatose state by victorian working conditions, why do you have
+them doing work which is so important that it must be protected from them?
+  In any case, I don't really think that the hard part of Lisp programming
+is writing the thing, it's having the idea in the first place, which is a
+bit more difficult to encrypt.  Most pirated software is lifted whole for its
+abilities, not dissected as a source of programming techniques.
+  If this feature is absolutely essential why not alter the format of these
+files so you can insert one into one another: If I could put an encrypted
+file inside Acad.lsp and have it function, and if I could tack a file of my
+own onto the end of an encrypted Acad.lsp then I would be able to manipulate
+the system as was intended without the danger of my seeing anyone's amazing
+secret routines.  Alternatively if Autocad would refuse to accept an
+encrypted Acad.lsp file then encrypted files could still be loaded with
+(load "FILENAME") while leaving Acad.lsp free for the user to put his own
+valued routines in.
+  (Workaround for the adventurous: rename Acad.lsp to Crud.lsp.  Make a new
+Acad.lsp containing the line: (LOAD "C:/ACAD/CRUD").  Then put the routines
+you really need in the new Acad.lsp.)
+ If Autodesk wants to sell their product to as many people as possible they
+are going to have to avoid adding features which allow the misguided to chop
+sections out of it: You don't get much advertising mileage or many repeat
+sales out of "You can modify this program so that it's damn nearly useless."
+
+      4.  The people who set up Autocad systems can't be held completely
+responsible for not seeing all the possibilities of the thing, or for
+adopting the traditional stance that employees are little better than
+baboons, but it would not be unreasonable to ask them to innovate a little.
+If you don't want to get into customizing then at least encourage your
+operators to try new ideas.  Maybe ask Autodesk or your dealer to hold a
+training session.
+
+      5.  Before anyone uses the usual comeback, it takes very little time
+to adapt to changes (specifically a new menu) if they are well designed.
+Unless you are actually a turkey masquerading as a computer operator.
+
+
+
+Finally a few suggestions on customization for the converted:
+
+      1.  Most of AutoCAD's various menus and setting files can be changed
+from within a drawing - in many cases this is the easiest way: You don't
+have to quit, make changes, start again, test and repeat: you just shell
+out, edit, and keep going.  I routinely add macros to the pulldowns while in
+a drawing, and even this simple ability makes work much easier: one can
+automate repetitive tasks with little more work than entering them once.
+The process makes a pleasant if brief break from the routine of work and
+keeps ones mind from going completely numb; also it makes the remaining work
+easier and less tedious and saves a lot of the time spent on it.  See the
+notes on building a menu editor into the pulldowns in Sample.pgp.
+
+      2.  The digitizer menu is ripe for revision: why not put the most used
+commands at the top where they aren't covered by the puck when it is on the
+pointing area (leaving your arm hanging off into space), delete all the
+functions you never use, and fill the space with Lisp routines or variants
+on Change and Layer commands and various styles, heights and registrations
+of text and the many other endlessly repeated commands which you are deathly
+sick of typing in.
+
+      3.  If you aren't using Lisp...well, you're reading this so you
+probably are.  If not, you're running AutoCAD at about 10% of what it's
+capable of.  The Lisp manual claims not to be a tutorial but that's how I
+got started; I would caution the novice that the more common pitfalls of
+each command are not documented: you have to be doggedly patient.  I would
+also note that the world needs a Lisp manual documenting for each command
+what it does, the syntax (so far so good), common errors to watch out for,
+and situations where it will be useful.  There may be a book like this, but
+I have yet to find it amidst the mountain of "Here: copy what we did" manuals.
+
+      4.  Customization IS easy, I can't stress the point too heavily.
+Everything you need to know is in the manual, and you can experiment
+fearlessly if you make a few backup files.  You can't hurt AutoCAD.
+As mentioned in the file Sample.pgp, it is worth building an "Edit Menu"
+selection into the pulldown menus; you will find that it gets used
+constantly - anything you repeat more than twice is worth putting into a
+pulldown, and not too many more than that make it a candidate for the
+tablet.  Get into the habit of consciously noticing what you do repeatedly
+that could be made into a single command and put somewhere in the menu
+structure.  And modify and replot the digitizer overlay: I like to make a
+new one about every two weeks, usually there are enough new things I want to
+put on it by then.  Also a bit of ornamentation and (if you have access to a
+pen plotter) some colour are nice: I spend several hours a day looking at
+the digitizer and would rather not have to stare at the usual tattered
+grey rag of electrostatic plotter paper.
+
+
