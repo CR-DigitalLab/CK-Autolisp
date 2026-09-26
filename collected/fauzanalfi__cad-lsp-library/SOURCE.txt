@@ -1,0 +1,6 @@
+取得元: https://github.com/fauzanalfi/cad-lsp-library
+コミット: 385e7664b02bea6b5adaff7091689cc85fc16a52
+取得日: 2026-09-26
+ライセンス: MIT
+収録ファイル数: 2
+除外ファイル数: 0（第三者の著作物を含む可能性があるため）

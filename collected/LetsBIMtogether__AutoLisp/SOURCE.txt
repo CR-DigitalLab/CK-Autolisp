@@ -1,0 +1,6 @@
+取得元: https://github.com/LetsBIMtogether/AutoLisp
+コミット: 7e3cb6c98e19043fed2c4865224fddf7b300a355
+取得日: 2026-09-26
+ライセンス: MIT
+収録ファイル数: 7
+除外ファイル数: 0（第三者の著作物を含む可能性があるため）

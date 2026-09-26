@@ -1,0 +1,6 @@
+取得元: https://github.com/eva-molina/WallForge
+コミット: c698dff393e1dd4bcbf37387eb8eb1f3916e5024
+取得日: 2026-09-26
+ライセンス: MIT
+収録ファイル数: 1
+除外ファイル数: 0（第三者の著作物を含む可能性があるため）

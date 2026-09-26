@@ -1,0 +1,6 @@
+取得元: https://github.com/ankaibua-spec/autolisp-civil-tools
+コミット: 35498af60e7a267a41c14acbbcbefb07b1f21efa
+取得日: 2026-09-26
+ライセンス: GPL-3.0
+収録ファイル数: 9
+除外ファイル数: 0（第三者の著作物を含む可能性があるため）

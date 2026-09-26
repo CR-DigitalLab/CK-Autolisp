@@ -1,0 +1,6 @@
+取得元: https://github.com/FranGarcia94/Copy-bounded-area-AutoCAD
+コミット: 567652f891d2dea2b8ea96926999ecaacca17940
+取得日: 2026-09-26
+ライセンス: GPL-3.0
+収録ファイル数: 2
+除外ファイル数: 0（第三者の著作物を含む可能性があるため）

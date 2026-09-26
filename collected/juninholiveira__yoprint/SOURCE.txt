@@ -1,0 +1,6 @@
+取得元: https://github.com/juninholiveira/yoprint
+コミット: a2e4bedcf56147887c2d713321cd58643aab386f
+取得日: 2026-09-26
+ライセンス: MIT
+収録ファイル数: 3
+除外ファイル数: 0（第三者の著作物を含む可能性があるため）
