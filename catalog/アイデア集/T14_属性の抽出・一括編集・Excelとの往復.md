@@ -18,7 +18,7 @@
 |---|---|---|---|---|---|
 | Global Attribute Extractor & Editor | 英語圏 | 75 | 複数図面の属性を抽出し、その場で編集して戻す | 抽出と編集を1つの画面で往復できる定番 | [開く](https://www.lee-mac.com/macatt.html) |
 | LATT | ヨーロッパ | 73 | 属性同士を連動させ、同じ値・連番・合計を自動更新 | 属性を「表計算のセル」のようにつなげる発想 | [開く](https://lispbox.wordpress.com/2016/10/25/les-lisps-de-patrick-copyright-c-patrick_35/) |
-| 批量制作目录—不开图提取块属性 | 中国語圏 | 70 | 図面を開かずに図枠の属性を抜き出して図面目録を作る | 目録作りに特化していて実務にすぐ効く | [開く](https://bbs.mjtd.com/thread-180962-1-1.html) |
+| 批量制作目录—不开图提取块属性 | 中国語圏 | 70 | 図面を開かずに図枠の属性を抜き出して図面目録を作る | 目録作りに特化していて実務にすぐ効く | [開く](https://bbs.mjtd.com/thread-188813-1-1.html) |
 | EXCELTOCAD – Cad Link Excel | ベトナム・東南アジア | 61 | CADとExcelの間で値を双方向に同期 | Excel側で直した値を図面へ戻せる | [開く](https://kho-lisp-cad.pages.dev/files/thongke/Cad-Link-Excel.lsp) |
 | Batch Attribute Editor | 英語圏 | 70 | 複数図面の属性をまとめて書き換え | 図面を開かずに処理するので速い | [開く](https://www.lee-mac.com/batte.html) |
 
