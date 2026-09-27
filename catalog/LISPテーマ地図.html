@@ -1,0 +1,117 @@
+<title>LISPテーマ地図</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+ --bg:#f4f6f8; --panel:#ffffff; --ink:#141a22; --ink2:#4a5360; --muted:#7a8391; --line:#dde2e8; --grid:#e8ecf0;
+ --s1:#2a78d6; --s2:#eb6834; --hi:#fff4d6; --ring:#ffffff;
+ color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --bg:#111418; --panel:#191d22; --ink:#eef1f4; --ink2:#b6bec8; --muted:#8a93a0; --line:#2c333b; --grid:#242a31;
+ --s1:#3987e5; --s2:#d95926; --hi:#3a3220; --ring:#191d22; color-scheme:dark;}}
+:root[data-theme="dark"]{
+ --bg:#111418; --panel:#191d22; --ink:#eef1f4; --ink2:#b6bec8; --muted:#8a93a0; --line:#2c333b; --grid:#242a31;
+ --s1:#3987e5; --s2:#d95926; --hi:#3a3220; --ring:#191d22; color-scheme:dark;}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;line-height:1.7;padding-inline:16px;padding-block:28px 48px}
+.wrap{max-width:1040px;margin:0 auto;display:grid;gap:22px}
+h1{font-family:"Zen Kaku Gothic New",sans-serif;font-size:1.9rem;margin:0;text-wrap:balance;letter-spacing:.02em}
+.lede{color:var(--ink2);max-width:62ch;margin:.3rem 0 0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.85rem;color:var(--ink2);align-items:center;margin-bottom:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.chart{position:relative;width:100%}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.ax text{fill:var(--muted);font:11px "IBM Plex Mono",monospace}
+.ax line{stroke:var(--grid)}
+.axt{fill:var(--ink2);font:12px "Noto Sans JP",sans-serif}
+.med{stroke:var(--muted);stroke-dasharray:4 4;stroke-width:1}
+.quad{fill:var(--muted);font:600 12px "Zen Kaku Gothic New",sans-serif;letter-spacing:.06em}
+.bub{stroke:var(--ring);stroke-width:2;cursor:pointer;fill-opacity:.85}
+.bub:hover,.bub:focus{fill-opacity:1;outline:none;stroke:var(--ink)}
+.lab{fill:var(--ink);font:500 10.5px "IBM Plex Mono",monospace;pointer-events:none}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:.82rem;box-shadow:0 6px 20px rgba(0,0,0,.12);max-width:300px;z-index:3}
+.tip b{font-family:"Zen Kaku Gothic New",sans-serif}
+.tip .k{color:var(--muted)}
+.num{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.note h3{font-family:"Zen Kaku Gothic New",sans-serif;font-size:1rem;margin:0 0 4px}
+.note p{margin:0;color:var(--ink2);font-size:.9rem}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:760px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:700;color:var(--ink2);cursor:pointer;white-space:nowrap;user-select:none}
+th:focus{outline:2px solid var(--s1)}
+td.r,th.r{text-align:right}
+tr.jp0 td:first-child{box-shadow:inset 3px 0 var(--s2)}
+.chip{display:inline-block;font-size:.72rem;padding:0 7px;border-radius:99px;border:1px solid var(--s2);color:var(--ink);margin-left:6px}
+.small{font-size:.8rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.bub{transition:fill-opacity .15s}}
+</style>
+<div class="wrap">
+ <header>
+  <h1>LISPテーマ地図</h1>
+  <p class="lede">世界のAutoLISP 6,942件を30テーマに分け、「作品の数」と「平均点」で並べた地図です。左上ほど「作品は少ないのに評価が高い」空き地、右側ほど作品があふれた激戦区です。</p>
+ </header>
+ <section class="panel" aria-label="テーマ地図">
+  <div class="legend">
+   <span><span class="sw" style="background:var(--s1)"></span>日本にも作品がある</span>
+   <span><span class="sw" style="background:var(--s2)"></span>日本の作品が0〜1件</span>
+   <span>円の大きさ＝65点以上の作品数</span>
+   <span>点線＝30テーマの中央値</span>
+  </div>
+  <div class="chart" id="chart"><div class="tip" id="tip" hidden></div></div>
+  <p class="small">横軸は対数目盛（件数の差が大きいため）。点数は「使う前に外から見た参考点数」で、実装の速さ・使いやすさ・安定性は含みません。1つのLISPが複数テーマに属する場合は、それぞれで数えています。</p>
+ </section>
+ <section class="notes" aria-label="読み取り">
+  <div class="panel note"><h3>空き地（少ない × 高評価）</h3><p>T01 操作に反応して自動処理、T02 図面を開かずに一括処理、T03 複数図面へ一括実行。作るのは難しいが、作品が少なく評価が高い。</p></div>
+  <div class="panel note"><h3>日本の空白</h3><p>T02・T21 は日本の作品が0件、T01・T20 は1件。世界にはあるのに日本にはほぼ無い＝国内では新しいツールになり得る。</p></div>
+  <div class="panel note"><h3>激戦区（多い × 平均的）</h3><p>T27 測量・土木、T12 文字の置換、T18 画層の整理、T16 数量拾い。似た作品が大量にあり、差をつけるには独自の切り口が要る。</p></div>
+ </section>
+ <section class="panel" aria-label="テーマ一覧表">
+  <div class="tbl"><table id="tbl"><thead><tr>
+   <th data-k="code" tabindex="0">テーマ</th><th data-k="n" class="r" tabindex="0">件数</th><th data-k="avg" class="r" tabindex="0">平均点</th><th data-k="max" class="r" tabindex="0">最高点</th><th data-k="hi" class="r" tabindex="0">65点以上</th><th data-k="jp" class="r" tabindex="0">日本</th><th data-k="easy" class="r" tabindex="0">入手しやすさ</th><th>上位3件</th>
+  </tr></thead><tbody></tbody></table></div>
+  <p class="small">見出しをクリックすると並べ替えます。「入手しやすさ」は、GitHub・直接ダウンロード・配布ページ・ページ内コードのいずれかで入手できそうな割合（見込み）。</p>
+ </section>
+</div>
+<script>
+const D=[{"code": "T01", "name": "操作に反応して自動処理（リアクター）", "n": 40, "avg": 56.9, "max": 81, "hi": 12, "jp": 1, "reg": 8, "easy": 75, "top": ["Layer Director（英語圏・81）", "FLay（英語圏・78）", "Command Reactor（その他の地域・74）"]}, {"code": "T02", "name": "図面を開かずに一括処理", "n": 53, "avg": 52.2, "max": 70, "hi": 10, "jp": 0, "reg": 6, "easy": 89, "top": ["批量制作目录—不开图提取块属性（中国語圏・70）", "DBXscanBlocks（英語圏・69）", "ACCORE（ヨーロッパ・68）"]}, {"code": "T03", "name": "複数図面へのスクリプト一括実行", "n": 75, "avg": 52.0, "max": 75, "hi": 11, "jp": 17, "reg": 8, "easy": 61, "top": ["CAD Batch Runner（英語圏・75）", "Batch Find & Replace Text（英語圏・74）", "Script Magician（英語圏・72）"]}, {"code": "T04", "name": "図枠の自動認識→一括印刷", "n": 139, "avg": 45.7, "max": 80, "hi": 12, "jp": 7, "reg": 8, "easy": 66, "top": ["批量打印-邱枫版 (Batchplot)（中国語圏・80）", "批量打印程序v3.6.1 (秋枫版改)（中国語圏・80）", "智能识别图框批量打印 (@打印输出)（中国語圏・80）"]}, {"code": "T05", "name": "図枠からレイアウト・ビューポートを自動作成", "n": 175, "avg": 44.7, "max": 74, "hi": 5, "jp": 12, "reg": 8, "easy": 68, "top": ["Auto layout LISP（英語圏・74）", "PlotDWGarr + LayDWGarr + wbD（英語圏・74）", "Viewport Legend（英語圏・69）"]}, {"code": "T06", "name": "図枠の属性を自動更新", "n": 89, "avg": 45.9, "max": 74, "hi": 5, "jp": 3, "reg": 8, "easy": 81, "top": ["RenameLOA reactor（英語圏・74）", "@lisp工程管理（中国語圏・71）", "批量制作目录—不开图提取块属性（中国語圏・70）"]}, {"code": "T07", "name": "検図：寸法値の手入力上書きを検出", "n": 53, "avg": 40.3, "max": 73, "hi": 2, "jp": 6, "reg": 8, "easy": 62, "top": ["DIMPOLICE（日本・73）", "OverDimCol (ODC)（英語圏・69）", "DIMSORT（日本・59）"]}, {"code": "T08", "name": "検図：わずかなずれ・隙間・重なりを検出", "n": 81, "avg": 46.5, "max": 72, "hi": 5, "jp": 6, "reg": 8, "easy": 83, "top": ["TxtOverlap（英語圏・72）", "ZureMikke（日本・72）", "定位压线字 (@lisp文本)（中国語圏・70）"]}, {"code": "T09", "name": "新旧図面の差分比較・雲マーク", "n": 33, "avg": 41.8, "max": 80, "hi": 3, "jp": 4, "reg": 8, "easy": 73, "top": ["DiffCheck（GitHub・80）", "阿甘对图器（中国語圏・68）", "修正文字自動赤化（日本・67）"]}, {"code": "T10", "name": "図面の健全性チェック・お掃除", "n": 154, "avg": 41.8, "max": 78, "hi": 3, "jp": 6, "reg": 8, "easy": 78, "top": ["DrawingHealthScore（GitHub・78）", "CAD批量清理与版本转换0.2（中国語圏・66）", "超级批量清理磁盘DWG（中国語圏・66）"]}, {"code": "T11", "name": "文字の重なりを自動で避ける・整列", "n": 136, "avg": 41.8, "max": 77, "hi": 6, "jp": 7, "reg": 8, "easy": 68, "top": ["文字避让 (@lisp文本)（中国語圏・77）", "ZW工具 AW 文字自动避让（中国語圏・74）", "TxtOverlap（英語圏・72）"]}, {"code": "T12", "name": "文字の一括検索・置換", "n": 509, "avg": 42.1, "max": 74, "hi": 11, "jp": 31, "reg": 8, "easy": 74, "top": ["Batch Find & Replace Text（英語圏・74）", "RegExpCnt（英語圏・72）", "Lisp dịch thuật bản vẽ song （ベトナム・東南アジア・70）"]}, {"code": "T13", "name": "図形と数値の連動（フィールド・面積表）", "n": 149, "avg": 48, "max": 75, "hi": 10, "jp": 13, "reg": 8, "easy": 74, "top": ["Area Object Link (AOL)（英語圏・75）", "Areas to Field（英語圏・69）", "TotalArea（ヨーロッパ・68）"]}, {"code": "T14", "name": "属性の抽出・一括編集・Excelとの往復", "n": 201, "avg": 43.4, "max": 75, "hi": 7, "jp": 3, "reg": 8, "easy": 72, "top": ["Global Attribute Extractor &（英語圏・75）", "LATT（ヨーロッパ・73）", "Batch Attribute Editor（英語圏・70）"]}, {"code": "T15", "name": "連番の自動記入", "n": 174, "avg": 50.8, "max": 76, "hi": 12, "jp": 4, "reg": 8, "easy": 64, "top": ["Incremental Numbering Suite（英語圏・76）", "Construction Notes Manager（GitHub・74）", "LATT（ヨーロッパ・73）"]}, {"code": "T16", "name": "数量拾い・集計表", "n": 390, "avg": 45.1, "max": 75, "hi": 7, "jp": 24, "reg": 8, "easy": 65, "top": ["Area Object Link (AOL)（英語圏・75）", "Construction Notes Manager（GitHub・74）", "CNM Tally（GitHub・69）"]}, {"code": "T17", "name": "凡例・画層一覧の自動作成", "n": 48, "avg": 44.9, "max": 73, "hi": 2, "jp": 3, "reg": 7, "easy": 81, "top": ["Automatic Legend from Your L（英語圏・73）", "Viewport Legend（英語圏・69）", "BLegend（英語圏・62）"]}, {"code": "T18", "name": "画層の自動振り分け・標準化", "n": 415, "avg": 38.3, "max": 81, "hi": 8, "jp": 37, "reg": 8, "easy": 78, "top": ["Layer Director（英語圏・81）", "FLay（英語圏・78）", "Command Reactor（その他の地域・74）"]}, {"code": "T19", "name": "ブロックの置換・再定義・自動ブロック化", "n": 335, "avg": 43.4, "max": 73, "hi": 2, "jp": 11, "reg": 8, "easy": 76, "top": ["Sel2BlkRef（英語圏・73）", "分堆建块 (@lisp Block)（中国語圏・71）", "AUTOBK.elf（その他の地域・64）"]}, {"code": "T20", "name": "記号を挿入すると下の線を自動でトリム", "n": 43, "avg": 45.8, "max": 72, "hi": 1, "jp": 1, "reg": 8, "easy": 74, "top": ["Automatic Block Break（英語圏・72）", "BreakAll.lsp（英語圏・64）", "Object Break（英語圏・58）"]}, {"code": "T21", "name": "動かしながら確認できる編集（動的プレビュー）", "n": 47, "avg": 46.3, "max": 74, "hi": 5, "jp": 0, "reg": 6, "easy": 62, "top": ["阿甘动态复制（中国語圏・74）", "阿甘动态复制V4.0自动正交版（中国語圏・74）", "MLeaderSmartAlign（GitHub・69）"]}, {"code": "T22", "name": "曲線に沿った文字・図形の配置", "n": 83, "avg": 40.4, "max": 72, "hi": 1, "jp": 2, "reg": 8, "easy": 72, "top": ["按路线编号 (@lisp Block)（中国語圏・72）", "Align Text to Curve (Auto Re（英語圏・64）", "Create Block Along Alignment（英語圏・59）"]}, {"code": "T23", "name": "分解された表の復元・Excel表の取り込み", "n": 247, "avg": 46.6, "max": 71, "hi": 9, "jp": 22, "reg": 8, "easy": 63, "top": ["WallForge（GitHub・71）", "生成表格 (@lisp文本)（中国語圏・67）", "AutoCAD Excel Interface（英語圏・66）"]}, {"code": "T24", "name": "建築：壁・建具・天井割付の作図", "n": 242, "avg": 41.1, "max": 71, "hi": 5, "jp": 11, "reg": 8, "easy": 70, "top": ["WallForge（GitHub・71）", "hueflow-elev（GitHub・67）", "Lisp bóc tách khối lượng xây（ベトナム・東南アジア・66）"]}, {"code": "T25", "name": "設備：単線→複線化、ダクト・配管の継手", "n": 188, "avg": 41.2, "max": 64, "hi": 0, "jp": 3, "reg": 8, "easy": 58, "top": ["地暖盘管自动绘制 (@lisp暖通)（中国語圏・64）", "FF Black Steel Sprinklers Au（英語圏・59）", "Fire Fighting Auto Connect S（英語圏・59）"]}, {"code": "T26", "name": "設備：器具の自動割付、配線の最短経路", "n": 117, "avg": 37.7, "max": 65, "hi": 1, "jp": 6, "reg": 8, "easy": 42, "top": ["cad-cable-stat 电缆长度自动统计（中国語圏・65）", "地暖盘管自动绘制 (@lisp暖通)（中国語圏・64）", "Draw Electrical Circuits Sho（英語圏・63）"]}, {"code": "T27", "name": "測量・土木：座標・レベル・縦断", "n": 818, "avg": 41.7, "max": 69, "hi": 2, "jp": 36, "reg": 8, "easy": 68, "top": ["Turning Path Tracker（GitHub・69）", "TerrainForge 方格网土方计算（中国語圏・65）", "Automatically Label Attribut（英語圏・64）"]}, {"code": "T28", "name": "作業環境の保存・復元", "n": 223, "avg": 37.2, "max": 80, "hi": 6, "jp": 20, "reg": 8, "easy": 77, "top": ["会话管理 (@lisp会话)（中国語圏・80）", "ZYFTools CAD开图自动选字体（中国語圏・71）", "自动输入法（永久免费）（中国語圏・69）"]}, {"code": "T29", "name": "外部参照の管理", "n": 127, "avg": 38.4, "max": 62, "hi": 0, "jp": 3, "reg": 8, "easy": 76, "top": ["Copy to XRef（英語圏・62）", "dwg2dxf（GitHub・60）", "DBXscanImg（英語圏・59）"]}, {"code": "T30", "name": "AI・OCR・翻訳など新技術との連携", "n": 103, "avg": 44.2, "max": 70, "hi": 4, "jp": 5, "reg": 8, "easy": 77, "top": ["Lisp dịch thuật bản vẽ song （ベトナム・東南アジア・70）", "PDFOCRTEXT PDF转CAD文字OCR（中国語圏・69）", "Lisp đọc bảng biểu OLE bị mấ（ベトナム・東南アジア・66）"]}];
+const W=960,H=520,m={l:56,r:24,t:20,b:52};
+const xs=v=>m.l+(Math.log(v)-Math.log(28))/(Math.log(1000)-Math.log(28))*(W-m.l-m.r);
+const ys=v=>m.t+(1-(v-34)/(60-34))*(H-m.t-m.b);
+const rs=v=>6+Math.sqrt(v)*3.4;
+const med=a=>{const s=[...a].sort((x,y)=>x-y),k=s.length>>1;return s.length%2?s[k]:(s[k-1]+s[k])/2};
+const mn=med(D.map(d=>d.n)),ma=med(D.map(d=>d.avg));
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+const svg=el('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'30テーマの作品数と平均点の散布図'});
+const ax=el('g',{class:'ax'},svg);
+[30,50,100,200,500,1000].forEach(v=>{el('line',{x1:xs(v),x2:xs(v),y1:m.t,y2:H-m.b},ax);const t=el('text',{x:xs(v),y:H-m.b+18,'text-anchor':'middle'},ax);t.textContent=v});
+[35,40,45,50,55,60].forEach(v=>{el('line',{x1:m.l,x2:W-m.r,y1:ys(v),y2:ys(v)},ax);const t=el('text',{x:m.l-8,y:ys(v)+4,'text-anchor':'end'},ax);t.textContent=v});
+const tx=el('text',{x:(W+m.l-m.r)/2,y:H-10,'text-anchor':'middle',class:'axt'},svg);tx.textContent='作品の数（件・対数目盛）';
+const ty=el('text',{x:14,y:(H-m.b+m.t)/2,'text-anchor':'middle',class:'axt',transform:`rotate(-90 14 ${(H-m.b+m.t)/2})`},svg);ty.textContent='平均点';
+el('line',{x1:xs(mn),x2:xs(mn),y1:m.t,y2:H-m.b,class:'med'},svg);
+el('line',{x1:m.l,x2:W-m.r,y1:ys(ma),y2:ys(ma),class:'med'},svg);
+const q1=el('text',{x:m.l+8,y:m.t+14,class:'quad'},svg);q1.textContent='空き地：少ない × 高評価';
+const q2=el('text',{x:W-m.r-8,y:m.t+14,class:'quad','text-anchor':'end'},svg);q2.textContent='定番：多い × 高評価';
+const q3=el('text',{x:W-m.r-8,y:H-m.b-10,class:'quad','text-anchor':'end'},svg);q3.textContent='激戦区：多い × 平均的';
+const q4=el('text',{x:m.l+8,y:H-m.b-10,class:'quad'},svg);q4.textContent='手薄：少ない × 平均的';
+const tip=document.getElementById('tip'),box=document.getElementById('chart');
+const show=(d,cx,cy)=>{tip.innerHTML=`<b>${d.code} ${d.name}</b><br><span class="k">件数</span> <span class="num">${d.n}</span>　<span class="k">平均</span> <span class="num">${d.avg}</span>　<span class="k">最高</span> <span class="num">${d.max}</span><br><span class="k">65点以上</span> <span class="num">${d.hi}</span>件　<span class="k">日本</span> <span class="num">${d.jp}</span>件<br><span class="k">上位：</span>${d.top.join('／')}`;tip.hidden=false;const r=box.getBoundingClientRect(),sx=r.width/W;let L=cx*sx+14,T=cy*sx-10;if(L+300>r.width)L=cx*sx-314;if(L<0)L=4;tip.style.left=L+'px';tip.style.top=T+'px'};
+const hide=()=>{tip.hidden=true};
+[...D].sort((a,b)=>b.hi-a.hi).forEach(d=>{
+ const cx=xs(d.n),cy=ys(d.avg),r=rs(d.hi);
+ const c=el('circle',{cx,cy,r,class:'bub',fill:d.jp<=1?'var(--s2)':'var(--s1)',tabindex:0,'aria-label':`${d.code} ${d.name} 件数${d.n} 平均${d.avg}`},svg);
+ c.addEventListener('mouseenter',()=>show(d,cx,cy));c.addEventListener('mouseleave',hide);
+ c.addEventListener('focus',()=>show(d,cx,cy));c.addEventListener('blur',hide);
+ const left=['T20','T11'].includes(d.code);const t=el('text',{x:left?cx-r-3:cx+r+3,y:cy+4,class:'lab','text-anchor':left?'end':'start'},svg);t.textContent=d.code;
+});
+box.appendChild(svg);
+// table
+const tb=document.querySelector('#tbl tbody');let key='avg',dir=-1;
+function render(){const rows=[...D].sort((a,b)=>(a[key]>b[key]?1:a[key]<b[key]?-1:0)*dir);
+ tb.innerHTML=rows.map(d=>`<tr class="${d.jp<=1?'jp0':''}"><td><span class="num">${d.code}</span> ${d.name}${d.jp<=1?'<span class="chip">日本ほぼ無し</span>':''}</td><td class="r num">${d.n}</td><td class="r num">${d.avg}</td><td class="r num">${d.max}</td><td class="r num">${d.hi}</td><td class="r num">${d.jp}</td><td class="r num">${d.easy}%</td><td class="small">${d.top.join('<br>')}</td></tr>`).join('')}
+document.querySelectorAll('th[data-k]').forEach(th=>{const go=()=>{const k=th.dataset.k;dir=(key===k)?-dir:(k==='code'?1:-1);key=k;render()};th.addEventListener('click',go);th.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})});
+render();
+</script>
