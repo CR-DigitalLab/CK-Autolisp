@@ -5,9 +5,7 @@
 ;;;  YOKERUSET (ショートカット YKS) : 設定画面
 ;;;
 ;;;  対応 : AutoCAD 2027
-;;;  版   : 1.0.1  (2026-09-27)
-;;;         1.0.1: 回転角の記録が省略された文字も対象にする
-;;;                ハッチ(H)ON のとき、ハッチの内側にある文字も外へ逃がす（以前は外形線だけを判定）
+;;;  版   : 1.0.0  (2026-09-27)
 ;;;
 ;;;  ・普段は「文字を選んで Enter」だけ。細かい調整は YKS（設定）で。
 ;;;  ・画面のズーム状態に関係なく、図面の座標だけで判定する。
@@ -29,7 +27,7 @@
     ("LdrDist"  "1.5"  "引出線を付ける移動距離（文字高さの何倍以上）")
     ("UseBlk"   "1"    "ブロックを障害物にする")
     ("UseDim"   "1"    "寸法を障害物にする")
-    ("UseHat"   "0"    "ハッチを障害物にする（外形の四角の内側すべて）")
+    ("UseHat"   "0"    "ハッチを障害物にする（外形の四角）")
     ("FixLay"   ""     "動かさない画層")
     ("IgnLay"   ""     "障害物にしない画層")
     ("MaskFail" "0"    "逃げ場のないマルチテキストに背景マスク")
@@ -215,16 +213,7 @@
 
 (defun yk:add-box (o / bb)
   (if (yk:bb-hit (setq bb (yk:obb-aabb o)) *yk:reg*)
-    ;; マス目への登録は処理範囲の中だけ（大きなハッチなどで遅くならないように）
-    (yk:gadd "YKS"
-             (list (max (car bb) (car *yk:reg*)) (max (cadr bb) (cadr *yk:reg*))
-                   (min (caddr bb) (caddr *yk:reg*)) (min (cadddr bb) (cadddr *yk:reg*)))
-             (list 'B o))))
-
-;;; 外形の四角を「中身ありの四角」として登録
-(defun yk:add-bb-box (bb)
-  (yk:add-box (list (list (/ (+ (car bb) (caddr bb)) 2.0) (/ (+ (cadr bb) (cadddr bb)) 2.0))
-                    '(1.0 0.0) (/ (- (caddr bb) (car bb)) 2.0) (/ (- (cadddr bb) (cadr bb)) 2.0))))
+    (yk:gadd "YKS" bb (list 'B o))))
 
 (defun yk:add-pts (pts closed / prev)
   (setq pts (mapcar 'yk:p2 (vl-remove nil pts)))
@@ -253,7 +242,8 @@
     (progn
       (setq w (- (caddr bb) (car bb)) h (- (cadddr bb) (cadr bb)))
       (if (<= (max w h) (* 8.0 *yk:hav*))
-        (yk:add-bb-box bb)
+        (yk:add-box (list (list (/ (+ (car bb) (caddr bb)) 2.0) (/ (+ (cadr bb) (cadddr bb)) 2.0))
+                          '(1.0 0.0) (/ w 2.0) (/ h 2.0)))
         (yk:add-rect-outline bb)))))
 
 ;;; 曲線を細かい線分に分けて登録
@@ -347,7 +337,7 @@
     ((member typ '("SOLID" "TRACE"))
      (yk:add-pts (mapcar '(lambda (c) (cdr (assoc c ed))) '(10 11 13 12)) T))
     ((= typ "HATCH")
-     (if (and *yk:usehat* (setq bb (yk:bbox e)) (yk:bb-hit bb *yk:reg*)) (yk:add-bb-box bb)))
+     (if (and *yk:usehat* (setq bb (yk:bbox e)) (yk:bb-hit bb *yk:reg*)) (yk:add-rect-outline bb)))
     ((= typ "INSERT") (if *yk:useblk* (yk:add-generic e)))
     ((member typ '("XLINE" "RAY" "VIEWPORT" "POINT")) nil)
     (T (yk:add-generic e))))
@@ -362,7 +352,7 @@
   (setq typ (cdr (assoc 0 ed)) p (yk:p2 (cdr (assoc 10 ed))))
   (cond
     ((= typ "TEXT")
-     (setq a  (cond ((cdr (assoc 50 ed))) (0.0))   ; 回転角が無ければ 0 度
+     (setq a  (cdr (assoc 50 ed))
            tb (textbox ed))
      (if (and tb a)
        (progn
@@ -783,5 +773,5 @@
 
 (defun c:YKS ( ) (c:YOKERUSET))
 
-(princ "\n[YokeruText 1.0.1] 読み込み完了  YOKERU(YK)=文字の重なりを避ける / YOKERUSET(YKS)=設定")
+(princ "\n[YokeruText 1.0.0] 読み込み完了  YOKERU(YK)=文字の重なりを避ける / YOKERUSET(YKS)=設定")
 (princ)

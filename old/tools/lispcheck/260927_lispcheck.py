@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.1'
+VERSION = '0.1.0'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -3380,7 +3380,6 @@ def entmake_core(I, lst):
                  [(c, v) for c, v in pairs[1:] if c not in (5, 330)] + (xdata or []), 'OBJECTS')
         dwg.register(o)
         dwg.sec('OBJECTS').append(o)
-        I.last_made = o.h
         return lst
     # --- 図形
     req = REQUIRED.get(typ, ())
@@ -3421,7 +3420,6 @@ def entmake_core(I, lst):
     o = DObj(full, 'ENTITIES')
     dwg.register(o)
     dwg.ents().append(o)
-    I.last_made = o.h
     return lst
 
 
@@ -3551,27 +3549,13 @@ def _entmod(I, a):
     return a[0]
 
 
-@bi('entmake')
+@bi('entmake entmakex')
 def _entmake(I, a):
     argn(a, 0, 1)
     if not a or a[0] is None:
         I.pending_block = None
         return None
     r = entmake_core(I, a[0])
-    return r
-
-
-@bi('entmakex')
-def _entmakex(I, a):
-    # AutoCAD の entmakex は作った図形の「図形名」を返す（entmake はデータのリストを返す）
-    argn(a, 0, 1)
-    if not a or a[0] is None:
-        I.pending_block = None
-        return None
-    I.last_made = None
-    r = entmake_core(I, a[0])
-    if r is not None and I.last_made is not None:
-        return Ename(I.last_made)
     return r
 
 

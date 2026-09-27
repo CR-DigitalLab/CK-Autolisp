@@ -186,10 +186,10 @@ msp.add_spline([(x + 10, y - 65), (x + 40, y - 58), (x + 70, y - 68), (x + 120, 
 txt("ON-SPLINE", x + 55, y - 65)
 
 # 15 ハッチの上
-x, y = header(14, "ハッチの上の文字", "初期設定（ハッチ＝障害物にしない）では動かない。ハッチ(H)ON にするとハッチの外へ出る（引出線付き）。")
+x, y = header(14, "ハッチの上の文字", "初期設定（ハッチ＝障害物にしない）では動かない。ハッチ(H)ON にすると外形の四角から外へ出る。")
 hatch = msp.add_hatch(color=252, dxfattribs={"layer": "HATCH"})
 hatch.set_pattern_fill("ANSI31", scale=1.0)
-hatch.paths.add_polyline_path([(x + 30, y - 35), (x + 100, y - 35), (x + 100, y - 50), (x + 30, y - 50)], is_closed=True)
+hatch.paths.add_polyline_path([(x + 30, y - 25), (x + 100, y - 25), (x + 100, y - 60), (x + 30, y - 60)], is_closed=True)
 txt("ON-HATCH", x + 55, y - 43)
 
 # 16 重なっていない文字（対照）
