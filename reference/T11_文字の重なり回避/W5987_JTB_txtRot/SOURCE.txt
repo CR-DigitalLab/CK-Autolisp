@@ -1,0 +1,9 @@
+name: txtRot.lsp
+command: txtrot
+author: Jimmy Bergmark (JTB World)
+source_url: https://jtbworld.com/autocad-txtrot-lsp
+download_url: https://jtbworld.com/download/txtRot.lsp
+date: 2026-09-27
+license/terms: Copyright (C) 1997-2012 JTB World, All Rights Reserved（ヘッダ）
+status: 取得済み
+files: txtRot.lsp

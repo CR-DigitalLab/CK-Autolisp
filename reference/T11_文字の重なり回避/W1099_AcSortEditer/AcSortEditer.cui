@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+警告! このファイルの内容を編集しないでください。
+XML エディタなどでこのファイルを編集した場合、カスタマイズとマイグレートの機能に支障をきたします。
+カスタマイズ ファイル内の情報を変更したい場合は、製品の［ユーザ インタフェースをカスタマイズ］ダイアログ ボックスを使用してください。
+［ユーザ インタフェースをカスタマイズ］ダイアログ ボックスを表示するには、［ツール］メニューから［カスタマイズ］ > ［インタフェース］を選択するか、コマンド ラインに CUI と入力します。 
+-->
+<CustSection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <FileVersion MajorVersion="0" MinorVersion="4" IncrementalVersion="1" UserVersion="1" />
+  <Header>
+    <CommonConfiguration>
+      <CommonItems>
+        <ModifiedRev MajorVersion="17" MinorVersion="1" UserVersion="1" />
+      </CommonItems>
+    </CommonConfiguration>
+    <WorkspaceRoot>
+      <WorkspaceConfigRoot />
+    </WorkspaceRoot>
+  </Header>
+  <MenuGroup Name="ACSORTEDITER">
+    <MacroGroup Name="AcSortEditerMacros">
+      <MenuMacro UID="ID_AcSortEditer01">
+        <Macro type="Any">
+          <Revision MajorVersion="16" MinorVersion="2" UserVersion="1" />
+          <ModifiedRev MajorVersion="17" MinorVersion="1" UserVersion="1" />
+          <Name xlate="true" UID="XLS_0002">AcSortEditer</Name>
+          <Command>^C^Cselect;\modemacro;";$M=$(if,$(eq,$(getvar,acadver),$(getvar,)),ai_startapp acsortediter.exe,(startapp $(getvar,modemacro)acsortediter.exe$(getvar,modemacro))(princ)); </Command>
+          <HelpString xlate="true" UID="XLS_0004">一行文字一括整列編集</HelpString>
+          <SmallImage Name="AcSortEditer.bmp" />
+          <LargeImage Name="AcSortEditer.bmp" />
+        </Macro>
+      </MenuMacro>
+    </MacroGroup>
+    <MenuRoot>
+      <AcceleratorRoot />
+      <OverrideRoot />
+      <MouseButtonRoot />
+      <DigitizerButtonRoot />
+      <PopMenuRoot />
+      <ToolbarRoot>
+        <Toolbar ToolbarOrient="floating" ToolbarVisible="show" xval="300" yval="600" rows="1" UID="ID_AcSortEditer">
+          <ModifiedRev MajorVersion="17" MinorVersion="1" UserVersion="1" />
+          <Alias>TB_ACSORTEDITER</Alias>
+          <Alias>ACSORTEDITER</Alias>
+          <Name xlate="true" UID="XLS_0001">AcSortEditer</Name>
+          <ToolbarButton IsSeparator="false" UID="TBBU_0001">
+            <ModifiedRev MajorVersion="17" MinorVersion="1" UserVersion="1" />
+            <Name xlate="true" UID="XLS_0003">AcSortEditer</Name>
+            <MenuItem>
+              <MacroRef MenuMacroID="ID_AcSortEditer01" />
+            </MenuItem>
+          </ToolbarButton>
+        </Toolbar>
+      </ToolbarRoot>
+      <ScreenMenuRoot />
+      <ImageMenuRoot />
+      <TabletMenuRoot />
+      <DoubleClickRoot />
+      <ToolPanelRoot />
+      <PanelSetRoot>
+        <PanelSet UID="PSTU_0001" />
+      </PanelSetRoot>
+    </MenuRoot>
+  </MenuGroup>
+</CustSection>

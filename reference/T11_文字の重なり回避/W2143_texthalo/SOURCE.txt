@@ -1,0 +1,9 @@
+name: Them hao quang cho Text
+command: texthalo
+author: CAD Studio 2018（Express Tools TXTEXP改変）
+source_url: https://github.com/altsun/My-Lisps
+download_url: https://github.com/altsun/My-Lisps
+date: 2026-09-27
+license/terms: ヘッダにAutodesk Express Toolsのライセンス条項あり。リポジトリにLICENSE無し
+status: 取得済み
+files: (texthalo) Them hao quang cho Text.lsp

@@ -1,0 +1,10 @@
+name: 定位重叠字 (@lisp文本)
+command: 定位重叠字/删除重字
+author: VitalGG (@lisp)
+source_url: https://atlisp.cn/package-info/at-text-stable.html
+download_url: git clone https://github.com/atlisp-org/atlisp-packages （at-text/ フォルダ）
+date: 2026-09-27
+license/terms: MIT License (Copyright (c) 2022 vitalgg) — atlisp-packages リポジトリのLICENSE
+status: 取得済み
+files: handle-overlap-text.lsp, menu.lsp, pkg.lsp, README.md, LICENSE
+note: @lisp 基盤ライブラリ(atlisp-lib)上で動作するパッケージ。関数名 @text:locate-overlay-text / @text:delete-overlay-sametext（handle-overlap-text.lsp）

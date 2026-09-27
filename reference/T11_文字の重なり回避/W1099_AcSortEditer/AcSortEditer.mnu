@@ -1,0 +1,20 @@
+//
+//      AcSortEditer AcSortEditer.mnu
+//                  Copyright (C) 2007 OSADA
+
+***MENUGROUP=AcSortEditer
+
+***TOOLBARS
+**TB_ACSORTEDITER
+**ACSORTEDITER
+ID_AcSortEditer [_Toolbar("AcSortEditer", _Floating, _Show, 300, 600, 1)]
+ID_AcSortEditer01 [_Button("AcSortEditer", "AcSortEditer.bmp", "AcSortEditer.bmp")]^C^Cselect;\modemacro;";$M=$(if,$(eq,$(getvar,acadver),$(getvar,)),ai_startapp acsortediter.exe,(startapp $(getvar,modemacro)acsortediter.exe$(getvar,modemacro))(princ));
+
+
+***HELPSTRINGS
+ID_ACSORTEDITER01 [àÍçsï∂éöàÍäáêÆóÒï“èW]
+
+//
+//      AcSortEditer AcSortEditer.mnu
+//
+

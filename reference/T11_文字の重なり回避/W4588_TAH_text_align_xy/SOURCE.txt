@@ -1,0 +1,9 @@
+name: Can le dText theo phuong x-y
+command: TAH
+author: Jeff Foster (TEXTALIGN.lsp 1997)
+source_url: https://github.com/altsun/My-Lisps
+download_url: https://github.com/altsun/My-Lisps
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: (TAH) Can le dText theo phuong x-y.lsp

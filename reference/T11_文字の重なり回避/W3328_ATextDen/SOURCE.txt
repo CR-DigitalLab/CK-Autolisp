@@ -1,0 +1,10 @@
+name: Выравнивание строк "ATextDen" от 05.03.07
+command: -
+author: Денис Флюстиков (Denis Flyustikov), 2007（原型 aMoveTxt by A.V. Babichuk）
+source_url: https://dwg.ru/dnl/200
+download_url: https://dwg.ru/dnl/load/200
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: dnl200.zip, ATextDen.VLX, ATextDen.txt, ATextDen.BMP
+note: ZIP展開済み。本体はVLX。元ファイル名はCP1251のため改名。ダウンロードはログイン不要だった

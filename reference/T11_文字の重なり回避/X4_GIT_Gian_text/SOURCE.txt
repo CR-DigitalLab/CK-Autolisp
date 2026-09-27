@@ -1,0 +1,10 @@
+name: GIT – Lisp giãn các text bị chồng nhau（横断図で重なった文字を等間隔に広げる）
+command: 
+author: Tue_NV (ヘッダ copyright by Tue_NV)
+source_url: https://tonghopkinhnghiem.info/lisp-gian-cac-text-bi-chong-nhau-trong-ban-ve-trac-ngang
+download_url: https://www.mediafire.com/file/5w46zm3a7lfptmz/GIT-Gian_text.lsp.lsp/file
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: GIT-Gian_text.lsp.lsp
+note: ファイル名は配布時のまま（.lsp.lsp）

@@ -1,0 +1,10 @@
+name: テキスト背景マスク
+command: -
+author: JagaimoLisp
+source_url: https://jagaimolisp.com/sample-textmask/
+download_url: (ページ本文のコードブロックを抽出)
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: JagaimoLispTxMask.lsp
+note: ページ本文のコードを抽出して保存（ファイル名は保存時に命名）。UTF-8で保存

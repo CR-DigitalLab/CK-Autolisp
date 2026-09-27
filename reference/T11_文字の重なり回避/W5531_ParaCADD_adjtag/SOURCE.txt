@@ -1,0 +1,10 @@
+name: adjtag.lsp
+command: ADJTAG, SWAPTAG
+author: Henry C. Francis (ParaCADD)
+source_url: https://www.paracadd.com/lisp/lisp_lst.htm#adjtag
+download_url: https://www.paracadd.com/lisp/adjtag.lsp ; 依存: https://www.paracadd.com/lisp/ukword.lsp, https://www.paracadd.com/lisp/upoint.lsp
+date: 2026-09-27
+license/terms: ParaCADD Free Autolisp Page。ヘッダ「All rights reserved」（Henry C. Francis）。補助関数(ukword等)は "Inside AutoLisp" 由来のfreeware（クレジット保持条件）
+status: 取得済み
+files: adjtag.lsp, ukword.lsp, upoint.lsp
+note: 依存ファイル同梱: ukword.lsp, upoint.lsp

@@ -1,0 +1,10 @@
+name: OVLFLAG-bgol（重なり文字の検出・フラグ, コマンド OVFX）
+command: 
+author: BGol Community (thevijayparmar)
+source_url: https://github.com/thevijayparmar/bgol-cad-lisps/tree/main/Text%20Lisps/Find%20Overlapping
+download_url: git clone https://github.com/thevijayparmar/bgol-cad-lisps
+date: 2026-09-27
+license/terms: MIT License
+status: 取得済み
+files: OVLFLAG-bgol.lsp, OVLFLAG-bgol.md, LICENSE
+note: eSurveying の同名ツール(FAS)に相当する独自実装のオープンソース版

@@ -1,0 +1,10 @@
+name: ttext.elf
+command: ttext
+author: CADian（인텔리코리아）公式ボード「CADian 리습 600」
+source_url: https://www.cadian.com/board/board.php?bbsid=file&pg=2&idx=347706
+download_url: https://www.cadian.com/board/attach_download.php?bbsid=file&idx=... (ページの添付リンク、ログイン不要で取得可)
+date: 2026-09-27
+license/terms: 記載なし（CADian公式ボードの無料配布）
+status: 取得済み
+files: ttext.zip, ttext.elf
+note: ZIP展開済み。.elf は CADian 用の暗号化LISP

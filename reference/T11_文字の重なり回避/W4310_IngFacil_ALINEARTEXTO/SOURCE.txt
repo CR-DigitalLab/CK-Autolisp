@@ -1,0 +1,10 @@
+name: Alinear Múltiples Textos
+command: ALINEARTEXTO
+author: Luis Cárdenas (Ingeniería Fácil)
+source_url: https://ingenieriafacil.com/recursos.html
+download_url: https://ingenieriafacil.com/wp-content/uploads/2024/05/ALINEARTEXTO.zip
+date: 2026-09-27
+license/terms: 記載なし（無料リソースとして公開）
+status: 取得済み
+files: ALINEARTEXTO.zip, ALINEARTEXTO.LSP
+note: ZIP展開済み

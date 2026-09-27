@@ -1,0 +1,10 @@
+name: textinbox 文字定点在方格内
+command: textinbox
+author: 841594 (2005)
+source_url: https://github.com/zhugecaomao/AutoLISP/blob/main/417155_textinbox.lsp
+download_url: https://github.com/zhugecaomao/AutoLISP/blob/main/417155_textinbox.lsp
+date: 2026-09-27
+license/terms: リポジトリにLICENSE無し（収集リポジトリ）
+status: 取得済み
+files: 417155_textinbox.lsp
+note: GBKエンコード

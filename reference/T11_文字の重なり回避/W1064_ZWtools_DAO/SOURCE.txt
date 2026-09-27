@@ -1,0 +1,10 @@
+name: ZW工具 DAO 文字上下颠倒排列
+command: DAO
+author: y1991427360s
+source_url: https://github.com/y1991427360s/zwcad-autolisp-tools
+download_url: git clone https://github.com/y1991427360s/zwcad-autolisp-tools
+date: 2026-09-27
+license/terms: リポジトリにLICENSE無し（ZWCAD 2026向け）
+status: 取得済み
+files: AA整合版本.lsp, README.md, 命令索引.md
+note: AA整合版本.lsp に全コマンドが統合されている（該当 defun: c:DAO 9135行付近）

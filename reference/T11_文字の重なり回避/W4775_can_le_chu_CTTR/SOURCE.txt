@@ -1,0 +1,9 @@
+name: can_le_chu_(CTTR - CNN - CPP - CGG)
+command: CTTR,CNN,CPP,CGG
+author: CadViet.com 収集
+source_url: https://kho-lisp-cad.pages.dev/files/text/36.-can_le_chu_-CTTR-CNN-CPP-CGG.lsp
+download_url: https://kho-lisp-cad.pages.dev/files/text/36.-can_le_chu_-CTTR-CNN-CPP-CGG.lsp
+date: 2026-09-27
+license/terms: サイト上で無料配布と記載（個別ライセンス記載なし）
+status: 取得済み
+files: 36.-can_le_chu_-CTTR-CNN-CPP-CGG.lsp

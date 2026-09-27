@@ -1,0 +1,9 @@
+name: LTR
+command: LTR
+author: Jeffery P. Sanders（依頼者 Jamey Westmoreland）
+source_url: https://jefferypsanders.com/autolisp_examp.html
+download_url: https://jefferypsanders.com/LTR.lsp
+date: 2026-09-27
+license/terms: 記載なし（AutoLISP例題として無料公開）
+status: 取得済み
+files: LTR.lsp

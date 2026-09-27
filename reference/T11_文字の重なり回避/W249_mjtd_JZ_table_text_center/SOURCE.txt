@@ -1,0 +1,10 @@
+name: 表格内文字居中
+command: -
+author: 明经CAD社区 投稿者（thread-175208）
+source_url: https://bbs.mjtd.com/thread-175208-1-1.html
+download_url: (投稿本文のコードを抽出)
+date: 2026-09-27
+license/terms: 記載なし（源码共享板）
+status: 取得済み
+files: JZ.lsp
+note: 投稿本文のコードを抽出して保存（ファイル名は保存時に命名）。ページと同じGBKで保存

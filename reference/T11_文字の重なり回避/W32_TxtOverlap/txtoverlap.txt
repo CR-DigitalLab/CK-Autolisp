@@ -1,0 +1,43 @@
+TXTOVERLAP - find and traverse overlapping texts in AutoCAD
+  (C)2013, CAD Studio a.s.          http://www.cadstudio.cz
+-------------------------------------------------------------
+
+TxtOverlap a LISP utility for AutoCAD 2008 and higher. It checks
+selected drawing texts for overlaps, highlights these overlaps
+and allows to zoom/traverse through the individual overlap spots.
+
+Load this utility with _APPLOAD.
+
+Start TxtOverlap by typing the TXTOVERLAP command.
+TxtOverlap prompts to select text objects - All (all), Layer
+(text objects on a specified layer), Selected (text objects
+you select) and then checks the specified objects. Please note
+that these N:N intersection checks can take a quite long time
+on large drawings.
+All overlaps are marked by red points (Point entities on the
+TXTOVERLAP layer). The option Deletemarks will erase all
+such marks (also automatically deleted when you re-run the check).
+
+You can use the PDMODE and PDSIZE variables to set the shape
+and size of the collision marks.
+
+The additional commands NEXTOVERLAP and PREVOVERLAP allow
+to go through the individual overlaps (marks) by zooming
+to the overlap area. The zoom level is controlled by the
+TEXTSIZE variable. You can also influence it with the LISP
+variable TxtOverlapZoomFactor:
+(setq TxtOverlapZoomFactor 20.0)
+
+You can assign the NEXTOVERLAP command to a hotkey or to a
+menu icon.
+
+Hint: disable UNDO to speed-up overlap checks on large drawings
+
+License: TXTOVERLAP is a free utility by CAD Studio, do not
+publish it online on other than CADstudio's web servers.
+
+--------------------------------------------------------------
+Contact:
+CAD Studio a.s.
+Tylova 17, 370 01 Ceske Budejovice, Czech Republic
+info@cadstudio.cz    www.cadstudio.cz    www.cadforum.cz

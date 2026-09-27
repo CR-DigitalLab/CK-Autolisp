@@ -1,0 +1,9 @@
+name: MLeaderSmartAlign
+command: MSA7 / MLEADERSMARTALIGN
+author: Pavel Ivashin
+source_url: https://github.com/ivashinpavel07/AutoCAD-AutoLISP-MLeaderSmartAlign
+download_url: git clone https://github.com/ivashinpavel07/AutoCAD-AutoLISP-MLeaderSmartAlign
+date: 2026-09-27
+license/terms: MIT License
+status: 取得済み
+files: MLeaderSmartAlign_v07.lsp, MLeaderSmartAlign_v05.lsp, README.md, LICENSE, CHANGELOG.md

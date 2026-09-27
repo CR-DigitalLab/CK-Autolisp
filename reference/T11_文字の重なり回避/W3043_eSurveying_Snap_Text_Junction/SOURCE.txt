@@ -1,0 +1,10 @@
+name: Snap Text
+command: SNT
+author: eSurveying Softech
+source_url: https://esurveying.net/free-lisp/snap-text-to-junction-point
+download_url: Google Drive (docs.google.com/uc?export=download...) — 配布ページ記載のリンク
+date: 2026-09-27
+license/terms: 無料配布（Free Lisp）。ソース非公開
+status: 取得済み
+files: 119_Snap_Junction.FAS, 119_Snap_Junction.des
+note: .FAS=AutoCAD用、.des=BricsCAD用（いずれもコンパイル/暗号化済み）

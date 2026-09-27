@@ -1,0 +1,10 @@
+name: Tekst izometryczny
+command: -
+author: kojacek (2002/2016)
+source_url: https://kojacek.wordpress.com/2016/12/07/tekst-izometryczny/
+download_url: (ページ本文のコードブロックを抽出)
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: ITEXT.lsp
+note: ページ本文のコードを抽出して保存（ファイル名は保存時に命名）。CADPL-Pack（cd: 関数ライブラリ）が必要

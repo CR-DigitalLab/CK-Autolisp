@@ -1,0 +1,9 @@
+name: TE
+command: te
+author: adalkondan
+source_url: https://github.com/adalkondan/AutoCAD-LISP-files
+download_url: https://github.com/adalkondan/AutoCAD-LISP-files
+date: 2026-09-27
+license/terms: MIT License
+status: 取得済み
+files: TE.LSP, LICENSE

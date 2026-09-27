@@ -1,0 +1,10 @@
+name: paramask.lsp
+command: DEMASK, HDMATCH, HDSPACE, HDUPD, PARAMASK, PMASK
+author: Henry C. Francis (ParaCADD)
+source_url: https://www.paracadd.com/lisp/lisp_lst.htm#paramask
+download_url: https://www.paracadd.com/lisp/paramask.lsp ; 依存: https://www.paracadd.com/lisp/ddhtext.dcl, https://www.paracadd.com/lisp/uint.lsp, https://www.paracadd.com/lisp/ukword.lsp, https://www.paracadd.com/lisp/ustr.lsp
+date: 2026-09-27
+license/terms: ParaCADD Free Autolisp Page。ヘッダ「All rights reserved」（Henry C. Francis）。補助関数(ukword等)は "Inside AutoLisp" 由来のfreeware（クレジット保持条件）
+status: 取得済み
+files: paramask.lsp, ddhtext.dcl, uint.lsp, ukword.lsp, ustr.lsp
+note: 依存ファイル同梱: ddhtext.dcl, uint.lsp, ukword.lsp, ustr.lsp

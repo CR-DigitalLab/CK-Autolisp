@@ -1,0 +1,10 @@
+name: ch5 字体两头对齐
+command: ch5
+author: 不明
+source_url: https://github.com/zhugecaomao/AutoLISP/blob/main/ch5-%E5%AD%97%E4%BD%93%E5%AF%B9%E9%BD%90.lsp
+download_url: https://github.com/zhugecaomao/AutoLISP/blob/main/ch5-%E5%AD%97%E4%BD%93%E5%AF%B9%E9%BD%90.lsp
+date: 2026-09-27
+license/terms: リポジトリにLICENSE無し（収集リポジトリ）
+status: 取得済み
+files: ch5-字体对齐.lsp
+note: GBKエンコード。候補URLのファイル名は「字体对齐」

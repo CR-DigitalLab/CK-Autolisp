@@ -1,0 +1,10 @@
+name: 对齐图素
+command: 对齐图素
+author: print1985（@lisp パッケージ化 vitalgg）
+source_url: https://atlisp.cn/package-info/align-all-stable.html
+download_url: git clone https://github.com/atlisp-org/atlisp-packages （align-all/ フォルダ）
+date: 2026-09-27
+license/terms: atlisp-packages リポジトリはMIT License。pkg.lsp に :OPENSOURCE 0 の記載あり
+status: 取得済み
+files: align-all.lsp, pkg.lsp, README.md, LICENSE
+note: @lisp 基盤ライブラリ上で動作

@@ -1,0 +1,10 @@
+name: TxtOverlap
+command: TXTOVERLAP
+author: CAD Studio a.s. (2013)
+source_url: https://www.cadforum.cz/en/download.asp?fileID=1960
+download_url: https://www.cadforum.cz/dl/txtoverlap.zip
+date: 2026-09-27
+license/terms: free utility by CAD Studio。CAD Studio以外のWebサーバでの公開禁止（同梱txt）
+status: 取得済み
+files: txtoverlap.zip, TxtOverlap.VLX, txtoverlap.txt
+note: ZIP展開済み。本体はVLX（コンパイル済み）

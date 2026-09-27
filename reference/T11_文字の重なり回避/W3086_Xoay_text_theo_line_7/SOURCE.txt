@@ -1,0 +1,9 @@
+name: Xoay text theo line (7)
+command: 7
+author: Ketxu
+source_url: https://kho-lisp-cad.pages.dev/files/text/25.-Xoay-text-theo-line-7.lsp
+download_url: https://kho-lisp-cad.pages.dev/files/text/25.-Xoay-text-theo-line-7.lsp
+date: 2026-09-27
+license/terms: サイト上で無料配布と記載（個別ライセンス記載なし）
+status: 取得済み
+files: 25.-Xoay-text-theo-line-7.lsp

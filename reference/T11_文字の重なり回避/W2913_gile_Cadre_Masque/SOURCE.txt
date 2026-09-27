@@ -1,0 +1,10 @@
+name: Cadre&Masque
+command: ct / mt
+author: Gilles Chanteau (gile) 2007
+source_url: https://gilecad.azurewebsites.net/Lisp.aspx
+download_url: https://gilecad.azurewebsites.net/LISP/Cadre&Masque.lsp
+date: 2026-09-27
+license/terms: 記載なし（無料公開）
+status: 取得済み
+files: Cadre&Masque.lsp
+note: Latin-1(Windows-1252)エンコード

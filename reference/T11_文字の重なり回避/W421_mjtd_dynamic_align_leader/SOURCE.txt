@@ -1,0 +1,10 @@
+name: 动态对齐箭头 引线+文字
+command: -
+author: 1028695446（明经CAD社区, 2019）
+source_url: https://bbs.mjtd.com/thread-180418-1-1.html
+download_url: (投稿本文のコードを抽出)
+date: 2026-09-27
+license/terms: 記載なし（源码共享板）
+status: 取得済み
+files: dynamic_align_leader.lsp
+note: 投稿本文のコードを抽出して保存（冒頭の説明文は除外、ファイル名は保存時に命名）。ページと同じGBKで保存

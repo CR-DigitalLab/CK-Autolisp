@@ -1,0 +1,9 @@
+name: DynSpacing (DSPC)
+command: DSPC
+author: CAD Studio / CAD Forum
+source_url: https://www.cadforum.cz/en/download.asp?fileID=3006
+download_url: https://www.cadforum.cz/dl/dynspacing.vlx
+date: 2026-09-27
+license/terms: CAD Studio/CAD Forum freeware（「Free applications and CAD utilities (mostly our freeware & trials)」）
+status: 取得済み
+files: dynspacing.vlx

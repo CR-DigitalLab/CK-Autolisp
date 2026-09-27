@@ -1,0 +1,10 @@
+name: Ausricht
+command: -
+author: CADwiesel
+source_url: https://www.cadwiesel.de/index.php?hp=downloads
+download_url: https://www.cadwiesel.de/cw_download_01.php?id=191
+date: 2026-09-27
+license/terms: kostenlos（無料）表示
+status: 取得済み
+files: Ausricht.zip, Ausricht.LSP
+note: ZIP展開済み

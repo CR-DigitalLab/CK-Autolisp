@@ -1,0 +1,9 @@
+name: DL
+command: DL
+author: Terry Miller
+source_url: https://autolisp-exchange.com/LISP/DL.lsp
+download_url: https://autolisp-exchange.com/LISP/DL.lsp
+date: 2026-09-27
+license/terms: ヘッダに特段の条項なし（AutoLISP Exchange 無料公開）
+status: 取得済み
+files: DL.lsp

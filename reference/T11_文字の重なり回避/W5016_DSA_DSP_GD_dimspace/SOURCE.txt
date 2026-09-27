@@ -1,0 +1,10 @@
+name: Can khoang cach giua cac lop Dim
+command: DSA,DSP,GD
+author: 不明
+source_url: https://github.com/altsun/My-Lisps
+download_url: https://github.com/altsun/My-Lisps
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: (DSA-DSP-GD) Can khoang cach giua cac lop Dim.VLX
+note: VLX（コンパイル済み）のみ

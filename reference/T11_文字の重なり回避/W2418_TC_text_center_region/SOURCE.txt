@@ -1,0 +1,9 @@
+name: Can dText vao chinh giua vung kin
+command: TC
+author: cadviet.com フォーラム
+source_url: https://github.com/altsun/My-Lisps
+download_url: https://github.com/altsun/My-Lisps
+date: 2026-09-27
+license/terms: ヘッダ「free lisp from cadviet.com」
+status: 取得済み
+files: (TC) Can dText vao chinh giua vung kin.lsp

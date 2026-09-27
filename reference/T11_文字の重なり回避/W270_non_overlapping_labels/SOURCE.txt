@@ -1,0 +1,9 @@
+name: non_overlapping_labels
+command: non_overlapping_labels
+author: Gyanendra Gurung (moostang)
+source_url: https://github.com/moostang/autolisp
+download_url: https://github.com/moostang/autolisp/blob/master/_non_overlapping_labels.lsp
+date: 2026-09-27
+license/terms: リポジトリにLICENSE無し
+status: 取得済み
+files: _non_overlapping_labels.lsp, README.md

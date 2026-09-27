@@ -1,0 +1,10 @@
+name: tal.elf
+command: TAL
+author: CADian（인텔리코리아）公式ボード「CADian 리습 600」
+source_url: https://www.cadian.com/board/board.php?bbsid=file&idx=348216
+download_url: https://www.cadian.com/board/attach_download.php?bbsid=file&idx=... (ページの添付リンク、ログイン不要で取得可)
+date: 2026-09-27
+license/terms: 記載なし（CADian公式ボードの無料配布）
+status: 取得済み
+files: tal (2).zip, tal.elf
+note: ZIP展開済み。.elf は CADian 用の暗号化LISP

@@ -1,0 +1,10 @@
+name: 文字位置揃え
+command: -
+author: ekakio (はてなブログ)
+source_url: https://ekakio.hatenablog.jp/entry/lisp-do-text-align
+download_url: (ページ本文のコードブロックを抽出)
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: XS.lsp
+note: ページ本文のコードを抽出して保存（ファイル名は保存時に命名）。UTF-8で保存（ページの表記のまま。¥n 等も原文通り）

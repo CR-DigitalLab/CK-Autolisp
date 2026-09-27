@@ -1,0 +1,10 @@
+name: Align Tools (функционал Corel Draw в AutoCAD)
+command: Align Tools
+author: dwg.ru 投稿者（Align Tools 2025.12.29）
+source_url: https://dwg.ru/dnl/15888
+download_url: https://dwg.ru/dnl/load/15888
+date: 2026-09-27
+license/terms: 記載なし（dwg.ru で無料ダウンロード）
+status: 取得済み
+files: dnl15888.zip, AlignTools_advanced.dcl, AlignTools_advanced.lsp, B_01_AL.bmp, B_02_ACX.bmp, B_03_AR.bmp, B_04_AT.bmp, B_05_ACY.bmp, B_06_AB.bmp, B_07_RL.bmp, B_08_RCX.bmp, B_09_RR.bmp, B_10_RT.bmp, B_11_RCY.bmp, B_12_RB.bmp, B_13_RZX.bmp, B_14_RZY.bmp, readme advaced.txt, test.dwg, Снимок экрана 2025-11-25 110917.png, Снимок экрана 2025-11-27 161811.png
+note: ZIP展開済み（元ファイル名はCP1251のロシア語名のため dnl15888.zip に改名）。ダウンロードはログイン不要だった（コメントのみ要登録）

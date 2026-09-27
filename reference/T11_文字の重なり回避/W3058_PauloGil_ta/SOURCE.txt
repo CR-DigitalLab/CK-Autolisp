@@ -1,0 +1,10 @@
+name: ta.lsp
+command: ta
+author: c:ta の原作者は Alan J. Thompson（v1.5 2009）。Paulo Gil Soto が収集・統合
+source_url: https://paulogilsoto.blogspot.com/2009/07/las-rutinas-lisp-que-uso.html
+download_url: http://www.mediafire.com/?f090hbv17ux6xj9 (→ https://www.mediafire.com/file/f090hbv17ux6xj9 / Lisp_pgil3.rar)
+date: 2026-09-27
+license/terms: 記載なし（ブログで個人収集ルーチン集として配布）
+status: 取得済み
+files: Lisp_pgil3.rar, newlisp_Gil.lsp
+note: 書庫(1000超ファイル)は同梱、展開物は該当の統合ファイル newlisp_Gil.lsp のみ保存（c:ta は10997行付近）。同梱 newlisp.lsp は同一内容

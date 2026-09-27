@@ -1,0 +1,9 @@
+name: MFuehrRotate
+command: mfrot
+author: Jörn Bosse (2020-11-23)
+source_url: https://bosse-engineering.com/LISP-Tools/freeware.html
+download_url: https://bosse-engineering.com/JB_Data/LISP-Tools/Freeware/MFuehrRotate.lsp
+date: 2026-09-27
+license/terms: Freeware（無料ダウンロード可、サポート・保証なし と記載）
+status: 取得済み
+files: MFuehrRotate.lsp

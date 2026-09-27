@@ -1,0 +1,10 @@
+name: Rutina Lisp que rota los textos seleccionados 180 grados sobre su punto base
+command: -
+author: DevCADLisp
+source_url: https://www.devcadlisp.com/rutinas/rutina-lisp-que-rota-los-textos-seleccionados-180-grados-sobre-su-punto-base/
+download_url: https://www.devcadlisp.com/descarga/5795
+date: 2026-09-27
+license/terms: VLXは無料ダウンロード可だが、利用には DevCADLisp の有料「Suscripción de uso de Rutinas」（ルーチン利用サブスクリプション）が必要と案内
+status: 取得済み
+files: Rotar textos 180 grados sobre su punto base.VLX
+note: VLX（コンパイル済み）のみ。候補一覧では「有料」扱い（利用は有料サブスクリプション）

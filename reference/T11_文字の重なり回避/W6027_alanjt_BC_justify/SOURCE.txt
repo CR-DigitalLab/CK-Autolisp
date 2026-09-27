@@ -1,0 +1,10 @@
+name: BC
+command: BC
+author: Alan J. Thompson (CADTutor)
+source_url: https://www.cadtutor.net/forum/topic/14279-alanjts-misc-useful-lisp-routines/
+download_url: (ページ本文のコードブロックを抽出)
+date: 2026-09-27
+license/terms: フォーラム投稿（ライセンス記載なし）
+status: 取得済み
+files: justify_JC_JL_JR_BC_TC.lsp
+note: ページ本文のコードを抽出して保存（ファイル名は保存時に命名）。JC/JL/JR/BC/TC が1つの投稿に同梱（本項目は c:BC）

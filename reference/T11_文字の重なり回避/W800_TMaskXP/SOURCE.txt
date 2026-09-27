@@ -1,0 +1,9 @@
+name: TMaskXP
+command: TMASKXP
+author: CAD Forum (www.cadforum.cz)
+source_url: https://www.cadstudio.cz/dl_file.asp?ID=3280
+download_url: https://www.cadforum.cz/dl/tmaskxp.lsp
+date: 2026-09-27
+license/terms: CAD Studio/CAD Forum freeware（「Free applications and CAD utilities (mostly our freeware & trials)」）
+status: 取得済み
+files: tmaskxp.lsp

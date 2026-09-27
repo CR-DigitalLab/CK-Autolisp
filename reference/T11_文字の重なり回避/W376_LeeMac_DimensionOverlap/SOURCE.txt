@@ -1,0 +1,9 @@
+name: Dimension Overlap
+command: dimoverlap
+author: Lee Mac
+source_url: https://www.lee-mac.com/dimoverlap.html
+download_url: https://www.lee-mac.com/lisp/DimensionOverlapV1-3.lsp
+date: 2026-09-27
+license/terms: Lee Mac Terms of Use: 私的利用・組織内利用は無料で使用/複製/改変可、ヘッダ保持必須、再配布は作者の書面同意が必要（https://www.lee-mac.com/terms.html）
+status: 取得済み
+files: DimensionOverlapV1-3.lsp

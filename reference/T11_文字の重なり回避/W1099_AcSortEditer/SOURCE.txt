@@ -1,0 +1,10 @@
+name: AcSortEditer
+command: -
+author: OSADA
+source_url: https://www.vector.co.jp/soft/win95/business/se438184.html
+download_url: https://ftp.vector.co.jp/45/92/1888/AcSortEditer2.1.lzh
+date: 2026-09-27
+license/terms: フリーソフト、著作権は作者OSADA、再配布禁止（Readme）
+status: 取得済み
+files: AcSortEditer2.1.lzh, Readme.txt, AcSortEditer.exe, AcSortEditer.chm, AcSortEditer.cui, AcSortEditer.mnu, AcSortEditer.bmp
+note: LZH展開済み。LISPではなく .NET 製 Windows 実行ファイル(.exe)＋メニュー(.cui/.mnu)。ソースなし

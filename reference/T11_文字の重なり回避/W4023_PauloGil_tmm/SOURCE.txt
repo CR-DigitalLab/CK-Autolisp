@@ -1,0 +1,10 @@
+name: tmm.lsp
+command: tmm
+author: 原作 TXTSTACK.LSP (C)1998 Terry W. Dotson。Paulo Gil Soto が tmm として収集
+source_url: https://paulogilsoto.blogspot.com/2009/07/las-rutinas-lisp-que-uso.html
+download_url: http://www.mediafire.com/?f090hbv17ux6xj9 (→ https://www.mediafire.com/file/f090hbv17ux6xj9 / Lisp_pgil3.rar)
+date: 2026-09-27
+license/terms: 記載なし（ヘッダに (C)1998 Terry W. Dotson）
+status: 取得済み
+files: newlisp_Gil.lsp
+note: c:Tmm は newlisp_Gil.lsp 11667行付近。元の書庫 Lisp_pgil3.rar は W3058_PauloGil_ta フォルダに保存

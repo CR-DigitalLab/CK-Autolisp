@@ -1,0 +1,10 @@
+name: Lisp căn lề text Left, Center, Right, Fit
+command: -
+author: CADViet フォーラム投稿者（topic 13440）
+source_url: https://www.cadviet.com/forum/index.php?app=forums&module=forums&controller=topic&id=13440
+download_url: (スレッド本文のコードブロックを抽出)
+date: 2026-09-27
+license/terms: 記載なし（フォーラム投稿）
+status: 取得済み
+files: ft_post_block0.lsp, ft_post_block1.lsp, ft_post_block3.lsp, ft_post_block8.lsp
+note: スレッド内の重複を除いた各版のコードブロック（ページ内の出現順番号をファイル名に付与、最後のものが最新版と思われる）。UTF-8で保存。候補ではログイン必要とされていたがコードは本文で公開されていた

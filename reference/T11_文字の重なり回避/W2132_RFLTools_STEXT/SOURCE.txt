@@ -1,0 +1,10 @@
+name: STEXT
+command: STEXT
+author: RFLTools (Robert Lang)
+source_url: https://github.com/RFLTools/RFLTools
+download_url: https://github.com/RFLTools/RFLTools/blob/master/Align/Commands/CSText.lsp
+date: 2026-09-27
+license/terms: GPL-3.0
+status: 取得済み
+files: CSText.lsp, LICENSE
+note: LoadRFLTools.lsp にも同一定義あり

@@ -1,0 +1,9 @@
+name: adx.lsp
+command: ADX
+author: David Harrington (CADALYST Tip 2200, 2007)
+source_url: https://www.paracadd.com/lisp/lisp_lst.htm#ADX
+download_url: https://www.paracadd.com/lisp/ADX.LSP
+date: 2026-09-27
+license/terms: (c) 2007 David Harrington / CADALYST Tip。ParaCADD で無料掲載
+status: 取得済み
+files: ADX.LSP

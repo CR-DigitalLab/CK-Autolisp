@@ -1,0 +1,10 @@
+name: DTT – Dan Text（重なった文字を等間隔に広げる）
+command: 
+author: Tue_NV (cadviet.com)
+source_url: https://kho-lisp-cad.pages.dev/
+download_url: https://kho-lisp-cad.pages.dev/files/text/111.-DTT-Dan-Text.lsp
+date: 2026-09-27
+license/terms: ヘッダ「free lisp from cadviet.com」
+status: 取得済み
+files: 111.-DTT-Dan-Text.lsp
+note: X4 (GIT) と同一アルゴリズムの別名版（原典 cadviet topic 13203 のヘッダ付き）

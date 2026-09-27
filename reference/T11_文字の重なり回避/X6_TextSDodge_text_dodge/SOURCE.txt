@@ -1,0 +1,10 @@
+name: TextSDodge（重叠文字避让：単線文字が他図形と重なる/交差する時に空き位置へ自動移動）
+command: 
+author: 不明（GitCode Premium-Resources 再配布、原作者記載なし）
+source_url: https://gitcode.com/Premium-Resources/c8d9f
+download_url: git clone https://gitcode.com/Premium-Resources/c8d9f
+date: 2026-09-27
+license/terms: リポジトリに MIT License（テンプレートのまま "[year] [fullname]"）。原作者の許諾は不明
+status: 取得済み
+files: 重叠文字避让.rar, TextSDodge.lsp, TextSDodge.dcl, TextsDodge.prv, 重叠文字避让.VLX, README.md, LICENSE
+note: RAR展開済み（libarchiveで展開）。ソース(.lsp/.dcl, GBK)と同内容のVLXを同梱。コマンド TextSDodge / TD。重なり自動回避そのものを行う本格的な実装

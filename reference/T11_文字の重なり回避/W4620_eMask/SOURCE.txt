@@ -1,0 +1,9 @@
+name: eMask
+command: MLMASK
+author: reqayasa
+source_url: https://github.com/reqayasa/autolisp-collection
+download_url: https://github.com/reqayasa/autolisp-collection/blob/main/eMask.lsp
+date: 2026-09-27
+license/terms: リポジトリにLICENSE無し
+status: 取得済み
+files: eMask.lsp, README.md

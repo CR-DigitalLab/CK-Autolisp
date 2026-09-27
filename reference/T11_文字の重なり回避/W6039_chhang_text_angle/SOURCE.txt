@@ -1,0 +1,10 @@
+name: chhang 批量修改文字角度
+command: chhang
+author: 不明
+source_url: https://github.com/zhugecaomao/AutoLISP/blob/main/chhang-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9%E6%96%87%E5%AD%97%E8%A7%92%E5%BA%A6.lsp
+download_url: https://github.com/zhugecaomao/AutoLISP/blob/main/chhang-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9%E6%96%87%E5%AD%97%E8%A7%92%E5%BA%A6.lsp
+date: 2026-09-27
+license/terms: リポジトリにLICENSE無し（収集リポジトリ）
+status: 取得済み
+files: chhang-批量修改文字角度.lsp, chhang-修改文字角度.lsp
+note: GBKエンコード。同名の別版も同梱

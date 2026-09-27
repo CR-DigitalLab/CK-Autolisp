@@ -1,0 +1,9 @@
+name: TXTACENTRO
+command: TXTACENTRO
+author: erickholger2025-sudo
+source_url: https://github.com/erickholger2025-sudo/AUTOLISP_AUTOCAD
+download_url: https://github.com/erickholger2025-sudo/AUTOLISP_AUTOCAD
+date: 2026-09-27
+license/terms: リポジトリにLICENSE無し
+status: 取得済み
+files: TXTACENTRO.LSP, TXTACENTRO.md

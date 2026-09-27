@@ -1,0 +1,10 @@
+name: Yazıyı referansa göre döndürme
+command: -
+author: ehya（cizimokulu.com 投稿, 2005）
+source_url: http://m.cizimokulu.com/page.php?id=198
+download_url: (ページ本文のコードを抽出)
+date: 2026-09-27
+license/terms: 記載なし
+status: 取得済み
+files: rty.lsp
+note: ページ本文のコードを抽出して保存（ファイル名は保存時に命名）。候補URLは一覧ページ、実ページは page.php?id=198

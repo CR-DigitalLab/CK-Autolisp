@@ -1,0 +1,10 @@
+name: Rutina Lisp para alinear varios textos tomando como base el primero seleccionado
+command: -
+author: DevCADLisp
+source_url: https://www.devcadlisp.com/rutinas/rutina-lisp-para-alinear-varios-textos-tomando-como-base-el-primero-seleccionado/
+download_url: https://www.devcadlisp.com/descarga/5876
+date: 2026-09-27
+license/terms: VLXは無料ダウンロード可だが、利用には DevCADLisp の有料「Suscripción de uso de Rutinas」（ルーチン利用サブスクリプション）が必要と案内
+status: 取得済み
+files: Alinear varios textos tomando como base el primero seleccionado-v2.VLX
+note: VLX（コンパイル済み）のみ。コマンド ALIT。候補一覧では「有料」扱い（利用は有料サブスクリプション）

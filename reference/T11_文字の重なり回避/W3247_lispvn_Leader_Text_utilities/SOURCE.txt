@@ -1,0 +1,10 @@
+name: Lisp miễn phí căn chỉnh mtext và leader
+command: ATL,ALP
+author: PhucLe (lisp.vn)
+source_url: https://www.lisp.vn/2026/06/lisp-mien-phi-can-chinh-mtext-va-leader.html
+download_url: https://www.mediafire.com/file/v8db1gmva5jyms9/Leader_%2526_Text_utilities_2.4.2-UCS.rar/file
+date: 2026-09-27
+license/terms: 無料配布。ページに「作者がソースを全面公開(Open-Source)」と記載（具体的ライセンス名なし）
+status: 取得済み
+files: Leader & Text utilities 2.4.2-UCS.rar, Leader & Text utilities 2.4.2-UCS.lsp, Leader & Text utilities 2.3.docx
+note: RAR展開済み。コマンド ATL/ALP/AVV/AHH/AMM/ALR/ALL/MTM/BGMO/MTW

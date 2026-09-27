@@ -1,0 +1,10 @@
+name: AsmiTools: TALON.LSP
+command: TALON
+author: Alexander Smirnov (AsmiTools)
+source_url: https://dwg.ru/dnl/7680
+download_url: https://dwg.ru/dnl/load/7680
+date: 2026-09-27
+license/terms: 記載なし（dwg.ru で無料ダウンロード）
+status: 取得済み
+files: dnl7680.zip, AsmiTools_Talon.zip, AsmiTools_Talon.lsp
+note: AsmiTools 全体の書庫(dnl7680.zip)から AsmiTools_Talon.zip を取り出し展開。元ファイル名はCP1251のため改名。ダウンロードはログイン不要だった
