@@ -19,7 +19,8 @@
 
 | ファイル | 内容 | 件数 |
 |---|---|---|
-| [catalog/00_世界のAutoLISP総合一覧_採点.xlsx](catalog/00_世界のAutoLISP総合一覧_採点.xlsx) | **全地域の総合版**（重複をまとめ済み。アイデア集・分野別TOP10・地域別集計つき） | 6,942 |
+| [catalog/00_世界のAutoLISP総合一覧_採点.xlsx](catalog/00_世界のAutoLISP総合一覧_採点.xlsx) | **全地域の総合版**（重複をまとめ済み。アイデア集30テーマ・テーマ／入手方法の列・テーマ別集計・分野別TOP10・地域別集計つき） | 6,942 |
+| [catalog/アイデア集/](catalog/アイデア集/README.md) | 30テーマの詳しい解説（仕組み・代表例・独自アプローチのヒント） | 30 |
 | catalog/list_01_英語圏_前半_採点.xlsx | Lee Mac、draftsperson.net、JTB World ほか | 696 |
 | catalog/list_02_英語圏_後半_採点.xlsx | CAD Forum、ParaCADD、Cadalyst、eSurveying ほか | 1,686 |
 | catalog/list_03_日本_採点.xlsx | Vector、note、ブログ ほか | 380 |
