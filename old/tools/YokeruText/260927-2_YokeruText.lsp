@@ -5,9 +5,7 @@
 ;;;  YOKERUSET (ショートカット YKS) : 設定画面
 ;;;
 ;;;  対応 : AutoCAD 2027
-;;;  版   : 1.1.0  (2026-09-27)
-;;;         1.1.0: 寸法の文字・マルチ引出線の文字も動かせるようにした（設定 T / U で ON）
-;;;                マルチ引出線を障害物として正確に判定（引出線と文字を別々に）
+;;;  版   : 1.0.1  (2026-09-27)
 ;;;         1.0.1: 回転角の記録が省略された文字も対象にする
 ;;;                ハッチ(H)ON のとき、ハッチの内側にある文字も外へ逃がす（以前は外形線だけを判定）
 ;;;
@@ -35,9 +33,7 @@
     ("FixLay"   ""     "動かさない画層")
     ("IgnLay"   ""     "障害物にしない画層")
     ("MaskFail" "0"    "逃げ場のないマルチテキストに背景マスク")
-    ("Confirm"  "1"    "実行後に確認する")
-    ("MoveDim"  "0"    "寸法の文字も動かす")
-    ("MoveMld"  "0"    "マルチ引出線の文字も動かす")))
+    ("Confirm"  "1"    "実行後に確認する")))
 
 (defun yk:cfg (key / v)
   (setq v (getenv (strcat "YokeruText_" key)))
@@ -64,9 +60,7 @@
         *yk:fixpat*  (if (/= (yk:cfg "FixLay") "") (strcase (yk:cfg "FixLay")))
         *yk:ignpat*  (if (/= (yk:cfg "IgnLay") "") (strcase (yk:cfg "IgnLay")))
         *yk:mask*    (yk:cfgb "MaskFail")
-        *yk:confirm* (yk:cfgb "Confirm")
-        *yk:movdim*  (yk:cfgb "MoveDim")
-        *yk:movmld*  (yk:cfgb "MoveMld")))
+        *yk:confirm* (yk:cfgb "Confirm")))
 
 ;;; ------------------------------------------------------------
 ;;;  2D の計算
@@ -184,18 +178,17 @@
       (setq iy (1+ iy)))
     (setq ix (1+ ix))))
 
-;;; 対象の印（文字＝T、寸法・マルチ引出線＝番号。番号のものは障害物としても登録する）
-(defun yk:mark (e val / s)
+(defun yk:mark (e / s)
   (setq s (read (strcat "YKH" (cdr (assoc 5 (entget e))))))
   (setq *yk:syms* (cons s *yk:syms*))
-  (set s val))
+  (set s T))
 
 (defun yk:marked-p (ed / h)
   (and (setq h (cdr (assoc 5 ed))) (eval (read (strcat "YKH" h)))))
 
 (defun yk:cleanup ( )
   (foreach s *yk:syms* (set s nil))
-  (setq *yk:syms* nil *yk:own* nil))
+  (setq *yk:syms* nil))
 
 ;;; ------------------------------------------------------------
 ;;;  障害物の登録
@@ -210,7 +203,7 @@
             b    (yk:v+ p1 (yk:vs d (cadr tt)))
             len  (distance a b)
             n    (1+ (fix (/ len *yk:cs*)))
-            item (list 'S a b *yk:own*)
+            item (list 'S a b)
             i    0)
       (repeat n
         (setq q1 (yk:v+ a (yk:vs (yk:v- b a) (/ (float i) n)))
@@ -226,7 +219,7 @@
     (yk:gadd "YKS"
              (list (max (car bb) (car *yk:reg*)) (max (cadr bb) (cadr *yk:reg*))
                    (min (caddr bb) (caddr *yk:reg*)) (min (cadddr bb) (cadddr *yk:reg*)))
-             (list 'B o *yk:own*))))
+             (list 'B o))))
 
 ;;; 外形の四角を「中身ありの四角」として登録
 (defun yk:add-bb-box (bb)
@@ -306,8 +299,7 @@
 ;;; 寸法：寸法の中身（線・矢印・寸法値）を個別に登録。座標が合わなければ外形で代用
 (defun yk:dim-ok (bh bb / be sub pts tol)
   (setq be  (entnext bh)
-        tol (+ (if (numberp *yk:hav*) *yk:hav* 0.0)
-               (* 0.1 (max (- (caddr bb) (car bb)) (- (cadddr bb) (cadr bb))))))
+        tol (+ *yk:hav* (* 0.1 (max (- (caddr bb) (car bb)) (- (cadddr bb) (cadr bb))))))
   (while (and be (/= "ENDBLK" (cdr (assoc 0 (setq sub (entget be))))))
     (if (= "LINE" (cdr (assoc 0 sub)))
       (setq pts (cons (cdr (assoc 10 sub)) (cons (cdr (assoc 11 sub)) pts))))
@@ -322,10 +314,8 @@
   (setq typ (cdr (assoc 0 sub)))
   (cond ((= typ "LINE") (yk:add-seg (yk:p2 (cdr (assoc 10 sub))) (yk:p2 (cdr (assoc 11 sub)))))
         ((= typ "SOLID") (yk:add-pts (mapcar '(lambda (c) (cdr (assoc c sub))) '(10 11 13 12)) T))
-        ((member typ '("MTEXT" "TEXT"))            ; 動かす寸法の文字は障害物にしない
-         (if (and (not *yk:own*) (setq o (yk:text-obb sub))) (yk:add-box o)))
-        ((member typ '("ARC" "CIRCLE")) (yk:add-curve be))
-        ((= typ "INSERT") (yk:add-generic be))))  ; 矢印ブロック
+        ((member typ '("MTEXT" "TEXT")) (if (setq o (yk:text-obb sub)) (yk:add-box o)))
+        ((member typ '("ARC" "CIRCLE")) (yk:add-curve be))))
 
 (defun yk:add-dim (e ed / bn bh be sub bb)
   (setq bb (yk:bbox e) bn (cdr (assoc 2 ed)))
@@ -353,9 +343,6 @@
     ((member typ '("TEXT" "MTEXT"))
      (if (and (yk:zup ed) (setq o (yk:text-obb ed))) (yk:add-box o) (yk:add-generic e)))
     ((= typ "DIMENSION") (if *yk:usedim* (yk:add-dim e ed)))
-    ((= typ "MULTILEADER")
-     (if (and (vl-catch-all-error-p (vl-catch-all-apply 'yk:add-mld (list e ed))) (not *yk:own*))
-       (yk:add-generic e)))
     ((= typ "LEADER") (yk:add-pts (yk:codes 10 ed) nil))
     ((member typ '("SOLID" "TRACE"))
      (yk:add-pts (mapcar '(lambda (c) (cdr (assoc c ed))) '(10 11 13 12)) T))
@@ -404,133 +391,28 @@
          (list (yk:v+ p (yk:v+ (yk:vs u (car lc)) (yk:vs v (cadr lc))))
                u (* w 0.5) (* h 0.5)))))))
 
-;;; 寸法の文字：寸法ブロックの中の文字から求める  → (四角 高さ) か nil
-(defun yk:dim-text (e ed / bn bh be sub bb o h res)
-  (setq bn (cdr (assoc 2 ed)))
-  (if (and (yk:zup ed) bn (setq bh (tblobjname "BLOCK" bn))
-           (setq bb (yk:bbox e)) (yk:dim-ok bh bb))
-    (progn
-      (setq be (entnext bh))
-      (while (and be (not res) (/= "ENDBLK" (cdr (assoc 0 (setq sub (entget be))))))
-        (if (and (member (cdr (assoc 0 sub)) '("MTEXT" "TEXT"))
-                 (setq h (cdr (assoc 40 sub))) (> h 0.0)
-                 (setq o (yk:text-obb sub)))
-          (setq res (list o h)))
-        (setq be (entnext be)))))
-  res)
-
-;;; マルチ引出線：平面が図面と平行か（最初の 11 = 文字の法線）
-(defun yk:mld-zup (ed / n)
-  (or (null (setq n (cdr (assoc 11 ed)))) (equal n '(0.0 0.0 1.0) 1e-8)))
-
-;;; 長い文字を 250 文字ずつに分ける（MTEXT の 3 / 1 用）
-(defun yk:str-codes (str / res)
-  (while (> (strlen str) 250)
-    (setq res (cons (cons 3 (substr str 1 250)) res) str (substr str 251)))
-  (reverse (cons (cons 1 str) res)))
-
-;;; マルチ引出線の文字：同じ内容の一時的なマルチテキストを作って大きさを測る → (四角 高さ) か nil
-(defun yk:mld-text (obj ed / str h w att ins dir sty tmp o)
-  (setq str (vl-catch-all-apply 'vla-get-TextString (list obj)))
-  (if (vl-catch-all-error-p str) (setq str (cdr (assoc 304 ed))))
-  (setq h   (cdr (assoc 41 ed))
-        w   (cdr (assoc 43 ed))
-        att (cdr (assoc 171 ed))
-        ins (cdr (assoc 12 ed))
-        dir (cdr (assoc 13 ed))
-        sty (cdr (assoc 340 ed)))
-  (if (and str (/= str "") h (> h 0.0) ins)
-    (progn
-      (setq tmp (entmakex
-                  (append
-                    (list '(0 . "MTEXT") '(100 . "AcDbEntity") (cons 8 (cdr (assoc 8 ed)))
-                          '(100 . "AcDbMText") (cons 10 ins) (cons 40 h)
-                          (cons 41 (if (and w (> w 0.0)) w 0.0))
-                          (cons 71 (if (and att (<= 1 att 9)) att 1)))
-                    (if (and sty (= (type sty) 'ENAME))
-                      (list (cons 7 (cdr (assoc 2 (entget sty))))))
-                    (if dir (list (cons 11 dir)))
-                    (yk:str-codes str))))
-      (if tmp
-        (progn
-          (setq o (yk:text-obb (entget tmp)))
-          (entdel tmp)))
-      (if o (list o h)))))
-
-;;; マルチ引出線の引出線 → ((線番号 . 頂点の並び x y z x y z ...) ...)
-(defun yk:mld-lines (obj / n li found idxs res)
-  (setq n (vla-get-LeaderCount obj) li 0 found 0)
-  (while (and (< found n) (< li (+ n 20)))
-    (setq idxs (vl-catch-all-apply 'vlax-invoke (list obj 'GetLeaderLineIndexes li)))
-    (if (not (vl-catch-all-error-p idxs))
-      (progn
-        (setq found (1+ found))
-        (foreach k idxs
-          (setq res (cons (cons k (vlax-invoke obj 'GetLeaderLineVertices k)) res)))))
-    (setq li (1+ li)))
-  (reverse res))
-
-(defun yk:flat->pts (l / res)
-  (while (>= (length l) 3)
-    (setq res (cons (list (car l) (cadr l) (caddr l)) res) l (cdddr l)))
-  (reverse res))
-
-;;; マルチ引出線を障害物に：引出線は線、文字は四角（動かす対象なら文字は登録しない）
-(defun yk:add-mld (e ed / obj o)
-  (setq obj (vlax-ename->vla-object e))
-  (if (and (yk:mld-zup ed) (yk:bb-hit (yk:bbox e) *yk:reg*))
-    (progn
-      (foreach ln (yk:mld-lines obj) (yk:add-pts (yk:flat->pts (cdr ln)) nil))
-      (if (and (not *yk:own*)
-               (equal 2 (vl-catch-all-apply 'vla-get-ContentType (list obj)))
-               (setq o (car (yk:mld-text obj ed))))
-        (yk:add-box o)))))
-
-;;; 動かす対象の情報 → (種類 四角 高さ Z 補足) か nil   種類：T=文字 D=寸法 M=マルチ引出線
-(defun yk:target-info (e ed / typ obj dt pos h o)
-  (setq typ (cdr (assoc 0 ed)) obj (vlax-ename->vla-object e))
-  (cond
-    ((= typ "DIMENSION")
-     (if (and (setq dt (yk:dim-text e ed))
-              (setq pos (vlax-get obj 'TextPosition)))
-       (list 'D (car dt) (cadr dt) (caddr pos) (list pos (cdr (assoc 70 ed))))))
-    ((= typ "MULTILEADER")
-     (if (and (yk:mld-zup ed)
-              (equal 2 (vl-catch-all-apply 'vla-get-ContentType (list obj)))
-              (setq dt (yk:mld-text obj ed)))
-       (list 'M (car dt) (cadr dt) (caddr (cdr (assoc 12 ed))) (yk:mld-lines obj))))
-    ((and (yk:zup ed) (setq h (cdr (assoc 40 ed))) (> h 0.0) (setq o (yk:text-obb ed)))
-     (list 'T o h (caddr (cdr (assoc 10 ed))) nil))))
-
 ;;; ------------------------------------------------------------
 ;;;  判定と探索
 ;;; ------------------------------------------------------------
-;;; 障害物の持ち主（寸法・マルチ引出線の番号）
-(defun yk:owner (it) (if (eq (car it) 'S) (cadddr it) (caddr it)))
-
 (defun yk:hits (o idx / bb)
   (setq bb (yk:obb-aabb o))
   (or (vl-some '(lambda (it)
-                  (and (not (equal (yk:owner it) idx))
-                       (if (eq (car it) 'S)
-                         (yk:seg-hit o (cadr it) (caddr it))
-                         (yk:obb-hit o (cadr it)))))
+                  (if (eq (car it) 'S)
+                    (yk:seg-hit o (cadr it) (caddr it))
+                    (yk:obb-hit o (cadr it))))
                (yk:gget "YKS" bb))
       (vl-some '(lambda (r) (and (/= (car r) idx) (yk:obb-hit o (cdr r))))
                (yk:gget "YKT" bb))))
 
-;;; 元の位置のまわりを輪状に探し、点数（移動距離＋方向による減点）の良い所を選ぶ
-;;; 文字：文字の並ぶ方向への移動を少し減点（上下に逃がす）
-;;; 寸法：寸法線と直角方向への移動を大きく減点（寸法線に沿って横にずらす）
-;;; 点数は移動距離以上になるので、「これ以上遠くでは今の最良を超えられない」所で探索を終える
-(defun yk:search (idx obb h kind / m step kmax u base k j r ang dir dvec cand sc best bestsc)
+;;; 元の位置のまわりを輪状に探し、点数（移動距離＋文字方向への移動は少し減点）の良い所を選ぶ
+(defun yk:search (idx obb h / m step kmax u base k j r ang dir dvec cand sc best bestsc foundk stop)
   (setq m    (* *yk:clear* h)
         step (* 0.5 h)
         kmax (max 1 (fix (+ 0.999 (/ (* *yk:maxd* h) step))))
         u    (cadr obb)
         base (+ (angle '(0.0 0.0) u) (/ pi 2.0))
         k    1)
-  (while (and (<= k kmax) (not (and bestsc (>= (* k step) bestsc))))
+  (while (and (<= k kmax) (not stop))
     (setq r (* k step) j 0)
     (repeat *yk:ndir*
       (setq ang  (+ base (/ (* 2.0 pi j) *yk:ndir*))
@@ -539,12 +421,12 @@
             cand (yk:obb-move obb dvec))
       (if (not (yk:hits (yk:obb-grow cand m) idx))
         (progn
-          (setq sc (* r (+ 1.0 (if (eq kind 'D)
-                                   (* 3.0 (abs (yk:dot dir (yk:perp u))))
-                                   (* 0.25 (abs (yk:dot dir u)))))))
+          (setq sc (* r (+ 1.0 (* 0.25 (abs (yk:dot dir u))))))
           (if (or (null bestsc) (< sc bestsc))
-            (setq bestsc sc best (list dvec cand)))))
+            (setq bestsc sc best (list dvec cand)))
+          (if (null foundk) (setq foundk k))))
       (setq j (1+ j)))
+    (if (and foundk (> k foundk)) (setq stop T))
     (setq k (1+ k)))
   best)
 
@@ -572,86 +454,41 @@
 ;;; ------------------------------------------------------------
 ;;;  選択
 ;;; ------------------------------------------------------------
-(defun yk:types ( )
-  (strcat "TEXT,MTEXT" (if *yk:movdim* ",DIMENSION" "") (if *yk:movmld* ",MULTILEADER" "")))
-
 (defun yk:select (space / ss ans)
   (cond
-    ((setq ss (ssget "_I" (list (cons 0 (yk:types)))))
+    ((setq ss (ssget "_I" '((0 . "TEXT,MTEXT"))))
      (sssetfirst nil nil)
      ss)
     (T
      (princ "\n逃がす文字を選択（何も選ばず Enter で他の選択肢）")
-     (setq ss (ssget (list (cons 0 (yk:types)))))
+     (setq ss (ssget '((0 . "TEXT,MTEXT"))))
      (if ss
        ss
        (progn
          (initget "All Settings eXit")
          (setq ans (getkword "\n選択なし [図面全体(A)/設定(S)/終了(X)] <終了>: "))
          (cond ((= ans "All")
-                (ssget "_X" (list (cons 0 (yk:types)) (cons 410 space))))
+                (ssget "_X" (list '(0 . "TEXT,MTEXT") (cons 410 space))))
                ((= ans "Settings")
                 (yk:settings)
-                (yk:load-cfg)
                 (yk:select space))
                (T nil)))))))
 
 ;;; ------------------------------------------------------------
 ;;;  元に戻す（確認で「元に戻す」、または Esc・エラーのとき）
 ;;; ------------------------------------------------------------
-;;; 動かした量を記録  yk-moved の中身 = (番号 オブジェクト 合計dx 合計dy 対象の情報)
-(defun yk:rec-move (r d / old)
-  (if (setq old (assoc (car r) yk-moved))
-    (setq yk-moved (subst (list (car r) (nth 6 r) (+ (caddr old) (car d)) (+ (cadddr old) (cadr d)) r)
+(defun yk:rec-move (idx obj d / old)
+  (if (setq old (assoc idx yk-moved))
+    (setq yk-moved (subst (list idx obj (+ (caddr old) (car d)) (+ (cadddr old) (cadr d)))
                           old yk-moved))
-    (setq yk-moved (cons (list (car r) (nth 6 r) (car d) (cadr d) r) yk-moved))))
-
-;;; マルチ引出線：矢印の先（各引出線の最初の点）を元の位置へ戻す
-(defun yk:mld-fix-arrows (obj lines / cur org)
-  (foreach ln lines
-    (setq org (cdr ln)
-          cur (vl-catch-all-apply 'vlax-invoke (list obj 'GetLeaderLineVertices (car ln))))
-    (if (and (not (vl-catch-all-error-p cur)) (>= (length cur) 3) (>= (length org) 3))
-      (vl-catch-all-apply 'vlax-invoke
-        (list obj 'SetLeaderLineVertices (car ln)
-              (append (list (car org) (cadr org) (caddr org)) (cdddr cur)))))))
-
-;;; 1つ動かす（d = 今回の移動量）
-(defun yk:apply-move (r d / mv p obj)
-  (yk:rec-move r d)
-  (setq mv (assoc (car r) yk-moved) obj (nth 6 r))
-  (cond
-    ((eq (nth 7 r) 'D)                     ; 寸法：文字の位置を指定（寸法の仕組みで動かす）
-     (setq p (car (nth 8 r)))
-     (vlax-put obj 'TextPosition (list (+ (car p) (caddr mv)) (+ (cadr p) (cadddr mv)) (caddr p))))
-    ((eq (nth 7 r) 'M)                     ; マルチ引出線：全体を動かし、矢印の先だけ戻す
-     (vla-move obj (vlax-3d-point '(0.0 0.0 0.0)) (vlax-3d-point (list (car d) (cadr d) 0.0)))
-     (yk:mld-fix-arrows obj (nth 8 r)))
-    (T
-     (vla-move obj (vlax-3d-point '(0.0 0.0 0.0)) (vlax-3d-point (list (car d) (cadr d) 0.0))))))
-
-;;; 1つ元に戻す
-(defun yk:undo-one (r dx dy / obj e ed)
-  (setq obj (nth 6 r))
-  (cond
-    ((eq (nth 7 r) 'D)
-     (vlax-put obj 'TextPosition (car (nth 8 r)))
-     ;; 元が「標準の位置」だった寸法は、その状態（ユーザー指定位置の印なし）に戻す
-     (if (and (setq e (vlax-vla-object->ename obj)) (setq ed (entget e))
-              (/= (cdr (assoc 70 ed)) (cadr (nth 8 r))))
-       (progn
-         (entmod (subst (cons 70 (cadr (nth 8 r))) (assoc 70 ed) ed))
-         (entupd e))))
-    ((eq (nth 7 r) 'M)
-     (vla-move obj (vlax-3d-point (list dx dy 0.0)) (vlax-3d-point '(0.0 0.0 0.0)))
-     (foreach ln (nth 8 r)
-       (vl-catch-all-apply 'vlax-invoke (list obj 'SetLeaderLineVertices (car ln) (cdr ln)))))
-    (T
-     (vla-move obj (vlax-3d-point (list dx dy 0.0)) (vlax-3d-point '(0.0 0.0 0.0))))))
+    (setq yk-moved (cons (list idx obj (car d) (cadr d)) yk-moved))))
 
 (defun yk:revert ( )
   (foreach mv yk-moved
-    (vl-catch-all-apply 'yk:undo-one (list (nth 4 mv) (caddr mv) (cadddr mv))))
+    (vl-catch-all-apply 'vla-move
+      (list (cadr mv)
+            (vlax-3d-point (list (caddr mv) (cadddr mv) 0.0))
+            (vlax-3d-point '(0.0 0.0 0.0)))))
   (foreach e yk-leaders (if (entget e) (entdel e)))
   (foreach mk yk-masks
     (vl-catch-all-apply 'vla-put-BackgroundFill (list (car mk) (cdr mk))))
@@ -664,7 +501,7 @@
                     hidden nlock nfix nskip hmax hsum bb reg ext rw rh ss2 cnt
                     yk-cur yk-moved yk-leaders yk-masks yk-pending
                     r cur pend res m pass fails d tot anchor p1 le vecs ans
-                    ssf nmoved nhit t0 inf ndim nmld mk)
+                    ssf nmoved nhit t0)
 
   (defun *error* (msg / reverted)
     (if yk-pending (progn (vl-catch-all-apply 'yk:revert nil) (setq reverted T)))
@@ -678,7 +515,7 @@
           (T (princ "\n[YOKERU] 中止しました。")))
     (princ))
 
-  (setq doc (vla-get-ActiveDocument (vlax-get-acad-object)) *yk:hav* nil)
+  (setq doc (vla-get-ActiveDocument (vlax-get-acad-object)))
   (yk:cleanup)
   (yk:load-cfg)
   (setq space (yk:space))
@@ -691,28 +528,23 @@
 
       ;; ---- 1. 対象の文字 ----
       (setq hidden (yk:hidden-layers)
-            nlock 0 nfix 0 nskip 0 ndim 0 nmld 0 idx 0 hmax 0.0 hsum 0.0 i 0 n (sslength ss))
+            nlock 0 nfix 0 nskip 0 idx 0 hmax 0.0 hsum 0.0 i 0 n (sslength ss))
       (repeat n
         (setq e (ssname ss i) ed (entget e) lay (cdr (assoc 8 ed)) i (1+ i))
         (cond
           ((member (strcase lay) hidden) (setq nskip (1+ nskip)))
           ((yk:locked-p lay) (setq nlock (1+ nlock)))
           ((and *yk:fixpat* (wcmatch (strcase lay) *yk:fixpat*)) (setq nfix (1+ nfix)))
-          ((or (vl-catch-all-error-p (setq inf (vl-catch-all-apply 'yk:target-info (list e ed))))
-               (null inf))
+          ((not (yk:zup ed)) (setq nskip (1+ nskip)))
+          ((not (and (setq h (cdr (assoc 40 ed))) (> h 0.0) (setq o (yk:text-obb ed))))
            (setq nskip (1+ nskip)))
           (T
-           ;; recs の中身 = (番号 図形名 高さ 四角 Z 画層 オブジェクト 種類 補足)
            (setq idx  (1+ idx)
-                 h    (nth 2 inf)
-                 recs (cons (list idx e h (nth 1 inf) (nth 3 inf) lay (vlax-ename->vla-object e)
-                                  (car inf) (nth 4 inf))
-                            recs)
+                 z    (caddr (cdr (assoc 10 ed)))
+                 recs (cons (list idx e h o z lay (vlax-ename->vla-object e)) recs)
                  hmax (max hmax h)
                  hsum (+ hsum h))
-           (cond ((eq (car inf) 'D) (setq ndim (1+ ndim)))
-                 ((eq (car inf) 'M) (setq nmld (1+ nmld))))
-           (yk:mark e (if (eq (car inf) 'T) T idx)))))
+           (yk:mark e))))
       (setq recs (reverse recs))
 
       (if (null recs)
@@ -742,16 +574,11 @@
             (progn
               (setq i 0)
               (repeat (sslength ss2)
-                (setq e (ssname ss2 i) ed (entget e) lay (cdr (assoc 8 ed)) i (1+ i)
-                      mk (yk:marked-p ed))
-                (if (not (or (eq mk T)          ; 動かす文字そのものは別に扱う
+                (setq e (ssname ss2 i) ed (entget e) lay (cdr (assoc 8 ed)) i (1+ i))
+                (if (not (or (yk:marked-p ed)
                              (member (strcase lay) hidden)
                              (and *yk:ignpat* (wcmatch (strcase lay) *yk:ignpat*))))
-                  (progn
-                    ;; 動かす寸法・マルチ引出線の線は、自分の文字以外の障害物として登録
-                    (setq *yk:own* (if (numberp mk) mk))
-                    (vl-catch-all-apply 'yk:add-entity (list e ed))
-                    (setq *yk:own* nil))))))
+                  (vl-catch-all-apply 'yk:add-entity (list e ed))))))
 
           ;; ---- 4. 文字をマス目へ ----
           (foreach r recs
@@ -777,23 +604,24 @@
               (setq cur (cdr (assoc (car r) yk-cur))
                     m   (* *yk:clear* (nth 2 r)))
               (if (yk:hits (yk:obb-grow cur m) (car r))
-                (if (setq res (yk:search (car r) cur (nth 2 r) (nth 7 r)))
+                (if (setq res (yk:search (car r) cur (nth 2 r)))
                   (progn
                     (setq d (car res))
-                    (yk:apply-move r d)
+                    (vla-move (nth 6 r) (vlax-3d-point '(0.0 0.0 0.0))
+                                        (vlax-3d-point (list (car d) (cadr d) 0.0)))
+                    (yk:rec-move (car r) (nth 6 r) d)
                     (yk:gdel "YKT" (yk:obb-aabb cur) (car r))
                     (yk:gadd "YKT" (yk:obb-aabb (cadr res)) (cons (car r) (cadr res)))
                     (setq yk-cur (subst (cons (car r) (cadr res)) (assoc (car r) yk-cur) yk-cur)))
                   (setq fails (cons r fails)))))
             (setq pend (reverse fails) pass (1+ pass)))
 
-          ;; ---- 7. 引出線（文字だけ。寸法・マルチ引出線は自分の仕組みで線が付く）----
+          ;; ---- 7. 引出線 ----
           (if *yk:ldr*
             (foreach mv yk-moved
               (setq r   (assoc (car mv) recs)
                     tot (list (caddr mv) (cadddr mv)))
-              (if (and (eq (nth 7 r) 'T)
-                       (>= (distance '(0.0 0.0) tot) (* *yk:ldrd* (nth 2 r))))
+              (if (>= (distance '(0.0 0.0) tot) (* *yk:ldrd* (nth 2 r)))
                 (progn
                   (setq anchor (car (nth 3 r))
                         o      (yk:obb-grow (cdr (assoc (car r) yk-cur)) (* 0.5 *yk:clear* (nth 2 r)))
@@ -808,7 +636,7 @@
           ;; ---- 8. 逃げ場がなかったマルチテキストに背景マスク（設定時のみ）----
           (if *yk:mask*
             (foreach r pend
-              (if (and (eq (nth 7 r) 'T) (= "MTEXT" (cdr (assoc 0 (entget (nth 1 r))))))
+              (if (= "MTEXT" (cdr (assoc 0 (entget (nth 1 r)))))
                 (if (not (vl-catch-all-error-p
                            (setq o (vl-catch-all-apply 'vla-get-BackgroundFill (list (nth 6 r))))))
                   (progn
@@ -850,11 +678,8 @@
           (if (= nmoved -1)
             (princ "\n[YOKERU] 元に戻しました。")
             (progn
-              (princ (strcat "\n[YOKERU] 完了：対象 " (itoa (length recs)) " 個"
-                             (if (> (+ ndim nmld) 0)
-                               (strcat "（うち寸法 " (itoa ndim) "・マルチ引出線 " (itoa nmld) "）")
-                               "")
-                             " / 重なり " (itoa nhit)
+              (princ (strcat "\n[YOKERU] 完了：対象 " (itoa (length recs))
+                             " 個 / 重なり " (itoa nhit)
                              " 個 → 移動 " (itoa nmoved)
                              " 個（引出線 " (itoa (length yk-leaders)) " 本）"))
               (if pend
@@ -902,8 +727,6 @@
   (princ (strcat "\n 無視画層(I)   : " (if (= (yk:cfg "IgnLay") "") "（なし）" (yk:cfg "IgnLay"))))
   (princ (strcat "\n マスク(K)     : 逃げ場のないマルチテキストに背景マスクを" (yk:onoff "MaskFail")))
   (princ (strcat "\n 確認(O)       : 実行後に確認" (yk:onoff "Confirm")))
-  (princ (strcat "\n 寸法の文字(T) : 動かす対象に" (yk:onoff "MoveDim")))
-  (princ (strcat "\n マルチ引出線(U): 動かす対象に" (yk:onoff "MoveMld")))
   (princ "\n──────────────────────────"))
 
 (defun yk:ask-real (key msg bits / v)
@@ -923,10 +746,10 @@
 (defun yk:settings ( / k done v)
   (while (not done)
     (yk:show-settings)
-    (initget "Clear Dist Ndir Leader lEngth Block diMension Hatch Fix Ignore masK cOnfirm dimText mUltileader Reset eXit")
+    (initget "Clear Dist Ndir Leader lEngth Block diMension Hatch Fix Ignore masK cOnfirm Reset eXit")
     (setq k (getkword (strcat "\n変更する項目 [余白(C)/距離(D)/方向数(N)/引出線(L)/引出線距離(E)/"
                               "ブロック(B)/寸法(M)/ハッチ(H)/固定画層(F)/無視画層(I)/マスク(K)/"
-                              "確認(O)/寸法の文字(T)/マルチ引出線(U)/初期値(R)/終了(X)] <終了>: ")))
+                              "確認(O)/初期値(R)/終了(X)] <終了>: ")))
     (cond
       ((or (null k) (= k "eXit")) (setq done T))
       ((= k "Clear")     (yk:ask-real "Clear" "余白（文字高さに対する割合、例 0.25）" 4))
@@ -944,8 +767,6 @@
       ((= k "Ignore")    (yk:ask-layers "IgnLay" "障害物にしない画層"))
       ((= k "masK")      (yk:toggle "MaskFail"))
       ((= k "cOnfirm")   (yk:toggle "Confirm"))
-      ((= k "dimText")   (yk:toggle "MoveDim"))
-      ((= k "mUltileader") (yk:toggle "MoveMld"))
       ((= k "Reset")
        (foreach c *yk:cfgdef* (yk:setcfg (car c) (cadr c)))
        (princ "\n初期値に戻しました。"))))
@@ -962,5 +783,5 @@
 
 (defun c:YKS ( ) (c:YOKERUSET))
 
-(princ "\n[YokeruText 1.1.0] 読み込み完了  YOKERU(YK)=文字の重なりを避ける / YOKERUSET(YKS)=設定")
+(princ "\n[YokeruText 1.0.1] 読み込み完了  YOKERU(YK)=文字の重なりを避ける / YOKERUSET(YKS)=設定")
 (princ)

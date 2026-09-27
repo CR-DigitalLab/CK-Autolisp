@@ -4,15 +4,11 @@ import math
 import os
 import ezdxf
 from ezdxf.enums import TextEntityAlignment
-from ezdxf.math import Vec2
-from ezdxf.render import mleader
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "YokeruText_test.dxf")
 H = 2.5            # テスト文字の高さ
 CW, CH = 140, 80   # 区画の幅・高さ
 COLS = 4
-# 寸法の見た目（文字高さ 2.5 の実務的な設定）
-DIM_OV = {"dimtxt": H, "dimasz": 2.5, "dimgap": 0.625, "dimexe": 1.25, "dimexo": 0.625}
 
 doc = ezdxf.new("R2018", setup=True)
 doc.header["$INSUNITS"] = 4  # mm
@@ -119,7 +115,7 @@ txt("MIDDLE-CENTER", x + 100, y - 63, align=TextEntityAlignment.MIDDLE_CENTER)
 # 06 寸法の近く
 x, y = header(5, "寸法の近くの文字", "寸法線・寸法値・補助線と重ならない位置へ。寸法の間の空白には入ってよい。")
 dim = msp.add_linear_dim(base=(x + 20, y - 40), p1=(x + 20, y - 60), p2=(x + 110, y - 60),
-                         override=DIM_OV, dxfattribs={"layer": "DIM"})
+                         dxfattribs={"layer": "DIM"})
 dim.render()
 txt("NEAR-DIM", x + 55, y - 41)
 txt("ON-DIM-VALUE", x + 60, y - 38.5)
@@ -225,48 +221,6 @@ x, y = header(19, "少しだけ重なった文字（引出線なしの確認）"
 msp.add_line((x + 10, y - 40), (x + 120, y - 40), dxfattribs={"layer": "OBJ"})
 txt("SLIGHT-TOUCH", x + 40, y - 39.6)
 
-
-def mld(text, arrows, insert, layer="TEXT"):
-    """マルチ引出線（文字）。arrows = 矢印の先の点のリスト（左側に接続）"""
-    b = msp.add_multileader_mtext("Standard")
-    b.set_content(text, char_height=H, alignment=mleader.TextAlignment.left)
-    for a in arrows:
-        b.add_leader_line(mleader.ConnectionSide.left, [Vec2(a)])
-    b.build(insert=Vec2(insert))
-    b.multileader.dxf.layer = layer
-    return b.multileader
-
-
-# 21 寸法の文字に線が重なる
-x, y = header(20, "寸法の文字に線が重なる（寸法の文字 T）",
-              "初期設定では動かない。寸法の文字(T)ON にすると、寸法線に沿って横へずれる（矢印・補助線はそのまま）。")
-msp.add_linear_dim(base=(x + 20, y - 40), p1=(x + 20, y - 60), p2=(x + 110, y - 60),
-                   override=DIM_OV, dxfattribs={"layer": "DIM"}).render()
-msp.add_line((x + 65, y - 25), (x + 65, y - 68), dxfattribs={"layer": "OBJ"})
-
-# 22 寸法の文字どうしの重なり
-x, y = header(21, "寸法の文字どうしの重なり（寸法の文字 T）",
-              "T ON で、片方の寸法の文字が横へずれて重ならなくなる。寸法の測った値は変わらない。")
-msp.add_linear_dim(base=(x + 20, y - 38), p1=(x + 20, y - 62), p2=(x + 100, y - 62),
-                   override=DIM_OV, dxfattribs={"layer": "DIM"}).render()
-msp.add_linear_dim(base=(x + 40, y - 39), p1=(x + 40, y - 66), p2=(x + 80, y - 66),
-                   override=DIM_OV, dxfattribs={"layer": "DIM"}).render()
-
-# 23 マルチ引出線の文字に線が重なる
-x, y = header(22, "マルチ引出線の文字に線が重なる（マルチ引出線 U）",
-              "初期設定では動かない。マルチ引出線(U)ON にすると、文字が線から離れ、矢印の先は元の位置のまま。")
-mld("MLEADER-TEXT", [(x + 25, y - 62)], (x + 60, y - 38))
-msp.add_line((x + 10, y - 40), (x + 125, y - 40), dxfattribs={"layer": "OBJ"})
-msp.add_circle((x + 25, y - 62), 1.0, dxfattribs={"layer": "OBJ"})
-
-# 24 引出線が2本のマルチ引出線
-x, y = header(23, "引出線が2本のマルチ引出線（マルチ引出線 U）",
-              "U ON で、文字が線から離れ、2本とも矢印の先は元の位置のまま（丸印の中心）。")
-mld("TWO-ARROWS", [(x + 20, y - 30), (x + 20, y - 62)], (x + 55, y - 44))
-msp.add_line((x + 45, y - 45.5), (x + 125, y - 45.5), dxfattribs={"layer": "OBJ"})
-msp.add_circle((x + 20, y - 30), 1.0, dxfattribs={"layer": "OBJ"})
-msp.add_circle((x + 20, y - 62), 1.0, dxfattribs={"layer": "OBJ"})
-
-doc.set_modelspace_vport(height=CH * 6.5, center=(CW * COLS / 2, -CH * 2.7))
+doc.set_modelspace_vport(height=CH * 5.5, center=(CW * COLS / 2, -CH * 2.2))
 doc.saveas(OUT)
 print("saved:", OUT)

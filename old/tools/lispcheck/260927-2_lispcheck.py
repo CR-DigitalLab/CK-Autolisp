@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.2'
+VERSION = '0.1.1'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -3497,27 +3497,7 @@ def _entget(I, a):
     if o is None or o.deleted:
         return None
     apps = [strp(x) for x in seq(a[1])] if len(a) > 1 and a[1] is not None else None
-    r = store_to_lisp(I.dwg, o, apps)
-    if o.typ == 'MTEXT' and (o.get(42) is None or o.get(43) is None):
-        # AutoCAD の entget は MTEXT の実際の幅(42)・高さ(43)を必ず返す → 概算で補う
-        w, hh = mtext_extent(o)
-        k = next((i for i, x in enumerate(r) if type(x) is list and x and x[0] == -3), len(r))
-        r[k:k] = [Dotted([42], w), Dotted([43], hh)]
-        I.warn('MTEXT の実際の幅・高さ(42/43)は概算です')
-    return r
-
-
-def mtext_extent(o):
-    h = float(o.get(40, 2.5) or 2.5)
-    lines = mtext_plain(o).split('\n') or ['']
-    ws = [text_width(x, h) for x in lines]
-    defw = float(o.get(41, 0.0) or 0.0)
-    n = 0
-    for w in ws:
-        n += max(1, int(math.ceil(w / defw - 1e-9))) if defw > 0 and w > defw else 1
-    w = min(max(ws + [0.0]), defw) if defw > 0 else max(ws + [0.0])
-    sp = float(o.get(44, 1.0) or 1.0)
-    return max(w, h * 0.1), h + (n - 1) * h * 1.6667 * sp
+    return store_to_lisp(I.dwg, o, apps)
 
 
 @bi('entmod')
@@ -4198,8 +4178,7 @@ def _tblobjname(I, a):
         b = I.dwg.blocks().get(name.upper())
         if b is None:
             return None
-        # AutoCAD はブロック定義の先頭（BLOCK）を返す → entnext で中身をたどれる
-        return Ename((b['block'] or b['rec']).h)
+        return Ename((b['rec'] or b['block']).h)
     r = I.dwg.find_rec(tname, name)
     return Ename(r.h) if r is not None else None
 
@@ -5413,20 +5392,6 @@ def ent_sample_points(dwg, o, depth=0):
         return pts
     if t == 'HATCH':
         return [(v[0], v[1]) for c, v in o.main() if c in (10, 11) and type(v) is tuple]
-    if t == 'MULTILEADER':
-        # 引出線の点＋文字の四角（概算。文字は左上基準とみなす）
-        secs = mld_scan(o)
-        pts = [(x[2][0], x[2][1]) for x in secs if type(x[2]) is tuple and x[1] == 10
-               and x[3] in ('ctx', 'leader', 'line')]
-        ins = [x[2] for x in secs if x[3] == 'ctx' and x[1] == 12 and type(x[2]) is tuple]
-        hs = [x[2] for x in secs if x[3] == 'ctx' and x[1] == 41]
-        ts = [x[2] for x in secs if x[3] == 'ctx' and x[1] == 304]
-        if ins and hs and ts:
-            h = float(hs[0])
-            w = text_width(str(ts[0]).replace('\\P', ''), h)
-            x0, y0 = ins[0][0], ins[0][1]
-            pts += [(x0, y0), (x0 + w, y0), (x0 + w, y0 - h), (x0, y0 - h)]
-        return pts
     pts = [(v[0], v[1]) for c, v in o.main() if 10 <= c <= 18 and type(v) is tuple]
     return pts
 
@@ -6074,21 +6039,6 @@ def ent_get_prop(I, o, p, raw):
     if p == 'truecolor':
         raise LispError('TrueColor プロパティは未対応です（Color を使ってください）')
     # --- 種類別
-    if t == 'DIMENSION':
-        if p == 'textposition':
-            return vpt(to_pt3(g(11, (0, 0, 0))), raw)
-        if p == 'textmovement':
-            return 0
-    if t == 'MULTILEADER':
-        secs = mld_scan(o)
-        if p == 'contenttype':
-            v = [x[2] for x in secs if x[1] == 172 and x[3] == 'top']
-            return int(v[-1]) if v else 2
-        if p == 'leadercount':
-            return len(set(x[4] for x in secs if x[3] in ('leader', 'line')))
-        if p == 'textstring':
-            v = [x[2] for x in secs if x[1] == 304 and x[3] == 'ctx']
-            return str(v[0]) if v else ''
     if t == 'LINE':
         a, b = to_pt3(g(10, (0, 0, 0))), to_pt3(g(11, (0, 0, 0)))
         if p == 'startpoint':
@@ -6441,20 +6391,6 @@ def ent_put_prop(I, o, p, v):
         if p == 'rotation':
             o.set(50, math.degrees(float(num(val))))
             return
-    if t == 'DIMENSION' and p == 'textposition':
-        # 文字の位置を動かす（寸法ブロック内の文字も同じだけ動かす＝「文字だけ自由に移動」の近似）
-        newp = to_pt3([float(x) for x in val])
-        old = to_pt3(o.get(11, (0.0, 0.0, 0.0)))
-        dv = [newp[i] - old[i] for i in range(3)]
-        o.set(11, tuple(newp))
-        o.set(70, int(o.get(70, 0)) | 128)
-        b = dwg.blocks().get(str(o.get(2, '')).upper())
-        if b:
-            for e in b['ents']:
-                if e.typ in ('MTEXT', 'TEXT') and not e.deleted:
-                    xform_ent(I, e, XF.move(dv))
-        I.warn('寸法の TextPosition の変更は近似です（寸法線・補助線は再計算されません）')
-        return
     if t == 'POINT' and p == 'coordinates':
         o.set(10, _pt_arg(val))
         return
@@ -6977,43 +6913,6 @@ def vla_invoke(I, obj, meth, args, raw=False):
             return None
         if m == 'copy':
             return vobj_ent(copy_ent(I, o))
-        if t == 'MULTILEADER' and m == 'getleaderlineindexes':
-            li = int(num(pyval(A[0])))
-            ns = []
-            for x in mld_scan(o):
-                if x[3] == 'line' and x[4] == li and x[5] is not None and x[5] not in ns:
-                    ns.append(x[5])
-            return varr(ns, 3, raw)
-        if t == 'MULTILEADER' and m == 'getleaderlinevertices':
-            pts, land = mld_line_vertices(o, int(num(pyval(A[0]))))
-            if not pts:
-                raise LispError('Automation Error. Invalid index')
-            flat = []
-            for q in pts + ([land] if land else []):
-                flat += list(q)
-            return varr(flat, 5, raw)
-        if t == 'MULTILEADER' and m == 'setleaderlinevertices':
-            n = int(num(pyval(A[0])))
-            vals = [float(x) for x in pyval(A[1])]
-            new = [tuple(vals[i:i + 3]) for i in range(0, len(vals) - 2, 3)]
-            pts, land = mld_line_vertices(o, n)
-            if not pts:
-                raise LispError('Automation Error. Invalid index')
-            if land is not None and len(new) == len(pts) + 1:
-                new = new[:-1]      # 最後の点（着地点）は複数の線で共有 → 変更しない（近似）
-            idxs = [x[0] for x in mld_scan(o) if x[3] == 'line' and x[5] == n and x[1] == 10]
-            p2 = [cv for i, cv in enumerate(o.p) if i not in idxs[len(new):]] if len(new) < len(idxs) else list(o.p)
-            if len(new) <= len(idxs):
-                for j, q in enumerate(new):
-                    p2[idxs[j]] = (10, q)
-                o.p = p2
-            else:
-                for j in range(len(idxs)):
-                    p2[idxs[j]] = (10, new[j])
-                at = idxs[-1] + 1
-                o.p = p2[:at] + [(10, q) for q in new[len(idxs):]] + p2[at:]
-            I.warn('SetLeaderLineVertices は近似です（着地点・折れ線は再計算されません）')
-            return None
         if m == 'move':
             p1, p2 = _pt_arg(A[0]), _pt_arg(A[1])
             xform_ent(I, o, XF.move([p2[i] - p1[i] for i in range(3)]))
@@ -7266,80 +7165,8 @@ class XF:
     mirror = mirror_line
 
 
-def mld_scan(o):
-    """MULTILEADER のグループコードを区間ごとに分類：
-    (位置, コード, 値, 区間 'top'/'ctx'/'leader'/'line', 引出線番号, 線番号)"""
-    res = []
-    st = 'top'
-    li = -1
-    ln = None
-    k = xdata_start(o.p)
-    for i, (c, v) in enumerate(o.p[:k]):
-        if c == 300 and str(v).startswith('CONTEXT_DATA'):
-            st = 'ctx'
-            continue
-        if c == 302 and str(v).startswith('LEADER{'):
-            st = 'leader'
-            li += 1
-            continue
-        if c == 304 and str(v).startswith('LEADER_LINE{'):
-            st = 'line'
-            ln = None
-            continue
-        if c == 305 and st == 'line':
-            st = 'leader'
-            continue
-        if c == 303 and st == 'leader':
-            st = 'ctx'
-            continue
-        if c == 301 and st == 'ctx':
-            st = 'top'
-            continue
-        if st == 'line' and c == 91:
-            ln = int(v)
-        res.append((i, c, v, st, li, ln))
-    # 線番号は区間の後ろ(91)にあるので、線ごとにまとめ直す
-    out = []
-    cur = []
-    for x in res:
-        if x[3] == 'line':
-            cur.append(x)
-            if x[1] == 91:
-                out += [(y[0], y[1], y[2], y[3], y[4], int(x[2])) for y in cur]
-                cur = []
-        else:
-            out += cur
-            cur = []
-            out.append(x)
-    return out + cur
-
-
-def mld_line_vertices(o, n):
-    secs = mld_scan(o)
-    pts = [to_pt3(x[2]) for x in secs if x[3] == 'line' and x[5] == n and x[1] == 10]
-    li = next((x[4] for x in secs if x[3] == 'line' and x[5] == n), None)
-    land = [to_pt3(x[2]) for x in secs if x[3] == 'leader' and x[4] == li and x[1] == 10]
-    return pts, (land[0] if land else None)
-
-
 def xform_ent(I, o, xf, with_subs=True):
     t = o.typ
-    if t == 'MULTILEADER':
-        secs = {x[0]: x for x in mld_scan(o)}
-        newp = list(o.p)
-        for i, (c, v) in enumerate(o.p):
-            x = secs.get(i)
-            if x is None or type(v) is not tuple:
-                continue
-            st = x[3]
-            if (st == 'ctx' and c in (10, 12, 15, 110)) or (st in ('leader', 'line') and c == 10):
-                newp[i] = (c, xf.pt(v))
-            elif (st == 'ctx' and c == 13) or (st == 'leader' and c == 11):
-                newp[i] = (c, xf.vec(v))
-        o.p = newp
-        if xf.m[:4] != (1, 0, 0, 1):
-            I.warn('MULTILEADER の回転・尺度変更は近似です')
-        return
     ptcodes = {'LINE': (10, 11), 'POINT': (10,), 'CIRCLE': (10,), 'ARC': (10,), 'TEXT': (10, 11),
                'ATTRIB': (10, 11), 'ATTDEF': (10, 11), 'MTEXT': (10,), 'INSERT': (10,), 'LWPOLYLINE': (10,),
                'ELLIPSE': (10,), 'SOLID': (10, 11, 12, 13), 'TRACE': (10, 11, 12, 13), '3DFACE': (10, 11, 12, 13),
