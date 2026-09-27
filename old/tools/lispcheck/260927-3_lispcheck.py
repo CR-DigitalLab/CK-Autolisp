@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.3'
+VERSION = '0.1.2'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -752,15 +752,6 @@ class Interp:
         self.pending_block = None
         self.tblnext_pos = {}
         self.written_files = []
-        # 仮想ファイル（書いたファイルを同じパスで読める・一覧できる・消せる）
-        self.vfs = {}          # 小文字パス → 実際の保存先
-        self.vfs_names = {}    # 小文字パス → 元の表記
-        self.vdirs = set()
-        self.vdel = set()
-        self.vlocked = set()
-        # 複数図面（lc:docs で設定。None なら今の図面1枚だけ）
-        self.docs = None
-        self.active_doc = 0
         self.sysvars = default_sysvars(dwg)
         self.sysvars0 = dict((k, copy_val(v)) for k, v in self.sysvars.items())
         self.cmd_log = []
@@ -3072,7 +3063,7 @@ DEFAULT_SYSVARS = {
     'PROJMODE': 1, 'DIMSTYLE': 'Standard', 'DIMTXT': 2.5, 'DIMASZ': 2.5, 'DIMDEC': 2, 'DIMLFAC': 1.0,
     'CMLSTYLE': 'Standard', 'CMLSCALE': 1.0, 'CMLJUST': 0, 'SPLFRAME': 0, 'SURFTAB1': 6, 'SURFTAB2': 6,
     'OFFSETGAPTYPE': 0, 'TSTACKALIGN': 1, 'MTEXTED': 'Internal', 'FONTALT': 'simplex.shx',
-    'LOGINNAME': 'user', 'ROAMABLEROOTPREFIX': 'C:\\Users\\user\\AppData\\Roaming\\Autodesk\\AutoCAD 2027\\R26.0\\jpn\\', 'MYDOCUMENTSPREFIX': 'C:\\Users\\user\\Documents',
+    'LOGINNAME': 'user', 'ROAMABLEROOTPREFIX': '', 'MYDOCUMENTSPREFIX': 'C:\\Users\\user\\Documents',
     'TEMPPREFIX': 'C:\\Temp\\', 'VIEWTWIST': 0.0, 'VIEWDIR': [0.0, 0.0, 1.0], 'WORLDVIEW': 1,
     'HANDSEED': '0', 'MENUNAME': 'ACAD', 'SNAPANG': 0.0, 'SNAPUNIT': [10.0, 10.0], 'GRIDUNIT': [10.0, 10.0],
 }
@@ -4914,24 +4905,7 @@ def _write_char(I, a):
     return a[0]
 
 
-def vkey(name):
-    return str(name).replace('/', '\\').rstrip('\\').lower()
-
-
-def is_abs_path(name):
-    return bool(re.match(r'^([A-Za-z]:[\\/]|\\\\)', str(name)))
-
-
-def vparent(key):
-    return key.rsplit('\\', 1)[0] if '\\' in key else ''
-
-
 def resolve_path(I, name, must_exist=True):
-    k = vkey(name)
-    if k in I.vdel:
-        return None
-    if k in I.vfs:
-        return I.vfs[k]
     name = name.replace('\\', '/')
     cands = [name]
     if not os.path.isabs(name):
@@ -4968,17 +4942,6 @@ def _open(I, a):
         os.makedirs(d, exist_ok=True)
         base = re.split(r'[\\/]', name)[-1] or 'noname.txt'
         p = os.path.join(d, base)
-        if is_abs_path(name):
-            k = vkey(name)
-            p = I.vfs.get(k) or os.path.join(d, re.sub(r'[\\/:*?"<>|]', '_', name))
-            if mode[:1] == 'a' and k not in I.vfs:
-                src = resolve_path(I, name)
-                if src and os.path.isfile(src):
-                    open(p, 'w', encoding='utf-8').write(read_text_file(src))
-            I.vfs[k] = p
-            I.vfs_names[k] = name
-            I.vdel.discard(k)
-            I.vdirs.add(vparent(k))
         f = open(p, 'a' if mode[:1] == 'a' else 'w', encoding=enc, newline='')
         if p not in I.written_files:
             I.written_files.append(p)
@@ -5051,9 +5014,6 @@ def _vl_file_size(I, a):
 
 @bi('vl-file-directory-p')
 def _vl_file_directory_p(I, a):
-    k = vkey(strp(a[0]))
-    if k in I.vdirs or any(vparent(x) == k for x in I.vfs if x not in I.vdel):
-        return T
     p = resolve_path(I, strp(a[0]))
     return truth(p is not None and os.path.isdir(p))
 
@@ -5067,27 +5027,7 @@ def _vl_file_systime(I, a):
     return [t.year, t.month, t.isoweekday() % 7, t.day, t.hour, t.minute, t.second, 0]
 
 
-@bi('vl-mkdir', 'approx', '仮想フォルダを作る（実際のフォルダは作らない）')
-def _vl_mkdir(I, a):
-    k = vkey(strp(a[0]))
-    if k in I.vdirs:
-        return None
-    I.vdirs.add(k)
-    return T
-
-
-@bi('vl-file-delete', 'approx', '仮想的に削除（実ファイルは消さない）')
-def _vl_file_delete(I, a):
-    k = vkey(strp(a[0]))
-    if resolve_path(I, strp(a[0])) is None:
-        return None
-    I.vfs.pop(k, None)
-    I.vdel.add(k)
-    I.echo('[ファイル削除(仮想)] %s\n' % strp(a[0]))
-    return T
-
-
-@bi('vl-file-copy vl-file-rename', 'stub', '実際には何もしない')
+@bi('vl-file-copy vl-file-delete vl-file-rename vl-mkdir', 'stub', '実際には何もしない')
 def _vl_file_ops(I, a):
     I.warn('ファイル操作（コピー/削除/名前変更/フォルダ作成）は実行せずログのみ（T を返しました）')
     I.echo('[ファイル操作(未実行)] %s\n' % ' '.join(short(x, 60) for x in a))
@@ -5100,21 +5040,10 @@ def _vl_directory_files(I, a):
     pat = strp(a[1]) if len(a) > 1 and a[1] is not None else '*.*'
     mode = a[2] if len(a) > 2 and a[2] is not None else 0
     p = resolve_path(I, d)
-    k = vkey(d)
-    virt = [(I.vfs_names[x].replace('/', '\\').split('\\')[-1], False) for x in I.vfs
-            if vparent(x) == k and x not in I.vdel]
-    virt += [(x.split('\\')[-1], True) for x in I.vdirs if vparent(x) == k]
-    if (p is None or not os.path.isdir(p)) and not virt and k not in I.vdirs:
+    if p is None or not os.path.isdir(p):
         return None
     res = []
-    for f, isd in virt:
-        if mode == -1 and not isd or mode == 1 and isd:
-            continue
-        if wcmatch(f.upper(), pat.upper().replace('*.*', '*')) and f not in res:
-            res.append(f)
-    for f in (sorted(os.listdir(p)) if p and os.path.isdir(p) else []):
-        if vkey(os.path.join(d, f)) in I.vdel:
-            continue
+    for f in sorted(os.listdir(p)):
         full = os.path.join(p, f)
         isd = os.path.isdir(full)
         if mode == -1 and not isd or mode == 1 and isd:
@@ -6657,19 +6586,6 @@ def vla_get(I, obj, prop, raw=False):
             return vb(True, raw)
         if p == 'caption':
             return 'AutoCAD - [%s]' % dwg.name
-    if k == 'xdoc' or (k == 'doc' and I.docs is not None and p in ('fullname', 'name', 'readonly', 'saved', 'path')):
-        d = I.docs[obj.ref if k == 'xdoc' else 0]
-        if p == 'fullname':
-            return d['full']
-        if p == 'name':
-            return d['name']
-        if p == 'readonly':
-            return vb(d['ro'], raw)
-        if p == 'saved':
-            return vb(not d['mod'], raw)
-        if p == 'path':
-            return d['full'].replace('/', '\\').rsplit('\\', 1)[0] if d['full'] else ''
-        raise LispError('lispcheck: 他の図面の %s は再現していません' % prop)
     if k == 'doc':
         if p in ('modelspace', 'paperspace', 'layers', 'blocks', 'textstyles', 'linetypes', 'dimstyles',
                  'registeredapplications'):
@@ -6780,9 +6696,7 @@ def vla_collection_items(I, coll):
         if r == 'blocks':
             return [VlaObj('blk', n) for n in dwg.blocks()]
         if r == 'documents':
-            if I.docs is None:
-                return [VlaObj('doc')]
-            return [VlaObj('doc')] + [VlaObj('xdoc', i) for i in range(1, len(I.docs))]
+            return [VlaObj('doc')]
     if coll.kind == 'blk':
         b = dwg.blocks().get(coll.ref)
         if b is None:
@@ -6896,30 +6810,6 @@ def vla_invoke(I, obj, meth, args, raw=False):
         if m == 'getinterfaceobject':
             I.warn('GetInterfaceObject は再現できません')
             return None
-    if k == 'xdoc' or (k == 'doc' and I.docs is not None and m in ('activate', 'getvariable')):
-        i = obj.ref if k == 'xdoc' else 0
-        d = I.docs[i]
-        if m == 'activate':
-            I.active_doc = i
-            I.echo('[前面の図面(仮想)] %s\n' % (d['full'] or d['name']))
-            return None
-        if m == 'getvariable':
-            v = strp(A[0]).upper()
-            if v == 'DBMOD':
-                return 1 if d['mod'] else 0
-            if v == 'DWGTITLED':
-                return 1 if d['titled'] else 0
-            if v == 'DWGNAME':
-                return d['name']
-            if v == 'DWGPREFIX':
-                return (d['full'].replace('/', '\\').rsplit('\\', 1)[0] + '\\') if d['full'] else ''
-            return sysvar_get(I, v)
-        if m in ('startundomark', 'endundomark', 'regen'):
-            return None
-        if m in ('save', 'saveas', 'close'):
-            I.warn('図面の保存/閉じる(%s)は実行しません' % meth)
-            return None
-        raise LispError('lispcheck: 他の図面の %s は再現していません' % meth)
     if k == 'doc':
         if m in ('startundomark', 'endundomark', 'regen', 'activate', 'purgeall', 'auditinfo'):
             return None
@@ -7014,20 +6904,8 @@ def vla_invoke(I, obj, meth, args, raw=False):
             nm = commit_block(I, {'name': name, 'pairs': [(0, 'BLOCK'), (2, name), (70, 0), (10, pt)], 'ents': []})
             return VlaObj('blk', nm.upper())
         if k == 'coll' and obj.ref == 'documents':
-            if m == 'open':
-                path = strp(pyval(A[0]))
-                ro = len(A) > 1 and truthy_vb(A[1])
-                docs = ensure_docs(I)
-                if resolve_path(I, path) is None:
-                    raise LispError('Automation Error. ファイルが見つかりません: %s' % path)
-                if vkey(path) in I.vlocked and not ro:
-                    raise LispError('Automation Error. 図面ファイルは使用中です: %s' % path)
-                docs.append({'full': path, 'name': path.replace('/', '\\').split('\\')[-1],
-                             'mod': False, 'titled': True, 'ro': bool(ro)})
-                I.echo('[図面を開く(仮想)] %s%s\n' % (path, '（読み取り専用）' if ro else ''))
-                return VlaObj('xdoc', len(docs) - 1)
-            if m == 'add':
-                I.warn('図面の新規作成(%s)は再現できません' % meth)
+            if m in ('add', 'open'):
+                I.warn('図面を新規作成/開く(%s)は再現できません' % meth)
                 return VlaObj('doc')
         if (k == 'coll' and obj.ref in ('modelspace', 'paperspace')) or k == 'blk':
             coll = obj
@@ -9488,11 +9366,6 @@ AutoCAD の無い環境で .lsp を実際に実行し、図面(DXF)がどう変�
   (lc:count [フィルタ])                     ssget "X" 相当の件数（フィルタ省略で全図形数）
   (lc:dump 図形名)                          entget をきれいに表示
   (lc:reset-inputs)                         台本を空にする
-  (lc:docs '(("C:\\p\\A.dwg" "modified") ("Drawing1.dwg" "untitled")))
-                                            開いている図面を設定（先頭が実行中の図面）。Documents・Open・Activate が使える
-  (lc:file "C:\\p\\A.dwg" ["locked"])       ディスク上にある（ことにする）ファイル。locked＝他の人が使用中
-  (lc:open-docs)                            今開いている図面の一覧（先頭が前面）
-  ※絶対パスへの書込み・読込・一覧・削除は仮想ファイルとして扱う（実ファイルは変更しない）
   テストファイル例:
      (load "foo.lsp")
      (lc:input '(0 0) '(100 0) "")
@@ -9553,56 +9426,6 @@ AutoCAD の無い環境で .lsp を実際に実行し、図面(DXF)がどう変�
 def _lc_input(I, a):
     I.inputs.extend(a)
     return T
-
-
-def ensure_docs(I):
-    if I.docs is None:
-        full = I.sysvars.get('DWGPREFIX', '') + I.dwg.name
-        I.docs = [{'full': full, 'name': I.dwg.name, 'mod': False, 'titled': True, 'ro': False}]
-    return I.docs
-
-
-@bi('lc:docs')
-def _lc_docs(I, a):
-    """開いている図面を設定する。(lc:docs '(("C:\\p\\A.dwg" "modified") ("Drawing1.dwg" "untitled")))
-    先頭がこの LISP を実行している図面。印："modified"(未保存の変更あり) "untitled"(一度も保存していない) "readonly"（読み取り専用）"""
-    docs = []
-    for it in seq(a[0]):
-        it = seq(it) if isinstance(it, list) else [it]
-        path = strp(it[0])
-        flags = [strp(x).lower() for x in it[1:]]
-        titled = 'untitled' not in flags
-        docs.append({'full': path if titled else '', 'name': path.replace('/', '\\').split('\\')[-1],
-                     'mod': 'modified' in flags, 'titled': titled, 'ro': 'readonly' in flags})
-    I.docs = docs
-    I.active_doc = 0
-    return T
-
-
-@bi('lc:file')
-def _lc_file(I, a):
-    """ディスク上にある（ことにする）ファイルを作る。(lc:file "C:\\p\\A.dwg" ["locked"])  locked＝他の人が使用中"""
-    name = strp(a[0])
-    k = vkey(name)
-    d = os.path.join(I.outdir, 'lisp_files')
-    os.makedirs(d, exist_ok=True)
-    p = os.path.join(d, re.sub(r'[\\/:*?"<>|]', '_', name))
-    open(p, 'w', encoding='utf-8').close()
-    I.vfs[k] = p
-    I.vfs_names[k] = name
-    I.vdel.discard(k)
-    I.vdirs.add(vparent(k))
-    if len(a) > 1 and a[1] is not None and 'lock' in strp(a[1]).lower():
-        I.vlocked.add(k)
-    return T
-
-
-@bi('lc:open-docs')
-def _lc_open_docs(I, a):
-    """今開いている図面の名前のリスト（確認用）。先頭は前面の図面"""
-    docs = ensure_docs(I)
-    order = [docs[I.active_doc]] + [x for i, x in enumerate(docs) if i != I.active_doc]
-    return L([x['full'] or x['name'] for x in order])
 
 
 @bi('lc:reset-inputs')
