@@ -4,8 +4,7 @@
 ;;;  PROJECTSET (ショートカット PJ) : 記録と再開を1つのダイアログで行う
 ;;;
 ;;;  対応 : AutoCAD 2027
-;;;  版   : 1.1.2  (2026-09-28)
-;;;         1.1.2: エラーの場所をさらに細かく表示（原因調査用）
+;;;  版   : 1.1.1  (2026-09-28)
 ;;;         1.1.1: エラーのときに「どこで起きたか」を表示するようにした
 ;;;                読めない記録ファイルがあっても止まらないようにした
 ;;;                同じ図面が2つ開いているときに二重に記録しないようにした
@@ -387,7 +386,6 @@
   (if (and (= reason 4) (not *pj:sdi*) *pj:recs* (nth *pj:sel* *pj:recs*)) (done_dialog 1)))
 
 (defun pj:dlg-open-accept ( )
-  (pj:step "［開く］を押したとき")
   (cond (*pj:sdi* nil)
         ((and *pj:recs* (nth *pj:sel* *pj:recs*)) (done_dialog 1))
         (T (set_tile "open_msg" "開く記録を選んでください。"))))
@@ -423,9 +421,7 @@
       (progn
         (setq *pj:delconf* nil *pj:confirm* nil)
         
-        (pj:step "ダイアログの表示（見出し）")
         (set_tile "head" (strcat "記録される図面 " (itoa (length (car info))) " 枚"))
-        (pj:step "ダイアログの表示（記録する図面の一覧）")
         (setq disp (nth 2 info))
         (pj:fill-list "save_files"
           (if disp
@@ -434,18 +430,16 @@
                          (strcat (pj:pad (car x) 45) "※一度も保存していないため記録不可")
                          (car x)))
                     disp)))
-        (pj:step "ダイアログの表示（名前の初期値）")
         (set_tile "name" (cond ((car (nth *pj:sel* *pj:recs*))) ((pj:default-name))))
-        (pj:step "ダイアログの表示（注意書き・ボタン）")
         (set_tile "save_note" *pj:save-note*)
         (if (null (car info)) (mode_tile "btn_save" 1))
         
         (pj:step "記録の一覧の表示")
         (pj:dlg-update-recs)
-        (pj:step "ダイアログの表示（保存先）")
+        (pj:step "ダイアログの表示")
+        
         (set_tile "folder" (strcat "記録の保存先：" (pj:folder)))
 
-        (pj:step "ダイアログの表示（ボタンの動作）")
         (action_tile "btn_save" "(pj:dlg-save-check)")
         (action_tile "name" "(if (= $reason 1) (pj:dlg-save-check))")   ; 名前欄で Enter＝記録
         (action_tile "recs" "(pj:dlg-open-pick $value $reason)")
@@ -455,7 +449,6 @@
         (action_tile "chfolder" "(done_dialog 2)")
         (action_tile "cancel" "(done_dialog 0)")
 
-        (pj:step "ダイアログの操作中")
         (setq r (start_dialog))
         (pj:step "ダイアログを閉じた後の処理")
         
