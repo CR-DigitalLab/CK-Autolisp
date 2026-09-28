@@ -4,10 +4,7 @@
 ;;;  PROJECTSET (ショートカット PJ) : 記録と再開を1つのダイアログで行う
 ;;;
 ;;;  対応 : AutoCAD 2027
-;;;  版   : 1.1.1  (2026-09-28)
-;;;         1.1.1: エラーのときに「どこで起きたか」を表示するようにした
-;;;                読めない記録ファイルがあっても止まらないようにした
-;;;                同じ図面が2つ開いているときに二重に記録しないようにした
+;;;  版   : 1.1.0  (2026-09-28)
 ;;;         1.1.0: 2回目以降も「最後に使った記録」が選ばれるようにした
 ;;;                名前欄で Enter を押したら記録する（［開く］は動かない）
 ;;;                SDI=1 のときは［開く］を押せないようにした
@@ -76,18 +73,14 @@
         (cond ((wcmatch l "PROJECTSET *") (setq ok T))
               ((wcmatch l "DATE *")       (setq date (substr l 6)))
               ((wcmatch l "FRONT *")      (setq front (substr l 7)))
-              ((and (wcmatch l "DWG *") (/= (substr l 5) "")          ; 空の行・同じ図面は1つに
-                    (not (member (strcase (substr l 5)) (mapcar 'strcase dwgs))))
-               (setq dwgs (cons (substr l 5) dwgs)))))
+              ((wcmatch l "DWG *")        (setq dwgs (cons (substr l 5) dwgs)))))
       (close fh)
       (if ok (list (if date date "") (if (/= front "") front) (reverse dwgs))))))
 
 (defun pj:records ( / dir res r)
   (setq dir (pj:folder))
   (foreach f (vl-directory-files dir (strcat "*" *pj:ext*) 1)
-    (if (and (setq r (vl-catch-all-apply 'pj:read (list (strcat dir f))))
-             (not (vl-catch-all-error-p r))
-             (listp r) r)
+    (if (setq r (pj:read (strcat dir f)))
       (setq res (cons (list (vl-filename-base f) (car r) (length (caddr r)) (strcat dir f)) res))))
   ;; 新しい順。同じ日時なら名前順（並びが毎回同じになるように）
   (if res (vl-sort res '(lambda (a b) (or (> (cadr a) (cadr b))
@@ -120,14 +113,10 @@
   (pj:dcl-unload)
   (if (and *pj:doc* *pj:undo*) (progn (vla-EndUndoMark *pj:doc*) (setq *pj:undo* nil))))
 
-;;; いま何をしているか（エラーのときに表示する）
-(defun pj:step (s) (setq *pj:step* s))
-
 (defun pj:error (tag msg)
   (pj:finish)
   (if (and msg (not (wcmatch (strcase msg) "*BREAK*,*CANCEL*,*EXIT*,*取消*,*キャンセル*")))
-    (princ (strcat "\n[" tag "] エラー: " msg
-                   (if *pj:step* (strcat "（場所：" *pj:step* "）") "")))
+    (princ (strcat "\n[" tag "] エラー: " msg))
     (princ (strcat "\n[" tag "] 中止しました。")))
   (princ))
 
@@ -136,11 +125,9 @@
   (setq acad (vlax-get-acad-object) active (vla-get-ActiveDocument acad))
   (vlax-for d (vla-get-Documents acad)
     (setq full (vla-get-FullName d) nm (vla-get-Name d))
-    (cond
-      ((or (= full "") (= 0 (vlax-invoke d 'GetVariable "DWGTITLED")))
-       (setq disp (cons (list nm "untitled") disp)))
-      ((member (strcase full) (mapcar 'strcase dwgs)) nil)   ; 同じ図面が2つ開いている → 1つとして記録
-      (T
+    (if (or (= full "") (= 0 (vlax-invoke d 'GetVariable "DWGTITLED")))
+      (setq disp (cons (list nm "untitled") disp))
+      (progn
         (setq dwgs (cons full dwgs))
         (if (equal d active) (setq front full))
         (setq disp (cons (list nm nil) disp)))))
@@ -287,7 +274,6 @@
     (if (pj:mkdirs p) (progn (setenv "ProjectSet_Folder" p) T))))
 
 (defun pj:dlg-save-check ( / nm )
-  (pj:step "記録する")
   (setq nm (vl-string-trim " \t" (get_tile "name")))
   (cond
     ((= nm "") (set_tile "save_note" "記録の名前を入れてください。"))
@@ -299,7 +285,6 @@
     (T (setq *pj:dlg-name* nm) (done_dialog 3))))
 
 (defun pj:dlg-del-check ( / rec )
-  (pj:step "記録の削除")
   (if (and *pj:recs* (setq rec (nth *pj:sel* *pj:recs*)))
     (if (/= *pj:delconf* (car rec))
       (progn
@@ -317,7 +302,6 @@
     (T (setq *pj:ren-name* nm) (done_dialog 1))))
 
 (defun pj:do-rename ( / rec oldf newf )
-  (pj:step "名前の変更")
   (if (and *pj:recs* (setq rec (nth *pj:sel* *pj:recs*)))
     (progn
       (setq *pj:ren-old* (car rec))
@@ -340,9 +324,7 @@
                   (set_tile "open_msg" (strcat "「" *pj:ren-old* "」の名前変更に失敗しました。")))
                 (done_dialog 5)))))))))
 
-(defun pj:dlg-update-open ( / rec data nopen nskip nmiss items st old)
-  (setq old *pj:step*)
-  (pj:step "記録の図面の表示")
+(defun pj:dlg-update-open ( / rec data nopen nskip nmiss items st )
   (if (and *pj:recs* (setq rec (nth *pj:sel* *pj:recs*)))
     (progn
       (setq data (pj:read (nth 3 rec)) nopen 0 nskip 0 nmiss 0)
@@ -366,8 +348,7 @@
       (set_tile "fhead" "")
       (mode_tile "btn_open" 1)
       (mode_tile "btn_ren" 1)
-      (mode_tile "btn_del" 1)))
-  (pj:step old))
+      (mode_tile "btn_del" 1))))
 
 (defun pj:dlg-update-recs ( )
   (pj:fill-list "recs" (if *pj:recs* (mapcar '(lambda (r) (strcat (pj:pad (car r) 22) (itoa (caddr r)) "枚")) *pj:recs*)))
@@ -377,7 +358,6 @@
   (pj:dlg-update-open))
 
 (defun pj:dlg-open-pick (val reason)
-  (pj:step "記録を選んだとき")
   (setq *pj:sel* (atoi val) *pj:delconf* nil *pj:confirm* nil)
   (set_tile "open_msg" "")
   (if (nth *pj:sel* *pj:recs*) (set_tile "name" (car (nth *pj:sel* *pj:recs*))))
@@ -397,15 +377,11 @@
         *pj:dlg-name* nil
         *pj:sel* nil *pj:want* nil                   ; 毎回「最後に使った記録」から
         *pj:sdi* (= 1 (getvar "SDI")))
-  (pj:step "ダイアログの読み込み")
   (if (not (pj:dcl-load)) (setq done T res nil))
   
   (while (not done)
-    (pj:step "開いている図面の確認")
-    (setq info (pj:collect))
-    (pj:step "記録の読み込み")
-    (setq *pj:recs* (pj:records))
-    (pj:step "記録の選択")
+    (setq info (pj:collect)
+          *pj:recs* (pj:records))
     
     (if (and *pj:want* (vl-position *pj:want* (mapcar 'car *pj:recs*)))
       (setq *pj:sel* (vl-position *pj:want* (mapcar 'car *pj:recs*))))
@@ -415,7 +391,6 @@
       (if (or (null *pj:sel*) (>= *pj:sel* (length *pj:recs*)))
         (setq *pj:sel* (pj:get-last-idx *pj:recs*))))
           
-    (pj:step "ダイアログの表示")
     (if (not (new_dialog "pj_main" *pj:dcl-id*))
       (setq done T)
       (progn
@@ -434,9 +409,7 @@
         (set_tile "save_note" *pj:save-note*)
         (if (null (car info)) (mode_tile "btn_save" 1))
         
-        (pj:step "記録の一覧の表示")
         (pj:dlg-update-recs)
-        (pj:step "ダイアログの表示")
         
         (set_tile "folder" (strcat "記録の保存先：" (pj:folder)))
 
@@ -450,7 +423,6 @@
         (action_tile "cancel" "(done_dialog 0)")
 
         (setq r (start_dialog))
-        (pj:step "ダイアログを閉じた後の処理")
         
         (cond
           ((= r 1) (setq res (nth *pj:sel* *pj:recs*) done T))
@@ -475,14 +447,11 @@
 ;;; --- コマンド ---
 (defun c:PROJECTSET ( / *error* res )
   (defun *error* (msg) (pj:error "PROJECTSET" msg))
-  (pj:step "開始")
   (pj:start)
   (setq res (pj:dlg-main))
   (if (and res (listp res))
-    (progn (pj:dcl-unload) (pj:step "図面を開く") (pj:open-record res)))
-  (pj:step "終了")
+    (progn (pj:dcl-unload) (pj:open-record res)))
   (pj:finish)
-  (setq *pj:step* nil)
   (princ)
 )
 

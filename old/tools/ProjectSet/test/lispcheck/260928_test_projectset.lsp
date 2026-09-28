@@ -108,34 +108,5 @@
 (setq n0 (length (pj:records)))
 (c:PJ)
 (lc:assert-equal (length (pj:records)) n0 "12: 記録は増えない")
-;;; 13. 同じ図面が2つ開いている（1つは読み取り専用）→ 1つとして記録
-(princ "\n\n===== 13. 同じ図面が2つ開いている =====")
-(lc:docs (list (list A) (list A "readonly") (list B)))
-(lc:input '("DCL" ("set" "name" "重複テスト") ("click" "btn_save")))
-(c:PJ)
-(lc:assert-equal (t:names "重複テスト") '("平面図" "立面図") "13: 平面図は1回だけ記録")
-
-;;; 14. 読めない記録ファイルがあっても止まらない
-(princ "\n\n===== 14. 壊れた記録ファイル =====")
-(setq fh (open (pj:file "壊れた記録") "w")) (write-line "ABC" fh) (close fh)
-(setq n0 (length (pj:records)))
-(c:PJ)
-(lc:assert (not (member "壊れた記録" (mapcar 'car (pj:records)))) "14: 壊れた記録は一覧に出ない")
-
-;;; 15. 記録を全部削除 → もう一度 PJ（エラーにならない）
-(princ "\n\n===== 15. 全部削除してから PJ =====")
-(foreach r (pj:records)
-  (lc:input (list "DCL" (list "pick" "recs" (t:idx (car r))) (list "click" "btn_del") (list "click" "btn_del")))
-  (c:PJ))
-(lc:assert (null (pj:records)) "15: 記録は0件")
-(c:PJ)
-(lc:assert (null *pj:step*) "15: エラーなしで最後まで終わる")
-
-;;; 16. エラーのときは場所を表示する（わざと pj:collect を壊して確認）
-(princ "\n\n===== 16. エラーの場所の表示 =====")
-(defun pj:collect ( ) (car 5))
-(c:PJ)
-(lc:assert-equal *pj:step* "開いている図面の確認" "16: 場所＝開いている図面の確認")
-
 (princ "\n\n===== テスト終了 =====")
 (princ)

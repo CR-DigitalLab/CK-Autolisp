@@ -1,0 +1,463 @@
+======================================================================
+lispcheck 0.1.5 実行レポート
+======================================================================
+図面: (空の新規図面)  (AC1024, 文字コード utf-8)
+読込: tools/ProjectSet/ProjectSet.lsp  OK
+読込: tools/ProjectSet/test/lispcheck/test_projectset.lsp  OK
+定義されたコマンド: PJ, PROJECTSET
+
+--- コマンドライン出力 ----------------------------------------------
+===== 1. 最初の記録（名前欄で Enter）=====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+    1: Drawing1.dwg                                 ※一度も保存していないため記録不可
+    2: 立面図.dwg
+  リスト recs:
+  リスト open_files:
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 2 枚
+  name = 20260928_プロジェクトセット
+  open_msg = 記録がありません。上部の［記録する］で図面を記録してください。
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_del, btn_open, btn_ren
+<ダイアログ操作: ['DCL', ['click', 'name']]>
+
+[PROJECTSET] 「20260928_プロジェクトセット」に記録しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset001.dcl
+[assert OK] (T:NAMES D1) 
+[assert OK] (GETENV "ProjectSet_Last") 
+
+
+===== 2. 名前「現場A」で記録 =====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+    1: 配置図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+    1: 立面図.dwg
+  fhead = 「20260928_プロジェクトセット」の図面 2 枚（開く 1 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 2 枚
+  name = 20260928_プロジェクトセット
+  recs = 0
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+<ダイアログ操作: ['DCL', ['set', 'name', '現場A'], ['click', 'btn_save']]>
+
+[PROJECTSET] 「現場A」に記録しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset002.dcl
+[assert OK] (T:NAMES "現場A") 
+
+
+===== 3. 選んでいる記録を更新 =====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+    1: 立面図.dwg
+    2: 配置図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: 現場A                 2枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+    1: 配置図.dwg                                   ※すでに開いています
+  fhead = 「現場A」の図面 2 枚（開く 0 枚・開いている 2 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 3 枚
+  name = 現場A
+  recs = 1
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ操作: ['DCL', ['click', 'btn_save']]>
+
+[PROJECTSET] 「現場A」に記録しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset003.dcl
+[assert OK] (T:NAMES "現場A") 
+
+
+===== 4. ほかの既存の名前 → 確認 → Esc =====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 立面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: 現場A                 3枚
+  リスト open_files:
+    0: 平面図.dwg
+    1: 立面図.dwg                                   ※すでに開いています
+    2: 配置図.dwg
+  fhead = 「現場A」の図面 3 枚（開く 2 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = 現場A
+  recs = 1
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+<ダイアログ操作: ("DCL" ("set" "name" "20260928_プロジェクトセット") ("click" "btn_save"))>
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 立面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: 現場A                 3枚
+  リスト open_files:
+    0: 平面図.dwg
+    1: 立面図.dwg                                   ※すでに開いています
+    2: 配置図.dwg
+  fhead = 「現場A」の図面 3 枚（開く 2 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = 20260928_プロジェクトセット
+  recs = 1
+  save_note = 「20260928_プロジェクトセット」は既にあります。もう一度［記録する］で上書きします。
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset004.dcl
+[assert OK] (T:NAMES D1) 
+
+
+===== 5. 最後に使った記録が選ばれる =====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: 現場A                 3枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+    1: 立面図.dwg
+    2: 配置図.dwg
+  fhead = 「現場A」の図面 3 枚（開く 2 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = 現場A
+  recs = 1
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+<ダイアログ操作: ['DCL', ['set', 'name', 'R1'], ['click', 'btn_save']]>
+
+[PROJECTSET] 「R1」に記録しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset005.dcl
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: 現場A                 3枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+  fhead = 「R1」の図面 1 枚（開く 0 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = R1
+  recs = 1
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ操作: ['DCL', ['set', 'name', 'R2'], ['click', 'btn_save']]>
+
+[PROJECTSET] 「R2」に記録しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset006.dcl
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 別の図面.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R2                    1枚
+    3: 現場A                 3枚
+  リスト open_files:
+    0: 平面図.dwg
+  fhead = 「R2」の図面 1 枚（開く 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = R2
+  recs = 2
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+<ダイアログ操作: ("DCL" ("pick" "recs" "1") ("click" "btn_open"))>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset007.dcl
+[図面を開く(仮想)] C:\案件\A棟\平面図.dwg
+[前面の図面(仮想)] C:\案件\A棟\平面図.dwg
+
+[PROJECTSET] 「R1」：開いた図面 1 枚 / 開いていた図面 0 枚
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 別の図面.dwg
+    1: 平面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R2                    1枚
+    3: 現場A                 3枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+  fhead = 「R1」の図面 1 枚（開く 0 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 2 枚
+  name = R1
+  recs = 1
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ操作: ['DCL', ['set', 'name', 'R3'], ['click', 'btn_save']]>
+
+[PROJECTSET] 「R3」に記録しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset008.dcl
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 別の図面.dwg
+    1: 平面図.dwg
+  リスト recs
+...（中略 2348 文字）...
+iles:
+    0: 平面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R2                    1枚
+    3: R3                    2枚
+    4: 現場A                 1枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+  fhead = 「現場A」の図面 1 枚（開く 0 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = 現場A
+  recs = 4
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ操作: ("DCL" ("pick" "recs" "2") ("click" "btn_ren"))>
+
+[ダイアログ表示(仮想)] pj_ren
+  new_name = R2
+<ダイアログ操作: ['DCL', ['set', 'new_name', 'R2改'], ['click', 'btn_ok']]>
+[名前変更(仮想)] C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\R2.pjs → C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\R2改.pjs
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R2改                  1枚
+    3: R3                    2枚
+    4: 現場A                 1枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+  fhead = 「R2改」の図面 1 枚（開く 0 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = R2改
+  recs = 2
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset012.dcl
+[assert OK] (MEMBER "R2改" (MAPCAR (QUOTE CAR) (PJ:RECORDS))) 8: R2改 がある
+[assert OK] (NOT (MEMBER "R2" (MAPCAR (QUOTE CAR) (PJ:RECORDS)))) 8: R2 は無い
+[assert OK] (T:SEL-NAME) 
+
+
+===== 9. 削除 =====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R2改                  1枚
+    3: R3                    2枚
+    4: 現場A                 1枚
+  リスト open_files:
+    0: 平面図.dwg                                   ※すでに開いています
+  fhead = 「現場A」の図面 1 枚（開く 0 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = 現場A
+  recs = 4
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ操作: ("DCL" ("pick" "recs" "2") ("click" "btn_del") ("click" "btn_del"))>
+[ファイル削除(仮想)] C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\R2改.pjs
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 平面図.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R3                    2枚
+    3: 現場A                 1枚
+  リスト open_files:
+    0: 別の図面.dwg                                 ※見つかりません
+    1: 平面図.dwg                                   ※すでに開いています
+  fhead = 「R3」の図面 2 枚（開く 0 枚・開いている 1 枚・見つからない 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = R3
+  recs = 2
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset013.dcl
+[assert OK] (NOT (MEMBER "R2改" (MAPCAR (QUOTE CAR) (PJ:RECORDS)))) 9: R2改 を削除
+
+
+===== 10. SDI=1 =====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 別の図面.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R3                    2枚
+    3: 現場A                 1枚
+  リスト open_files:
+    0: 平面図.dwg
+  fhead = 「現場A」の図面 1 枚（開く 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = 現場A
+  open_msg = 1図面だけを開くモード（SDI=1）のため、まとめて開けません（記録はできます）。
+  recs = 3
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ操作: ("DCL" ("dclick" "recs" "2"))>
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 別の図面.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R3                    2枚
+    3: 現場A                 1枚
+  リスト open_files:
+    0: 別の図面.dwg                                 ※すでに開いています
+    1: 平面図.dwg
+  fhead = 「R3」の図面 2 枚（開く 1 枚・開いている 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = R3
+  open_msg = 1図面だけを開くモード（SDI=1）のため、まとめて開けません（記録はできます）。
+  recs = 2
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_open
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset014.dcl
+[assert OK] (LENGTH (LC:OPEN-DOCS)) 
+
+
+===== 11. 見つからない・使用中 =====[ファイル削除(仮想)] C:\案件\B棟\配置図.dwg
+
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: 別の図面.dwg
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R3                    2枚
+    3: 現場A                 1枚
+  リスト open_files:
+    0: 平面図.dwg
+  fhead = 「現場A」の図面 1 枚（開く 1 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 1 枚
+  name = 現場A
+  recs = 3
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+<ダイアログ操作: ("DCL" ("pick" "recs" "0") ("click" "btn_open"))>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset015.dcl
+[図面を開く(仮想)] C:\案件\A棟\平面図.dwg
+[図面を開く(仮想)] C:\案件\A棟\立面図.dwg（読み取り専用）
+[前面の図面(仮想)] C:\案件\A棟\平面図.dwg
+
+[PROJECTSET] 「20260928_プロジェクトセット」：開いた図面 2 枚 / 開いていた図面 0 枚
+          ※読取専用 1 枚：立面図[assert OK] (LENGTH (LC:OPEN-DOCS)) 
+
+
+===== 12. 新規図面だけ =====
+[ダイアログ表示(仮想)] pj_main
+  リスト save_files:
+    0: Drawing1.dwg                                 ※一度も保存していないため記録不可
+  リスト recs:
+    0: 20260928_プロジェクトセット2枚
+    1: R1                    1枚
+    2: R3                    2枚
+    3: 現場A                 1枚
+  リスト open_files:
+    0: 平面図.dwg
+    1: 立面図.dwg
+  fhead = 「20260928_プロジェクトセット」の図面 2 枚（開く 2 枚）
+  folder = 記録の保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\
+  head = 記録される図面 0 枚
+  name = 20260928_プロジェクトセット
+  recs = 0
+  save_note = 名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。
+  使えない状態: btn_save
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\projectset016.dcl
+[assert OK] (LENGTH (PJ:RECORDS)) 
+
+
+===== テスト終了 =====
+
+--- エラー ----------------------------------------------------------
+なし
+
+--- 警告（シミュレーションの限界・AutoCADとの差の可能性）----------
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset001.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset001.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\20260928_プロジェクトセット.pjs" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_20260928_プロジェクトセット.pjs に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset002.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset002.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\現場A.pjs" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_現場A.pjs に作成しました（実ファイルは変更しません）  ×3
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset003.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset003.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset004.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset004.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset005.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset005.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\R1.pjs" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_R1.pjs に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset006.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset006.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\R2.pjs" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_R2.pjs に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset007.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset007.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset008.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset008.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\ProjectSet\R3.pjs" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_R3.pjs に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset009.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset009.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset010.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset010.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset011.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset011.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset012.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset012.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset013.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset013.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset014.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset014.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset015.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset015.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\projectset016.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset016.dcl に作成しました（実ファイルは変更しません）
+
+--- 図面の変更: 追加 0 / 変更 0 / 削除 0 --------------------
+
+--- システム変数の変更（実行後に元へ戻っていないもの）------------
+なし
+
+--- アサーション: 15/15 成功 ----------------------------------------
+すべて成功
+
+--- ユーザー関数の呼び出し回数 -------------------------------------
+PJ:READ×144, PJ:PAD×87, PJ:FOLDER×76, PJ:SLASH×76, PJ:FILL-LIST×60, PJ:FNAME×38, PJ:RECORDS×29, PJ:DLG-UPDATE-OPEN×24, PJ:FILE×22, PJ:OPEN-NAMES×19, PJ:DCL-UNLOAD×19, PJ:COLLECT×18, PJ:DLG-UPDATE-RECS×18, C:PJ×16, C:PROJECTSET×16, PJ:START×16, PJ:DLG-MAIN×16, PJ:DCL-LOAD×16, PJ:FINISH×16, PJ:GET-LAST-IDX×15, PJ:BAD-NAME-P×9, PJ:DLG-SAVE-CHECK×8, PJ:SAVE×7, PJ:MKDIRS×7, PJ:NOW×7
+一度も呼ばれなかった関数: *ERROR*, PJ:BROWSE-FOLDER, PJ:CHANGE-FOLDER, PJ:ERROR
+
+--- 出力ファイル ----------------------------------------------------
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset001.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_20260928_プロジェクトセット.pjs（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset002.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_現場A.pjs（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset003.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset004.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset005.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_R1.pjs（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset006.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_R2.pjs（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset007.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset008.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_ProjectSet_R3.pjs（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset009.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset010.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset011.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset012.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset013.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset014.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset015.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/lisp_files/C__Users_user_AppData_Local_Temp_projectset016.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/pj3/report.txt
+======================================================================
