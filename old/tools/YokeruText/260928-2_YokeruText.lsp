@@ -5,18 +5,18 @@
 ;;;  YOKERUSET (ショートカット YKS) : 設定画面
 ;;;
 ;;;  対応 : AutoCAD 2027
-;;;  版   : 2.0.0  (2026-09-28)
-;;;         2.0.0: シンプル版に作り直し
-;;;                ・引出線・固定画層・無視画層・背景マスク・実行後の確認をなくした
-;;;                ・ハッチはよけない。寸法の文字・マルチ引出線の文字はいつも動かす
-;;;                ・設定は「余白・最大移動距離・探す方向の数」だけ
-;;;                ・最後に、動いた文字をすべて選択状態にする
-;;;         1.x  : 以前の版は old/tools/YokeruText/ に保管
+;;;  版   : 1.1.1  (2026-09-28)
+;;;         1.1.1: このファイルを ANSI（Shift-JIS）で保存（UTF-8 では日本語が文字化けするため）
+;;;         1.1.0: 寸法の文字・マルチ引出線の文字も動かせるようにした（設定 T / U で ON）
+;;;                マルチ引出線を障害物として正確に判定（引出線と文字を別々に）
+;;;         1.0.1: 回転角の記録が省略された文字も対象にする
+;;;                ハッチ(H)ON のとき、ハッチの内側にある文字も外へ逃がす（以前は外形線だけを判定）
 ;;;
 ;;;  ・普段は「文字を選んで Enter」だけ。細かい調整は YKS（設定）で。
 ;;;  ・画面のズーム状態に関係なく、図面の座標だけで判定する。
 ;;;  ・近くの図形だけを比べる「マス目方式」で、文字が多くても速い。
-;;;  ・このファイルは ANSI（Shift-JIS）で保存する。
+;;;  ・大きく動いた文字には引出線を自動で付ける（設定で切替）。
+;;;  ・実行後に確認し、「元に戻す」または Esc で全部元通り。
 ;;; ============================================================
 
 (vl-load-com)
@@ -27,7 +27,18 @@
 (setq *yk:cfgdef*
   '(("Clear"    "0.25" "余白（文字高さに対する割合）")
     ("MaxDist"  "6"    "最大移動距離（文字高さの何倍まで）")
-    ("Dirs"     "16"   "探す方向の数")))
+    ("Dirs"     "16"   "探す方向の数")
+    ("Leader"   "1"    "引出線を付ける")
+    ("LdrDist"  "1.5"  "引出線を付ける移動距離（文字高さの何倍以上）")
+    ("UseBlk"   "1"    "ブロックを障害物にする")
+    ("UseDim"   "1"    "寸法を障害物にする")
+    ("UseHat"   "0"    "ハッチを障害物にする（外形の四角の内側すべて）")
+    ("FixLay"   ""     "動かさない画層")
+    ("IgnLay"   ""     "障害物にしない画層")
+    ("MaskFail" "0"    "逃げ場のないマルチテキストに背景マスク")
+    ("Confirm"  "1"    "実行後に確認する")
+    ("MoveDim"  "0"    "寸法の文字も動かす")
+    ("MoveMld"  "0"    "マルチ引出線の文字も動かす")))
 
 (defun yk:cfg (key / v)
   (setq v (getenv (strcat "YokeruText_" key)))
@@ -38,12 +49,25 @@
         v (if (and s (/= s "")) (atof s)))
   (if (and v (>= v vmin)) v (atof (cadr (assoc key *yk:cfgdef*)))))
 
+(defun yk:cfgb (key) (= (yk:cfg key) "1"))
+
 (defun yk:setcfg (key val) (setenv (strcat "YokeruText_" key) val))
 
 (defun yk:load-cfg ( )
   (setq *yk:clear*   (yk:cfgr "Clear" 0.0)
         *yk:maxd*    (yk:cfgr "MaxDist" 0.5)
-        *yk:ndir*    (max 4 (min 64 (fix (yk:cfgr "Dirs" 4.0))))))
+        *yk:ndir*    (max 4 (min 64 (fix (yk:cfgr "Dirs" 4.0))))
+        *yk:ldr*     (yk:cfgb "Leader")
+        *yk:ldrd*    (yk:cfgr "LdrDist" 0.0)
+        *yk:useblk*  (yk:cfgb "UseBlk")
+        *yk:usedim*  (yk:cfgb "UseDim")
+        *yk:usehat*  (yk:cfgb "UseHat")
+        *yk:fixpat*  (if (/= (yk:cfg "FixLay") "") (strcase (yk:cfg "FixLay")))
+        *yk:ignpat*  (if (/= (yk:cfg "IgnLay") "") (strcase (yk:cfg "IgnLay")))
+        *yk:mask*    (yk:cfgb "MaskFail")
+        *yk:confirm* (yk:cfgb "Confirm")
+        *yk:movdim*  (yk:cfgb "MoveDim")
+        *yk:movmld*  (yk:cfgb "MoveMld")))
 
 ;;; ------------------------------------------------------------
 ;;;  2D の計算
@@ -168,8 +192,7 @@
   (set s val))
 
 (defun yk:marked-p (ed / h)
-  ;; and は T しか返さないため、印の値（T か番号）をそのまま返す
-  (if (setq h (cdr (assoc 5 ed))) (eval (read (strcat "YKH" h)))))
+  (and (setq h (cdr (assoc 5 ed))) (eval (read (strcat "YKH" h)))))
 
 (defun yk:cleanup ( )
   (foreach s *yk:syms* (set s nil))
@@ -319,7 +342,7 @@
 (defun yk:codes (code ed)
   (mapcar 'cdr (vl-remove-if-not '(lambda (x) (= (car x) code)) ed)))
 
-(defun yk:add-entity (e ed / typ o)
+(defun yk:add-entity (e ed / typ o bb)
   (setq typ (cdr (assoc 0 ed)))
   (cond
     ((= typ "LINE")
@@ -330,15 +353,17 @@
      (if (vl-catch-all-error-p (vl-catch-all-apply 'yk:add-curve (list e))) (yk:add-generic e)))
     ((member typ '("TEXT" "MTEXT"))
      (if (and (yk:zup ed) (setq o (yk:text-obb ed))) (yk:add-box o) (yk:add-generic e)))
-    ((= typ "DIMENSION") (yk:add-dim e ed))
+    ((= typ "DIMENSION") (if *yk:usedim* (yk:add-dim e ed)))
     ((= typ "MULTILEADER")
      (if (and (vl-catch-all-error-p (vl-catch-all-apply 'yk:add-mld (list e ed))) (not *yk:own*))
        (yk:add-generic e)))
     ((= typ "LEADER") (yk:add-pts (yk:codes 10 ed) nil))
     ((member typ '("SOLID" "TRACE"))
      (yk:add-pts (mapcar '(lambda (c) (cdr (assoc c ed))) '(10 11 13 12)) T))
-    ((= typ "INSERT") (yk:add-generic e))
-    ((member typ '("HATCH" "XLINE" "RAY" "VIEWPORT" "POINT")) nil)      ; ハッチはよけない
+    ((= typ "HATCH")
+     (if (and *yk:usehat* (setq bb (yk:bbox e)) (yk:bb-hit bb *yk:reg*)) (yk:add-bb-box bb)))
+    ((= typ "INSERT") (if *yk:useblk* (yk:add-generic e)))
+    ((member typ '("XLINE" "RAY" "VIEWPORT" "POINT")) nil)
     (T (yk:add-generic e))))
 
 ;;; ------------------------------------------------------------
@@ -539,10 +564,17 @@
 (defun yk:locked-p (lay / d)
   (and (setq d (tblsearch "LAYER" lay)) (= 4 (logand 4 (cdr (assoc 70 d))))))
 
+(defun yk:leader-pt (o p / c u v lx ly)
+  (setq c  (car o) u (cadr o) v (yk:perp u)
+        lx (max (- (caddr o)) (min (caddr o) (yk:dot (yk:v- p c) u)))
+        ly (max (- (cadddr o)) (min (cadddr o) (yk:dot (yk:v- p c) v))))
+  (yk:v+ c (yk:v+ (yk:vs u lx) (yk:vs v ly))))
+
 ;;; ------------------------------------------------------------
 ;;;  選択
 ;;; ------------------------------------------------------------
-(defun yk:types ( ) "TEXT,MTEXT,DIMENSION,MULTILEADER")
+(defun yk:types ( )
+  (strcat "TEXT,MTEXT" (if *yk:movdim* ",DIMENSION" "") (if *yk:movmld* ",MULTILEADER" "")))
 
 (defun yk:select (space / ss ans)
   (cond
@@ -566,7 +598,7 @@
                (T nil)))))))
 
 ;;; ------------------------------------------------------------
-;;;  元に戻す（処理の途中で Esc・エラーになったとき）
+;;;  元に戻す（確認で「元に戻す」、または Esc・エラーのとき）
 ;;; ------------------------------------------------------------
 ;;; 動かした量を記録  yk-moved の中身 = (番号 オブジェクト 合計dx 合計dy 対象の情報)
 (defun yk:rec-move (r d / old)
@@ -621,18 +653,23 @@
 (defun yk:revert ( )
   (foreach mv yk-moved
     (vl-catch-all-apply 'yk:undo-one (list (nth 4 mv) (caddr mv) (cadddr mv))))
-  (setq yk-moved nil yk-pending nil))
+  (foreach e yk-leaders (if (entget e) (entdel e)))
+  (foreach mk yk-masks
+    (vl-catch-all-apply 'vla-put-BackgroundFill (list (car mk) (cdr mk))))
+  (setq yk-moved nil yk-leaders nil yk-masks nil yk-pending nil))
 
 ;;; ------------------------------------------------------------
 ;;;  メイン
 ;;; ------------------------------------------------------------
-(defun c:YOKERU ( / *error* doc undo space ss i n e ed lay h idx recs
-                    hidden nlock nskip hmax hsum bb reg ext rw rh ss2
-                    yk-cur yk-moved yk-pending
-                    r cur pend res m pass fails d ssm nmoved nhit t0 inf ndim nmld mk)
+(defun c:YOKERU ( / *error* doc undo space ss i n e ed lay o h z idx recs
+                    hidden nlock nfix nskip hmax hsum bb reg ext rw rh ss2 cnt
+                    yk-cur yk-moved yk-leaders yk-masks yk-pending
+                    r cur pend res m pass fails d tot anchor p1 le vecs ans
+                    ssf nmoved nhit t0 inf ndim nmld mk)
 
   (defun *error* (msg / reverted)
     (if yk-pending (progn (vl-catch-all-apply 'yk:revert nil) (setq reverted T)))
+    (redraw)
     (yk:cleanup)
     (if (and doc undo) (progn (vla-EndUndoMark doc) (setq undo nil)))
     (cond ((and msg (not (wcmatch (strcase msg) "*BREAK*,*CANCEL*,*EXIT*")))
@@ -653,14 +690,15 @@
       (vla-StartUndoMark doc)
       (setq undo T t0 (getvar "MILLISECS"))
 
-      ;; ---- 1. 対象の文字（文字・マルチテキスト・寸法の文字・マルチ引出線の文字）----
+      ;; ---- 1. 対象の文字 ----
       (setq hidden (yk:hidden-layers)
-            nlock 0 nskip 0 ndim 0 nmld 0 idx 0 hmax 0.0 hsum 0.0 i 0 n (sslength ss))
+            nlock 0 nfix 0 nskip 0 ndim 0 nmld 0 idx 0 hmax 0.0 hsum 0.0 i 0 n (sslength ss))
       (repeat n
         (setq e (ssname ss i) ed (entget e) lay (cdr (assoc 8 ed)) i (1+ i))
         (cond
           ((member (strcase lay) hidden) (setq nskip (1+ nskip)))
           ((yk:locked-p lay) (setq nlock (1+ nlock)))
+          ((and *yk:fixpat* (wcmatch (strcase lay) *yk:fixpat*)) (setq nfix (1+ nfix)))
           ((or (vl-catch-all-error-p (setq inf (vl-catch-all-apply 'yk:target-info (list e ed))))
                (null inf))
            (setq nskip (1+ nskip)))
@@ -680,7 +718,7 @@
 
       (if (null recs)
         (princ (strcat "\n[YOKERU] 動かせる文字がありません"
-                       "（ロック画層 " (itoa nlock) "・非表示/3D/その他 " (itoa nskip) "）。"))
+                       "（ロック " (itoa nlock) "・固定 " (itoa nfix) "・対象外 " (itoa nskip) "）。"))
         (progn
           ;; ---- 2. 処理範囲とマス目 ----
           (setq *yk:hav* (/ hsum (length recs)))
@@ -708,7 +746,8 @@
                 (setq e (ssname ss2 i) ed (entget e) lay (cdr (assoc 8 ed)) i (1+ i)
                       mk (yk:marked-p ed))
                 (if (not (or (eq mk T)          ; 動かす文字そのものは別に扱う
-                             (member (strcase lay) hidden)))
+                             (member (strcase lay) hidden)
+                             (and *yk:ignpat* (wcmatch (strcase lay) *yk:ignpat*))))
                   (progn
                     ;; 動かす寸法・マルチ引出線の線は、自分の文字以外の障害物として登録
                     (setq *yk:own* (if (numberp mk) mk))
@@ -722,10 +761,10 @@
 
           ;; ---- 5. 重なっている文字を探し、込み合っている順に並べる ----
           (foreach r recs
-            (setq m (* *yk:clear* (nth 2 r)))
-            (if (yk:hits (yk:obb-grow (nth 3 r) m) (car r))
-              (setq pend (cons (cons (length (append (yk:gget "YKS" (yk:obb-aabb (nth 3 r)))
-                                                     (yk:gget "YKT" (yk:obb-aabb (nth 3 r)))))
+            (setq o (nth 3 r) m (* *yk:clear* (nth 2 r)))
+            (if (yk:hits (yk:obb-grow o m) (car r))
+              (setq pend (cons (cons (length (append (yk:gget "YKS" (yk:obb-aabb o))
+                                                     (yk:gget "YKT" (yk:obb-aabb o))))
                                      r)
                                pend))))
           (setq nhit (length pend)
@@ -748,32 +787,97 @@
                     (setq yk-cur (subst (cons (car r) (cadr res)) (assoc (car r) yk-cur) yk-cur)))
                   (setq fails (cons r fails)))))
             (setq pend (reverse fails) pass (1+ pass)))
-          (setq yk-pending nil nmoved (length yk-moved))
 
-          ;; ---- 7. 結果の通知 ----
-          (princ (strcat "\n[YOKERU] 完了：対象 " (itoa (length recs)) " 個"
-                         (if (> (+ ndim nmld) 0)
-                           (strcat "（うち寸法 " (itoa ndim) "・マルチ引出線 " (itoa nmld) "）")
-                           "")
-                         " / 重なり " (itoa nhit) " 個 → 移動 " (itoa nmoved) " 個"
-                         (if pend (strcat " / 逃げ場なし " (itoa (length pend)) " 個") "")))
-          (if (> (+ nlock nskip) 0)
-            (princ (strcat "\n          対象外：ロック画層 " (itoa nlock)
-                           "・非表示/3D/その他 " (itoa nskip))))
-          (princ (strcat "\n          処理時間 "
-                         (rtos (/ (- (getvar "MILLISECS") t0) 1000.0) 2 2) " 秒"))
+          ;; ---- 7. 引出線（文字だけ。寸法・マルチ引出線は自分の仕組みで線が付く）----
+          (if *yk:ldr*
+            (foreach mv yk-moved
+              (setq r   (assoc (car mv) recs)
+                    tot (list (caddr mv) (cadddr mv)))
+              (if (and (eq (nth 7 r) 'T)
+                       (>= (distance '(0.0 0.0) tot) (* *yk:ldrd* (nth 2 r))))
+                (progn
+                  (setq anchor (car (nth 3 r))
+                        o      (yk:obb-grow (cdr (assoc (car r) yk-cur)) (* 0.5 *yk:clear* (nth 2 r)))
+                        p1     (yk:leader-pt o anchor))
+                  (if (> (distance anchor p1) (* 0.25 (nth 2 r)))
+                    (if (setq le (entmakex (list '(0 . "LINE")
+                                                 (cons 8 (nth 5 r))
+                                                 (list 10 (car anchor) (cadr anchor) (nth 4 r))
+                                                 (list 11 (car p1) (cadr p1) (nth 4 r)))))
+                      (setq yk-leaders (cons le yk-leaders))))))))
+
+          ;; ---- 8. 逃げ場がなかったマルチテキストに背景マスク（設定時のみ）----
+          (if *yk:mask*
+            (foreach r pend
+              (if (and (eq (nth 7 r) 'T) (= "MTEXT" (cdr (assoc 0 (entget (nth 1 r))))))
+                (if (not (vl-catch-all-error-p
+                           (setq o (vl-catch-all-apply 'vla-get-BackgroundFill (list (nth 6 r))))))
+                  (progn
+                    (setq yk-masks (cons (cons (nth 6 r) o) yk-masks))
+                    (vl-catch-all-apply 'vla-put-BackgroundFill (list (nth 6 r) :vlax-true)))))))
+
+          (setq nmoved (length yk-moved))
+
+          ;; ---- 9. 確認（動いた文字＝緑の矢印、逃げ場なし＝赤枠）----
+          (if (and *yk:confirm* (or yk-moved pend))
+            (progn
+              (foreach mv yk-moved
+                (setq r (assoc (car mv) recs)
+                      z (nth 4 r))
+                (setq vecs (append vecs
+                                   (list 3 (trans (list (car (car (nth 3 r))) (cadr (car (nth 3 r))) z) 0 1)
+                                           (trans (list (car (car (cdr (assoc (car r) yk-cur))))
+                                                        (cadr (car (cdr (assoc (car r) yk-cur)))) z) 0 1)))))
+              (foreach r pend
+                (setq z (nth 4 r) cnt (yk:obb-corners (cdr (assoc (car r) yk-cur))))
+                (setq cnt (append cnt (list (car cnt))))
+                (while (cdr cnt)
+                  (setq vecs (append vecs (list 1 (trans (list (car (car cnt)) (cadr (car cnt)) z) 0 1)
+                                                  (trans (list (car (cadr cnt)) (cadr (cadr cnt)) z) 0 1)))
+                        cnt (cdr cnt))))
+              (if vecs (grvecs vecs))
+              (princ (strcat "\n[YOKERU] 移動 " (itoa nmoved) " 個（緑の矢印）"
+                             (if pend (strcat "・逃げ場なし " (itoa (length pend)) " 個（赤枠）") "")))
+              (initget "Yes Undo")
+              (setq ans (getkword "\n確定しますか？ [確定(Y)/元に戻す(U)] <確定>: "))
+              (redraw)
+              (if (= ans "Undo")
+                (progn
+                  (yk:revert)
+                  (setq nmoved -1)))))
+          (setq yk-pending nil)
+
+          ;; ---- 10. 結果の通知 ----
+          (if (= nmoved -1)
+            (princ "\n[YOKERU] 元に戻しました。")
+            (progn
+              (princ (strcat "\n[YOKERU] 完了：対象 " (itoa (length recs)) " 個"
+                             (if (> (+ ndim nmld) 0)
+                               (strcat "（うち寸法 " (itoa ndim) "・マルチ引出線 " (itoa nmld) "）")
+                               "")
+                             " / 重なり " (itoa nhit)
+                             " 個 → 移動 " (itoa nmoved)
+                             " 個（引出線 " (itoa (length yk-leaders)) " 本）"))
+              (if pend
+                (princ (strcat "\n          逃げ場なし " (itoa (length pend)) " 個"
+                               (if yk-masks (strcat "（うち " (itoa (length yk-masks)) " 個に背景マスク）") "")
+                               " → 選択状態にしました")))
+              (if (> (+ nlock nfix nskip) 0)
+                (princ (strcat "\n          対象外：ロック画層 " (itoa nlock)
+                               "・固定画層 " (itoa nfix) "・非表示/3D/その他 " (itoa nskip))))
+              (princ (strcat "\n          処理時間 "
+                             (rtos (/ (- (getvar "MILLISECS") t0) 1000.0) 2 2) " 秒"))))
 
           (yk:cleanup)
           (vla-EndUndoMark doc)
           (setq undo nil)
 
-          ;; ---- 8. 動いた文字をすべて選択状態に ----
-          (if yk-moved
+          ;; 逃げ場がなかった文字を選択状態に（確認・手直し用）
+          (if (and pend (/= nmoved -1))
             (progn
-              (setq ssm (ssadd))
-              (foreach mv yk-moved (ssadd (cadr (nth 4 mv)) ssm))
-              (sssetfirst nil ssm)
-              (princ (strcat "\n          動いた文字 " (itoa nmoved) " 個を選択状態にしました。"))))))
+              (setq ssf (ssadd))
+              (foreach r pend (ssadd (nth 1 r) ssf))
+              (sssetfirst nil ssf)))))
       (if undo (progn (vla-EndUndoMark doc) (setq undo nil)))))
   (yk:cleanup)
   (princ))
@@ -783,11 +887,24 @@
 ;;; ------------------------------------------------------------
 ;;;  設定画面
 ;;; ------------------------------------------------------------
+(defun yk:onoff (key) (if (yk:cfgb key) "する" "しない"))
+
 (defun yk:show-settings ( )
   (princ "\n──────── YOKERU 設定 ────────")
-  (princ (strcat "\n 余白(C)   : 文字高さ × " (yk:cfg "Clear")))
-  (princ (strcat "\n 距離(D)   : 最大 文字高さ × " (yk:cfg "MaxDist") " まで動かす"))
-  (princ (strcat "\n 方向数(N) : " (yk:cfg "Dirs") " 方向を探す"))
+  (princ (strcat "\n 余白(C)       : 文字高さ × " (yk:cfg "Clear")))
+  (princ (strcat "\n 距離(D)       : 最大 文字高さ × " (yk:cfg "MaxDist") " まで動かす"))
+  (princ (strcat "\n 方向数(N)     : " (yk:cfg "Dirs") " 方向を探す"))
+  (princ (strcat "\n 引出線(L)     : " (yk:onoff "Leader")))
+  (princ (strcat "\n 引出線距離(E) : 文字高さ × " (yk:cfg "LdrDist") " 以上動いたら引出線"))
+  (princ (strcat "\n ブロック(B)   : 障害物に" (yk:onoff "UseBlk")))
+  (princ (strcat "\n 寸法(M)       : 障害物に" (yk:onoff "UseDim")))
+  (princ (strcat "\n ハッチ(H)     : 障害物に" (yk:onoff "UseHat")))
+  (princ (strcat "\n 固定画層(F)   : " (if (= (yk:cfg "FixLay") "") "（なし）" (yk:cfg "FixLay"))))
+  (princ (strcat "\n 無視画層(I)   : " (if (= (yk:cfg "IgnLay") "") "（なし）" (yk:cfg "IgnLay"))))
+  (princ (strcat "\n マスク(K)     : 逃げ場のないマルチテキストに背景マスクを" (yk:onoff "MaskFail")))
+  (princ (strcat "\n 確認(O)       : 実行後に確認" (yk:onoff "Confirm")))
+  (princ (strcat "\n 寸法の文字(T) : 動かす対象に" (yk:onoff "MoveDim")))
+  (princ (strcat "\n マルチ引出線(U): 動かす対象に" (yk:onoff "MoveMld")))
   (princ "\n──────────────────────────"))
 
 (defun yk:ask-real (key msg bits / v)
@@ -795,19 +912,41 @@
   (setq v (getreal (strcat "\n" msg " <" (yk:cfg key) ">: ")))
   (if v (yk:setcfg key (rtos v 2 3))))
 
+(defun yk:toggle (key) (yk:setcfg key (if (yk:cfgb key) "0" "1")))
+
+(defun yk:ask-layers (key msg / s)
+  (setq s (getstring T (strcat "\n" msg "（ワイルドカード可・カンマ区切り、「.」で空に） <"
+                               (if (= (yk:cfg key) "") "なし" (yk:cfg key)) ">: ")))
+  (cond ((= s "") nil)
+        ((= s ".") (yk:setcfg key ""))
+        (T (yk:setcfg key s))))
+
 (defun yk:settings ( / k done v)
   (while (not done)
     (yk:show-settings)
-    (initget "Clear Dist Ndir Reset eXit")
-    (setq k (getkword "\n変更する項目 [余白(C)/距離(D)/方向数(N)/初期値(R)/終了(X)] <終了>: "))
+    (initget "Clear Dist Ndir Leader lEngth Block diMension Hatch Fix Ignore masK cOnfirm dimText mUltileader Reset eXit")
+    (setq k (getkword (strcat "\n変更する項目 [余白(C)/距離(D)/方向数(N)/引出線(L)/引出線距離(E)/"
+                              "ブロック(B)/寸法(M)/ハッチ(H)/固定画層(F)/無視画層(I)/マスク(K)/"
+                              "確認(O)/寸法の文字(T)/マルチ引出線(U)/初期値(R)/終了(X)] <終了>: ")))
     (cond
       ((or (null k) (= k "eXit")) (setq done T))
-      ((= k "Clear") (yk:ask-real "Clear" "余白（文字高さに対する割合、例 0.25）" 4))
-      ((= k "Dist")  (yk:ask-real "MaxDist" "最大移動距離（文字高さの何倍、例 6）" 6))
+      ((= k "Clear")     (yk:ask-real "Clear" "余白（文字高さに対する割合、例 0.25）" 4))
+      ((= k "Dist")      (yk:ask-real "MaxDist" "最大移動距離（文字高さの何倍、例 6）" 6))
       ((= k "Ndir")
        (initget 6)
        (if (setq v (getint (strcat "\n探す方向の数（4～64） <" (yk:cfg "Dirs") ">: ")))
          (yk:setcfg "Dirs" (itoa (max 4 (min 64 v))))))
+      ((= k "Leader")    (yk:toggle "Leader"))
+      ((= k "lEngth")    (yk:ask-real "LdrDist" "引出線を付ける移動距離（文字高さの何倍以上）" 4))
+      ((= k "Block")     (yk:toggle "UseBlk"))
+      ((= k "diMension") (yk:toggle "UseDim"))
+      ((= k "Hatch")     (yk:toggle "UseHat"))
+      ((= k "Fix")       (yk:ask-layers "FixLay" "動かさない画層"))
+      ((= k "Ignore")    (yk:ask-layers "IgnLay" "障害物にしない画層"))
+      ((= k "masK")      (yk:toggle "MaskFail"))
+      ((= k "cOnfirm")   (yk:toggle "Confirm"))
+      ((= k "dimText")   (yk:toggle "MoveDim"))
+      ((= k "mUltileader") (yk:toggle "MoveMld"))
       ((= k "Reset")
        (foreach c *yk:cfgdef* (yk:setcfg (car c) (cadr c)))
        (princ "\n初期値に戻しました。"))))
@@ -824,5 +963,5 @@
 
 (defun c:YKS ( ) (c:YOKERUSET))
 
-(princ "\n[YokeruText 2.0.0] 読み込み完了  YOKERU(YK)=文字の重なりを避ける / YOKERUSET(YKS)=設定")
+(princ "\n[YokeruText 1.1.1] 読み込み完了  YOKERU(YK)=文字の重なりを避ける / YOKERUSET(YKS)=設定")
 (princ)

@@ -30,6 +30,7 @@ layers = {
     "DIM": dict(color=3),
     "HATCH": dict(color=252),
     "LOCKED": dict(color=1, lock=True),       # ロック画層の文字
+    "FIX": dict(color=5),                     # 固定画層テスト用
     "HIDDEN_OFF": dict(color=6, off=True),    # 非表示画層の線
     "HIDDEN_FRZ": dict(color=6, freeze=True), # フリーズ画層の線
 }
@@ -72,7 +73,7 @@ def txt(s, x, y, rot=0.0, align=None, layer="TEXT", h=H):
 cases = []
 
 # 01 線と重なった文字
-x, y = header(0, "線と重なった文字", "3つの文字が線から離れる。終了後、動いた文字が選択状態になる。")
+x, y = header(0, "線と重なった文字", "3つの文字が線から離れる。短い移動なら引出線なし。")
 msp.add_line((x + 10, y - 35), (x + 120, y - 35), dxfattribs={"layer": "OBJ"})
 txt("TEXT-A on line", x + 20, y - 36)
 msp.add_line((x + 90, y - 20), (x + 90, y - 65), dxfattribs={"layer": "OBJ"})
@@ -148,11 +149,10 @@ x, y = header(8, "ロック画層の文字", "動かない。結果に「ロッ�
 msp.add_line((x + 10, y - 40), (x + 120, y - 40), dxfattribs={"layer": "OBJ"})
 txt("LOCKED-TEXT", x + 40, y - 41, layer="LOCKED")
 
-# 10 寸法の文字と普通の文字
-x, y = header(9, "寸法の文字と普通の文字の重なり", "どちらか（または両方）が動いて重ならなくなる。寸法の測った値は変わらない。")
-msp.add_linear_dim(base=(x + 20, y - 40), p1=(x + 20, y - 60), p2=(x + 110, y - 60),
-                   override=DIM_OV, dxfattribs={"layer": "DIM"}).render()
-txt("OVER-DIM-TEXT", x + 57, y - 40)
+# 10 固定画層
+x, y = header(9, "固定画層（設定で FIX を指定した場合）", "YKS→固定画層(F)に FIX を入れて実行すると動かない。未設定なら動く。")
+msp.add_line((x + 10, y - 40), (x + 120, y - 40), dxfattribs={"layer": "OBJ"})
+txt("FIX-LAYER-TEXT", x + 40, y - 41, layer="FIX")
 
 # 11 非表示画層の線
 x, y = header(10, "非表示・フリーズ画層の線", "見えない線は障害物にしない＝文字は動かない（重なり 0）。")
@@ -162,7 +162,7 @@ msp.add_line((x + 10, y - 55), (x + 120, y - 55), dxfattribs={"layer": "HIDDEN_F
 txt("OVER-FROZEN-LINE", x + 40, y - 56)
 
 # 12 逃げ場なし
-x, y = header(11, "逃げ場なし（細かい格子の中）", "動かない。結果に「逃げ場なし」の個数が出る（選択状態にはならない）。")
+x, y = header(11, "逃げ場なし（細かい格子の中）", "赤枠で表示され、終了後に選択状態。マスク(K)ON で MTEXT なら背景マスク。")
 for k in range(0, 41, 2):
     msp.add_line((x + 20, y - 20 - k), (x + 110, y - 20 - k), dxfattribs={"layer": "OBJ"})
     msp.add_line((x + 20 + k * 2.25, y - 20), (x + 20 + k * 2.25, y - 60), dxfattribs={"layer": "OBJ"})
@@ -173,7 +173,7 @@ mt3.dxf.attachment_point = 5
 mt3.dxf.width = 30
 
 # 13 密集した注記
-x, y = header(12, "密集した注記（10個が1点に集中）", "放射状に散らばる（引出線は付かない）。遠くまで動く文字もある。")
+x, y = header(12, "密集した注記（10個が1点に集中）", "放射状に散らばり、大きく動いたものには引出線が付く。引出線どうしは交差することがある。")
 cx, cy = x + 65, y - 45
 msp.add_circle((cx, cy), 1.5, dxfattribs={"layer": "OBJ"})
 for k in range(10):
@@ -190,7 +190,7 @@ msp.add_spline([(x + 10, y - 65), (x + 40, y - 58), (x + 70, y - 68), (x + 120, 
 txt("ON-SPLINE", x + 55, y - 65)
 
 # 15 ハッチの上
-x, y = header(14, "ハッチの上の文字", "ハッチはよけない＝文字は動かない（重なり 0）。")
+x, y = header(14, "ハッチの上の文字", "初期設定（ハッチ＝障害物にしない）では動かない。ハッチ(H)ON にするとハッチの外へ出る（引出線付き）。")
 hatch = msp.add_hatch(color=252, dxfattribs={"layer": "HATCH"})
 hatch.set_pattern_fill("ANSI31", scale=1.0)
 hatch.paths.add_polyline_path([(x + 30, y - 35), (x + 100, y - 35), (x + 100, y - 50), (x + 30, y - 50)], is_closed=True)
@@ -220,8 +220,8 @@ txt("UCS-TEST-A", x + 20, y - 36)
 msp.add_line((x + 90, y - 20), (x + 90, y - 65), dxfattribs={"layer": "OBJ"})
 txt("UCS-TEST-B", x + 82, y - 50)
 
-# 20 少しだけ重なった文字
-x, y = header(19, "少しだけ重なった文字", "わずかに動くだけ（大きく飛ばない）。")
+# 20 引出線の距離しきい値
+x, y = header(19, "少しだけ重なった文字（引出線なしの確認）", "わずかに動くだけで、引出線は付かない。")
 msp.add_line((x + 10, y - 40), (x + 120, y - 40), dxfattribs={"layer": "OBJ"})
 txt("SLIGHT-TOUCH", x + 40, y - 39.6)
 
@@ -238,30 +238,30 @@ def mld(text, arrows, insert, layer="TEXT"):
 
 
 # 21 寸法の文字に線が重なる
-x, y = header(20, "寸法の文字に線が重なる",
-              "寸法の文字が寸法線に沿って横へずれる（矢印・補助線・測った値はそのまま）。")
+x, y = header(20, "寸法の文字に線が重なる（寸法の文字 T）",
+              "初期設定では動かない。寸法の文字(T)ON にすると、寸法線に沿って横へずれる（矢印・補助線はそのまま）。")
 msp.add_linear_dim(base=(x + 20, y - 40), p1=(x + 20, y - 60), p2=(x + 110, y - 60),
                    override=DIM_OV, dxfattribs={"layer": "DIM"}).render()
 msp.add_line((x + 65, y - 25), (x + 65, y - 68), dxfattribs={"layer": "OBJ"})
 
 # 22 寸法の文字どうしの重なり
-x, y = header(21, "寸法の文字どうしの重なり",
-              "片方の寸法の文字が寸法線に沿って横へ、または寸法線の反対側へずれて重ならなくなる。寸法の測った値は変わらない。")
+x, y = header(21, "寸法の文字どうしの重なり（寸法の文字 T）",
+              "T ON で、片方の寸法の文字が横へずれて重ならなくなる。寸法の測った値は変わらない。")
 msp.add_linear_dim(base=(x + 20, y - 38), p1=(x + 20, y - 62), p2=(x + 100, y - 62),
                    override=DIM_OV, dxfattribs={"layer": "DIM"}).render()
 msp.add_linear_dim(base=(x + 40, y - 39), p1=(x + 40, y - 66), p2=(x + 80, y - 66),
                    override=DIM_OV, dxfattribs={"layer": "DIM"}).render()
 
 # 23 マルチ引出線の文字に線が重なる
-x, y = header(22, "マルチ引出線の文字に線が重なる",
-              "文字が線から離れ、矢印の先は元の位置（丸印の中心）のまま。")
+x, y = header(22, "マルチ引出線の文字に線が重なる（マルチ引出線 U）",
+              "初期設定では動かない。マルチ引出線(U)ON にすると、文字が線から離れ、矢印の先は元の位置のまま。")
 mld("MLEADER-TEXT", [(x + 25, y - 62)], (x + 60, y - 38))
 msp.add_line((x + 10, y - 40), (x + 125, y - 40), dxfattribs={"layer": "OBJ"})
 msp.add_circle((x + 25, y - 62), 1.0, dxfattribs={"layer": "OBJ"})
 
 # 24 引出線が2本のマルチ引出線
-x, y = header(23, "引出線が2本のマルチ引出線",
-              "文字が線から離れ、2本とも矢印の先は元の位置のまま（丸印の中心）。")
+x, y = header(23, "引出線が2本のマルチ引出線（マルチ引出線 U）",
+              "U ON で、文字が線から離れ、2本とも矢印の先は元の位置のまま（丸印の中心）。")
 mld("TWO-ARROWS", [(x + 20, y - 30), (x + 20, y - 62)], (x + 55, y - 44))
 msp.add_line((x + 45, y - 45.5), (x + 125, y - 45.5), dxfattribs={"layer": "OBJ"})
 msp.add_circle((x + 20, y - 30), 1.0, dxfattribs={"layer": "OBJ"})
