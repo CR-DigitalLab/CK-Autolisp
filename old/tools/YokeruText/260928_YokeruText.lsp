@@ -1,44 +1,43 @@
 ;;; ============================================================
-;;;  YokeruText.lsp   \ •¶š‚Ìd‚È‚è‚ğ©“®‚Å”ğ‚¯‚é \
+;;;  YokeruText.lsp   â€• æ–‡å­—ã®é‡ãªã‚Šã‚’è‡ªå‹•ã§é¿ã‘ã‚‹ â€•
 ;;;
-;;;  YOKERU    (ƒVƒ‡[ƒgƒJƒbƒg YK ) : d‚È‚Á‚Ä‚¢‚é•¶š‚ğ‹ó‚¢‚Ä‚¢‚éêŠ‚Ö©“®‚Å“¦‚ª‚·
-;;;  YOKERUSET (ƒVƒ‡[ƒgƒJƒbƒg YKS) : İ’è‰æ–Ê
+;;;  YOKERU    (ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ YK ) : é‡ãªã£ã¦ã„ã‚‹æ–‡å­—ã‚’ç©ºã„ã¦ã„ã‚‹å ´æ‰€ã¸è‡ªå‹•ã§é€ƒãŒã™
+;;;  YOKERUSET (ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ YKS) : è¨­å®šç”»é¢
 ;;;
-;;;  ‘Î‰ : AutoCAD 2027
-;;;  ”Å   : 1.1.1  (2026-09-28)
-;;;         1.1.1: ‚±‚Ìƒtƒ@ƒCƒ‹‚ğ ANSIiShift-JISj‚Å•Û‘¶iUTF-8 ‚Å‚Í“ú–{Œê‚ª•¶š‰»‚¯‚·‚é‚½‚ßj
-;;;         1.1.0: ¡–@‚Ì•¶šEƒ}ƒ‹ƒ`ˆøoü‚Ì•¶š‚à“®‚©‚¹‚é‚æ‚¤‚É‚µ‚½iİ’è T / U ‚Å ONj
-;;;                ƒ}ƒ‹ƒ`ˆøoü‚ğáŠQ•¨‚Æ‚µ‚Ä³Šm‚É”»’èiˆøoü‚Æ•¶š‚ğ•ÊX‚Éj
-;;;         1.0.1: ‰ñ“]Šp‚Ì‹L˜^‚ªÈ—ª‚³‚ê‚½•¶š‚à‘ÎÛ‚É‚·‚é
-;;;                ƒnƒbƒ`(H)ON ‚Ì‚Æ‚«Aƒnƒbƒ`‚Ì“à‘¤‚É‚ ‚é•¶š‚àŠO‚Ö“¦‚ª‚·iˆÈ‘O‚ÍŠOŒ`ü‚¾‚¯‚ğ”»’èj
+;;;  å¯¾å¿œ : AutoCAD 2027
+;;;  ç‰ˆ   : 1.1.0  (2026-09-27)
+;;;         1.1.0: å¯¸æ³•ã®æ–‡å­—ãƒ»ãƒãƒ«ãƒå¼•å‡ºç·šã®æ–‡å­—ã‚‚å‹•ã‹ã›ã‚‹ã‚ˆã†ã«ã—ãŸï¼ˆè¨­å®š T / U ã§ ONï¼‰
+;;;                ãƒãƒ«ãƒå¼•å‡ºç·šã‚’éšœå®³ç‰©ã¨ã—ã¦æ­£ç¢ºã«åˆ¤å®šï¼ˆå¼•å‡ºç·šã¨æ–‡å­—ã‚’åˆ¥ã€…ã«ï¼‰
+;;;         1.0.1: å›è»¢è§’ã®è¨˜éŒ²ãŒçœç•¥ã•ã‚ŒãŸæ–‡å­—ã‚‚å¯¾è±¡ã«ã™ã‚‹
+;;;                ãƒãƒƒãƒ(H)ON ã®ã¨ãã€ãƒãƒƒãƒã®å†…å´ã«ã‚ã‚‹æ–‡å­—ã‚‚å¤–ã¸é€ƒãŒã™ï¼ˆä»¥å‰ã¯å¤–å½¢ç·šã ã‘ã‚’åˆ¤å®šï¼‰
 ;;;
-;;;  E•’i‚Íu•¶š‚ğ‘I‚ñ‚Å Enterv‚¾‚¯B×‚©‚¢’²®‚Í YKSiİ’èj‚ÅB
-;;;  E‰æ–Ê‚ÌƒY[ƒ€ó‘Ô‚ÉŠÖŒW‚È‚­A}–Ê‚ÌÀ•W‚¾‚¯‚Å”»’è‚·‚éB
-;;;  E‹ß‚­‚Ì}Œ`‚¾‚¯‚ğ”ä‚×‚éuƒ}ƒX–Ú•û®v‚ÅA•¶š‚ª‘½‚­‚Ä‚à‘¬‚¢B
-;;;  E‘å‚«‚­“®‚¢‚½•¶š‚É‚Íˆøoü‚ğ©“®‚Å•t‚¯‚éiİ’è‚ÅØ‘ÖjB
-;;;  EÀsŒã‚ÉŠm”F‚µAuŒ³‚É–ß‚·v‚Ü‚½‚Í Esc ‚Å‘S•”Œ³’Ê‚èB
+;;;  ãƒ»æ™®æ®µã¯ã€Œæ–‡å­—ã‚’é¸ã‚“ã§ Enterã€ã ã‘ã€‚ç´°ã‹ã„èª¿æ•´ã¯ YKSï¼ˆè¨­å®šï¼‰ã§ã€‚
+;;;  ãƒ»ç”»é¢ã®ã‚ºãƒ¼ãƒ çŠ¶æ…‹ã«é–¢ä¿‚ãªãã€å›³é¢ã®åº§æ¨™ã ã‘ã§åˆ¤å®šã™ã‚‹ã€‚
+;;;  ãƒ»è¿‘ãã®å›³å½¢ã ã‘ã‚’æ¯”ã¹ã‚‹ã€Œãƒã‚¹ç›®æ–¹å¼ã€ã§ã€æ–‡å­—ãŒå¤šãã¦ã‚‚é€Ÿã„ã€‚
+;;;  ãƒ»å¤§ããå‹•ã„ãŸæ–‡å­—ã«ã¯å¼•å‡ºç·šã‚’è‡ªå‹•ã§ä»˜ã‘ã‚‹ï¼ˆè¨­å®šã§åˆ‡æ›¿ï¼‰ã€‚
+;;;  ãƒ»å®Ÿè¡Œå¾Œã«ç¢ºèªã—ã€ã€Œå…ƒã«æˆ»ã™ã€ã¾ãŸã¯ Esc ã§å…¨éƒ¨å…ƒé€šã‚Šã€‚
 ;;; ============================================================
 
 (vl-load-com)
 
 ;;; ------------------------------------------------------------
-;;;  İ’èiƒL[ Šù’è’l à–¾j  ¦ ’l‚Í setenv ‚Åƒ†[ƒU[‚²‚Æ‚É‹L‰¯
+;;;  è¨­å®šï¼ˆã‚­ãƒ¼ æ—¢å®šå€¤ èª¬æ˜ï¼‰  â€» å€¤ã¯ setenv ã§ãƒ¦ãƒ¼ã‚¶ãƒ¼ã”ã¨ã«è¨˜æ†¶
 ;;; ------------------------------------------------------------
 (setq *yk:cfgdef*
-  '(("Clear"    "0.25" "—]”’i•¶š‚‚³‚É‘Î‚·‚éŠ„‡j")
-    ("MaxDist"  "6"    "Å‘åˆÚ“®‹——£i•¶š‚‚³‚Ì‰½”{‚Ü‚Åj")
-    ("Dirs"     "16"   "’T‚·•ûŒü‚Ì”")
-    ("Leader"   "1"    "ˆøoü‚ğ•t‚¯‚é")
-    ("LdrDist"  "1.5"  "ˆøoü‚ğ•t‚¯‚éˆÚ“®‹——£i•¶š‚‚³‚Ì‰½”{ˆÈãj")
-    ("UseBlk"   "1"    "ƒuƒƒbƒN‚ğáŠQ•¨‚É‚·‚é")
-    ("UseDim"   "1"    "¡–@‚ğáŠQ•¨‚É‚·‚é")
-    ("UseHat"   "0"    "ƒnƒbƒ`‚ğáŠQ•¨‚É‚·‚éiŠOŒ`‚ÌlŠp‚Ì“à‘¤‚·‚×‚Äj")
-    ("FixLay"   ""     "“®‚©‚³‚È‚¢‰æ‘w")
-    ("IgnLay"   ""     "áŠQ•¨‚É‚µ‚È‚¢‰æ‘w")
-    ("MaskFail" "0"    "“¦‚°ê‚Ì‚È‚¢ƒ}ƒ‹ƒ`ƒeƒLƒXƒg‚É”wŒiƒ}ƒXƒN")
-    ("Confirm"  "1"    "ÀsŒã‚ÉŠm”F‚·‚é")
-    ("MoveDim"  "0"    "¡–@‚Ì•¶š‚à“®‚©‚·")
-    ("MoveMld"  "0"    "ƒ}ƒ‹ƒ`ˆøoü‚Ì•¶š‚à“®‚©‚·")))
+  '(("Clear"    "0.25" "ä½™ç™½ï¼ˆæ–‡å­—é«˜ã•ã«å¯¾ã™ã‚‹å‰²åˆï¼‰")
+    ("MaxDist"  "6"    "æœ€å¤§ç§»å‹•è·é›¢ï¼ˆæ–‡å­—é«˜ã•ã®ä½•å€ã¾ã§ï¼‰")
+    ("Dirs"     "16"   "æ¢ã™æ–¹å‘ã®æ•°")
+    ("Leader"   "1"    "å¼•å‡ºç·šã‚’ä»˜ã‘ã‚‹")
+    ("LdrDist"  "1.5"  "å¼•å‡ºç·šã‚’ä»˜ã‘ã‚‹ç§»å‹•è·é›¢ï¼ˆæ–‡å­—é«˜ã•ã®ä½•å€ä»¥ä¸Šï¼‰")
+    ("UseBlk"   "1"    "ãƒ–ãƒ­ãƒƒã‚¯ã‚’éšœå®³ç‰©ã«ã™ã‚‹")
+    ("UseDim"   "1"    "å¯¸æ³•ã‚’éšœå®³ç‰©ã«ã™ã‚‹")
+    ("UseHat"   "0"    "ãƒãƒƒãƒã‚’éšœå®³ç‰©ã«ã™ã‚‹ï¼ˆå¤–å½¢ã®å››è§’ã®å†…å´ã™ã¹ã¦ï¼‰")
+    ("FixLay"   ""     "å‹•ã‹ã•ãªã„ç”»å±¤")
+    ("IgnLay"   ""     "éšœå®³ç‰©ã«ã—ãªã„ç”»å±¤")
+    ("MaskFail" "0"    "é€ƒã’å ´ã®ãªã„ãƒãƒ«ãƒãƒ†ã‚­ã‚¹ãƒˆã«èƒŒæ™¯ãƒã‚¹ã‚¯")
+    ("Confirm"  "1"    "å®Ÿè¡Œå¾Œã«ç¢ºèªã™ã‚‹")
+    ("MoveDim"  "0"    "å¯¸æ³•ã®æ–‡å­—ã‚‚å‹•ã‹ã™")
+    ("MoveMld"  "0"    "ãƒãƒ«ãƒå¼•å‡ºç·šã®æ–‡å­—ã‚‚å‹•ã‹ã™")))
 
 (defun yk:cfg (key / v)
   (setq v (getenv (strcat "YokeruText_" key)))
@@ -70,7 +69,7 @@
         *yk:movmld*  (yk:cfgb "MoveMld")))
 
 ;;; ------------------------------------------------------------
-;;;  2D ‚ÌŒvZ
+;;;  2D ã®è¨ˆç®—
 ;;; ------------------------------------------------------------
 (defun yk:floor (x / i)
   (setq i (fix x))
@@ -82,7 +81,7 @@
 (defun yk:dot (a b) (+ (* (car a) (car b)) (* (cadr a) (cadr b))))
 (defun yk:perp (u) (list (- (cadr u)) (car u)))
 
-;;; ‰ñ“]‚µ‚½lŠpiOBBj = (’†S ‰¡•ûŒü‚Ì’PˆÊƒxƒNƒgƒ‹ ”¼• ”¼‚‚³)
+;;; å›è»¢ã—ãŸå››è§’ï¼ˆOBBï¼‰ = (ä¸­å¿ƒ æ¨ªæ–¹å‘ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ« åŠå¹… åŠé«˜ã•)
 (defun yk:obb-corners (o / c u v hw hh)
   (setq c (car o) u (cadr o) v (yk:perp u) hw (caddr o) hh (cadddr o))
   (list (yk:v+ c (yk:v+ (yk:vs u hw)     (yk:vs v hh)))
@@ -103,7 +102,7 @@
        (not (or (< (caddr a) (car b)) (< (caddr b) (car a))
                 (< (cadddr a) (cadr b)) (< (cadddr b) (cadr a))))))
 
-;;; ‰ñ“]‚µ‚½lŠp‚Ç‚¤‚µ‚Ìd‚È‚èi•ª—£²”»’èj
+;;; å›è»¢ã—ãŸå››è§’ã©ã†ã—ã®é‡ãªã‚Šï¼ˆåˆ†é›¢è»¸åˆ¤å®šï¼‰
 (defun yk:obb-hit (a b / d ok ra rb)
   (setq d (yk:v- (car b) (car a)) ok T)
   (foreach ax (list (cadr a) (yk:perp (cadr a)) (cadr b) (yk:perp (cadr b)))
@@ -116,7 +115,7 @@
         (if (> (abs (yk:dot d ax)) (+ ra rb)) (setq ok nil)))))
   ok)
 
-;;; ü•ª‚ÌØ‚èæ‚èi”ÍˆÍ xmin..xmax, ymin..ymaxj  Œğ‚í‚é‹æŠÔ (t0 t1) ‚© nil
+;;; ç·šåˆ†ã®åˆ‡ã‚Šå–ã‚Šï¼ˆç¯„å›² xmin..xmax, ymin..ymaxï¼‰  äº¤ã‚ã‚‹åŒºé–“ (t0 t1) ã‹ nil
 (defun yk:clip (x y dx dy xmin xmax ymin ymax / t0 t1 ok p q r)
   (setq t0 0.0 t1 1.0 ok T)
   (foreach pq (list (list (- dx) (- x xmin)) (list dx (- xmax x))
@@ -133,7 +132,7 @@
               (if (< r t0) (setq ok nil) (if (< r t1) (setq t1 r)))))))))
   (if ok (list t0 t1)))
 
-;;; ü•ª‚Æ‰ñ“]‚µ‚½lŠp‚Ìd‚È‚è
+;;; ç·šåˆ†ã¨å›è»¢ã—ãŸå››è§’ã®é‡ãªã‚Š
 (defun yk:seg-hit (o p1 p2 / c u v hw hh x1 y1 x2 y2)
   (setq c (car o) u (cadr o) v (yk:perp u) hw (caddr o) hh (cadddr o)
         x1 (yk:dot (yk:v- p1 c) u) y1 (yk:dot (yk:v- p1 c) v)
@@ -143,8 +142,8 @@
         (T (if (yk:clip x1 y1 (- x2 x1) (- y2 y1) (- hw) hw (- hh) hh) T))))
 
 ;;; ------------------------------------------------------------
-;;;  ƒ}ƒX–Úi‹ß‚­‚Ì}Œ`‚¾‚¯‚ğ”ä‚×‚é‚½‚ß‚Ì“ü‚ê•¨j
-;;;  ƒZƒ‹‚²‚Æ‚ÉƒVƒ“ƒ{ƒ‹‚ğì‚Á‚Ä’†g‚ğ“ü‚ê‚éig‚¢I‚í‚Á‚½‚ç‘S•” nil ‚É–ß‚·j
+;;;  ãƒã‚¹ç›®ï¼ˆè¿‘ãã®å›³å½¢ã ã‘ã‚’æ¯”ã¹ã‚‹ãŸã‚ã®å…¥ã‚Œç‰©ï¼‰
+;;;  ã‚»ãƒ«ã”ã¨ã«ã‚·ãƒ³ãƒœãƒ«ã‚’ä½œã£ã¦ä¸­èº«ã‚’å…¥ã‚Œã‚‹ï¼ˆä½¿ã„çµ‚ã‚ã£ãŸã‚‰å…¨éƒ¨ nil ã«æˆ»ã™ï¼‰
 ;;; ------------------------------------------------------------
 (defun yk:istr (i) (if (< i 0) (strcat "M" (itoa (abs i))) (itoa i)))
 (defun yk:cell (pre ix iy) (read (strcat pre (yk:istr ix) "X" (yk:istr iy))))
@@ -185,7 +184,7 @@
       (setq iy (1+ iy)))
     (setq ix (1+ ix))))
 
-;;; ‘ÎÛ‚Ìˆói•¶šTA¡–@Eƒ}ƒ‹ƒ`ˆøoü”Ô†B”Ô†‚Ì‚à‚Ì‚ÍáŠQ•¨‚Æ‚µ‚Ä‚à“o˜^‚·‚éj
+;;; å¯¾è±¡ã®å°ï¼ˆæ–‡å­—ï¼Tã€å¯¸æ³•ãƒ»ãƒãƒ«ãƒå¼•å‡ºç·šï¼ç•ªå·ã€‚ç•ªå·ã®ã‚‚ã®ã¯éšœå®³ç‰©ã¨ã—ã¦ã‚‚ç™»éŒ²ã™ã‚‹ï¼‰
 (defun yk:mark (e val / s)
   (setq s (read (strcat "YKH" (cdr (assoc 5 (entget e))))))
   (setq *yk:syms* (cons s *yk:syms*))
@@ -199,9 +198,9 @@
   (setq *yk:syms* nil *yk:own* nil))
 
 ;;; ------------------------------------------------------------
-;;;  áŠQ•¨‚Ì“o˜^
+;;;  éšœå®³ç‰©ã®ç™»éŒ²
 ;;; ------------------------------------------------------------
-;;; ü•ªiˆ—”ÍˆÍ‚ÅØ‚èæ‚èAƒ}ƒX–Ú‚Ì‘å‚«‚³‚²‚Æ‚É•ª‚¯‚Ä“o˜^j
+;;; ç·šåˆ†ï¼ˆå‡¦ç†ç¯„å›²ã§åˆ‡ã‚Šå–ã‚Šã€ãƒã‚¹ç›®ã®å¤§ãã•ã”ã¨ã«åˆ†ã‘ã¦ç™»éŒ²ï¼‰
 (defun yk:add-seg (p1 p2 / tt d a b len n i q1 q2 item)
   (if (setq tt (yk:clip (car p1) (cadr p1) (- (car p2) (car p1)) (- (cadr p2) (cadr p1))
                         (car *yk:reg*) (caddr *yk:reg*) (cadr *yk:reg*) (cadddr *yk:reg*)))
@@ -223,13 +222,13 @@
 
 (defun yk:add-box (o / bb)
   (if (yk:bb-hit (setq bb (yk:obb-aabb o)) *yk:reg*)
-    ;; ƒ}ƒX–Ú‚Ö‚Ì“o˜^‚Íˆ—”ÍˆÍ‚Ì’†‚¾‚¯i‘å‚«‚Èƒnƒbƒ`‚È‚Ç‚Å’x‚­‚È‚ç‚È‚¢‚æ‚¤‚Éj
+    ;; ãƒã‚¹ç›®ã¸ã®ç™»éŒ²ã¯å‡¦ç†ç¯„å›²ã®ä¸­ã ã‘ï¼ˆå¤§ããªãƒãƒƒãƒãªã©ã§é…ããªã‚‰ãªã„ã‚ˆã†ã«ï¼‰
     (yk:gadd "YKS"
              (list (max (car bb) (car *yk:reg*)) (max (cadr bb) (cadr *yk:reg*))
                    (min (caddr bb) (caddr *yk:reg*)) (min (cadddr bb) (cadddr *yk:reg*)))
              (list 'B o *yk:own*))))
 
-;;; ŠOŒ`‚ÌlŠp‚ğu’†g‚ ‚è‚ÌlŠpv‚Æ‚µ‚Ä“o˜^
+;;; å¤–å½¢ã®å››è§’ã‚’ã€Œä¸­èº«ã‚ã‚Šã®å››è§’ã€ã¨ã—ã¦ç™»éŒ²
 (defun yk:add-bb-box (bb)
   (yk:add-box (list (list (/ (+ (car bb) (caddr bb)) 2.0) (/ (+ (cadr bb) (cadddr bb)) 2.0))
                     '(1.0 0.0) (/ (- (caddr bb) (car bb)) 2.0) (/ (- (cadddr bb) (cadr bb)) 2.0))))
@@ -254,8 +253,8 @@
       (setq mn (vlax-safearray->list mn) mx (vlax-safearray->list mx))
       (list (car mn) (cadr mn) (car mx) (cadr mx)))))
 
-;;; Œ`‚ª•¡G‚È‚à‚ÌF¬‚³‚¯‚ê‚ÎlŠpi’†g‚ ‚èjA‘å‚«‚¯‚ê‚ÎŠOŒ`ü‚¾‚¯
-;;; i}˜gƒuƒƒbƒN‚È‚Ç‚ªu‘S–Ê‚ÌáŠQ•¨v‚É‚È‚ç‚È‚¢‚æ‚¤‚Éj
+;;; å½¢ãŒè¤‡é›‘ãªã‚‚ã®ï¼šå°ã•ã‘ã‚Œã°å››è§’ï¼ˆä¸­èº«ã‚ã‚Šï¼‰ã€å¤§ãã‘ã‚Œã°å¤–å½¢ç·šã ã‘
+;;; ï¼ˆå›³æ ãƒ–ãƒ­ãƒƒã‚¯ãªã©ãŒã€Œå…¨é¢ã®éšœå®³ç‰©ã€ã«ãªã‚‰ãªã„ã‚ˆã†ã«ï¼‰
 (defun yk:add-generic (e / bb w h)
   (if (and (setq bb (yk:bbox e)) (yk:bb-hit bb *yk:reg*))
     (progn
@@ -264,7 +263,7 @@
         (yk:add-bb-box bb)
         (yk:add-rect-outline bb)))))
 
-;;; ‹Èü‚ğ×‚©‚¢ü•ª‚É•ª‚¯‚Ä“o˜^
+;;; æ›²ç·šã‚’ç´°ã‹ã„ç·šåˆ†ã«åˆ†ã‘ã¦ç™»éŒ²
 (defun yk:add-sampled (e d0 d1 / sp n i pa pb pp dd)
   (setq sp (* 0.25 *yk:cs*)
         n  (min 500 (max 4 (fix (/ (- d1 d0) sp))))
@@ -290,7 +289,7 @@
       (setq len (vlax-curve-getDistAtParam e (vlax-curve-getEndParam e)))
       (if (and len (> len 0.0)) (yk:add-sampled e 0.0 len)))))
 
-;;; ƒ|ƒŠƒ‰ƒCƒ“F’¼ü‹æŠÔ‚Í‚»‚Ì‚Ü‚ÜA‰~ŒÊ‹æŠÔ‚¾‚¯×‚©‚­•ª‚¯‚é
+;;; ãƒãƒªãƒ©ã‚¤ãƒ³ï¼šç›´ç·šåŒºé–“ã¯ãã®ã¾ã¾ã€å††å¼§åŒºé–“ã ã‘ç´°ã‹ãåˆ†ã‘ã‚‹
 (defun yk:add-poly (e / ep k pa pb m)
   (if (yk:bb-hit (yk:bbox e) *yk:reg*)
     (progn
@@ -304,7 +303,7 @@
           (yk:add-sampled e (vlax-curve-getDistAtParam e k) (vlax-curve-getDistAtParam e (1+ k))))
         (setq k (1+ k))))))
 
-;;; ¡–@F¡–@‚Ì’†giüE–îˆóE¡–@’lj‚ğŒÂ•Ê‚É“o˜^BÀ•W‚ª‡‚í‚È‚¯‚ê‚ÎŠOŒ`‚Å‘ã—p
+;;; å¯¸æ³•ï¼šå¯¸æ³•ã®ä¸­èº«ï¼ˆç·šãƒ»çŸ¢å°ãƒ»å¯¸æ³•å€¤ï¼‰ã‚’å€‹åˆ¥ã«ç™»éŒ²ã€‚åº§æ¨™ãŒåˆã‚ãªã‘ã‚Œã°å¤–å½¢ã§ä»£ç”¨
 (defun yk:dim-ok (bh bb / be sub pts tol)
   (setq be  (entnext bh)
         tol (+ (if (numberp *yk:hav*) *yk:hav* 0.0)
@@ -323,10 +322,10 @@
   (setq typ (cdr (assoc 0 sub)))
   (cond ((= typ "LINE") (yk:add-seg (yk:p2 (cdr (assoc 10 sub))) (yk:p2 (cdr (assoc 11 sub)))))
         ((= typ "SOLID") (yk:add-pts (mapcar '(lambda (c) (cdr (assoc c sub))) '(10 11 13 12)) T))
-        ((member typ '("MTEXT" "TEXT"))            ; “®‚©‚·¡–@‚Ì•¶š‚ÍáŠQ•¨‚É‚µ‚È‚¢
+        ((member typ '("MTEXT" "TEXT"))            ; å‹•ã‹ã™å¯¸æ³•ã®æ–‡å­—ã¯éšœå®³ç‰©ã«ã—ãªã„
          (if (and (not *yk:own*) (setq o (yk:text-obb sub))) (yk:add-box o)))
         ((member typ '("ARC" "CIRCLE")) (yk:add-curve be))
-        ((= typ "INSERT") (yk:add-generic be))))  ; –îˆóƒuƒƒbƒN
+        ((= typ "INSERT") (yk:add-generic be))))  ; çŸ¢å°ãƒ–ãƒ­ãƒƒã‚¯
 
 (defun yk:add-dim (e ed / bn bh be sub bb)
   (setq bb (yk:bbox e) bn (cdr (assoc 2 ed)))
@@ -367,7 +366,7 @@
     (T (yk:add-generic e))))
 
 ;;; ------------------------------------------------------------
-;;;  •¶š‚ÌlŠp
+;;;  æ–‡å­—ã®å››è§’
 ;;; ------------------------------------------------------------
 (defun yk:zup (ed / n)
   (or (null (setq n (cdr (assoc 210 ed)))) (equal n '(0.0 0.0 1.0) 1e-8)))
@@ -376,7 +375,7 @@
   (setq typ (cdr (assoc 0 ed)) p (yk:p2 (cdr (assoc 10 ed))))
   (cond
     ((= typ "TEXT")
-     (setq a  (cond ((cdr (assoc 50 ed))) (0.0))   ; ‰ñ“]Šp‚ª–³‚¯‚ê‚Î 0 “x
+     (setq a  (cond ((cdr (assoc 50 ed))) (0.0))   ; å›è»¢è§’ãŒç„¡ã‘ã‚Œã° 0 åº¦
            tb (textbox ed))
      (if (and tb a)
        (progn
@@ -405,7 +404,7 @@
          (list (yk:v+ p (yk:v+ (yk:vs u (car lc)) (yk:vs v (cadr lc))))
                u (* w 0.5) (* h 0.5)))))))
 
-;;; ¡–@‚Ì•¶šF¡–@ƒuƒƒbƒN‚Ì’†‚Ì•¶š‚©‚ç‹‚ß‚é  ¨ (lŠp ‚‚³) ‚© nil
+;;; å¯¸æ³•ã®æ–‡å­—ï¼šå¯¸æ³•ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸­ã®æ–‡å­—ã‹ã‚‰æ±‚ã‚ã‚‹  â†’ (å››è§’ é«˜ã•) ã‹ nil
 (defun yk:dim-text (e ed / bn bh be sub bb o h res)
   (setq bn (cdr (assoc 2 ed)))
   (if (and (yk:zup ed) bn (setq bh (tblobjname "BLOCK" bn))
@@ -420,17 +419,17 @@
         (setq be (entnext be)))))
   res)
 
-;;; ƒ}ƒ‹ƒ`ˆøoüF•½–Ê‚ª}–Ê‚Æ•½s‚©iÅ‰‚Ì 11 = •¶š‚Ì–@üj
+;;; ãƒãƒ«ãƒå¼•å‡ºç·šï¼šå¹³é¢ãŒå›³é¢ã¨å¹³è¡Œã‹ï¼ˆæœ€åˆã® 11 = æ–‡å­—ã®æ³•ç·šï¼‰
 (defun yk:mld-zup (ed / n)
   (or (null (setq n (cdr (assoc 11 ed)))) (equal n '(0.0 0.0 1.0) 1e-8)))
 
-;;; ’·‚¢•¶š‚ğ 250 •¶š‚¸‚Â‚É•ª‚¯‚éiMTEXT ‚Ì 3 / 1 —pj
+;;; é•·ã„æ–‡å­—ã‚’ 250 æ–‡å­—ãšã¤ã«åˆ†ã‘ã‚‹ï¼ˆMTEXT ã® 3 / 1 ç”¨ï¼‰
 (defun yk:str-codes (str / res)
   (while (> (strlen str) 250)
     (setq res (cons (cons 3 (substr str 1 250)) res) str (substr str 251)))
   (reverse (cons (cons 1 str) res)))
 
-;;; ƒ}ƒ‹ƒ`ˆøoü‚Ì•¶šF“¯‚¶“à—e‚Ìˆê“I‚Èƒ}ƒ‹ƒ`ƒeƒLƒXƒg‚ğì‚Á‚Ä‘å‚«‚³‚ğ‘ª‚é ¨ (lŠp ‚‚³) ‚© nil
+;;; ãƒãƒ«ãƒå¼•å‡ºç·šã®æ–‡å­—ï¼šåŒã˜å†…å®¹ã®ä¸€æ™‚çš„ãªãƒãƒ«ãƒãƒ†ã‚­ã‚¹ãƒˆã‚’ä½œã£ã¦å¤§ãã•ã‚’æ¸¬ã‚‹ â†’ (å››è§’ é«˜ã•) ã‹ nil
 (defun yk:mld-text (obj ed / str h w att ins dir sty tmp o)
   (setq str (vl-catch-all-apply 'vla-get-TextString (list obj)))
   (if (vl-catch-all-error-p str) (setq str (cdr (assoc 304 ed))))
@@ -458,7 +457,7 @@
           (entdel tmp)))
       (if o (list o h)))))
 
-;;; ƒ}ƒ‹ƒ`ˆøoü‚Ìˆøoü ¨ ((ü”Ô† . ’¸“_‚Ì•À‚Ñ x y z x y z ...) ...)
+;;; ãƒãƒ«ãƒå¼•å‡ºç·šã®å¼•å‡ºç·š â†’ ((ç·šç•ªå· . é ‚ç‚¹ã®ä¸¦ã³ x y z x y z ...) ...)
 (defun yk:mld-lines (obj / n li found idxs res)
   (setq n (vla-get-LeaderCount obj) li 0 found 0)
   (while (and (< found n) (< li (+ n 20)))
@@ -476,7 +475,7 @@
     (setq res (cons (list (car l) (cadr l) (caddr l)) res) l (cdddr l)))
   (reverse res))
 
-;;; ƒ}ƒ‹ƒ`ˆøoü‚ğáŠQ•¨‚ÉFˆøoü‚ÍüA•¶š‚ÍlŠpi“®‚©‚·‘ÎÛ‚È‚ç•¶š‚Í“o˜^‚µ‚È‚¢j
+;;; ãƒãƒ«ãƒå¼•å‡ºç·šã‚’éšœå®³ç‰©ã«ï¼šå¼•å‡ºç·šã¯ç·šã€æ–‡å­—ã¯å››è§’ï¼ˆå‹•ã‹ã™å¯¾è±¡ãªã‚‰æ–‡å­—ã¯ç™»éŒ²ã—ãªã„ï¼‰
 (defun yk:add-mld (e ed / obj o)
   (setq obj (vlax-ename->vla-object e))
   (if (and (yk:mld-zup ed) (yk:bb-hit (yk:bbox e) *yk:reg*))
@@ -487,7 +486,7 @@
                (setq o (car (yk:mld-text obj ed))))
         (yk:add-box o)))))
 
-;;; “®‚©‚·‘ÎÛ‚Ìî•ñ ¨ (í—Ş lŠp ‚‚³ Z •â‘«) ‚© nil   í—ŞFT=•¶š D=¡–@ M=ƒ}ƒ‹ƒ`ˆøoü
+;;; å‹•ã‹ã™å¯¾è±¡ã®æƒ…å ± â†’ (ç¨®é¡ å››è§’ é«˜ã• Z è£œè¶³) ã‹ nil   ç¨®é¡ï¼šT=æ–‡å­— D=å¯¸æ³• M=ãƒãƒ«ãƒå¼•å‡ºç·š
 (defun yk:target-info (e ed / typ obj dt pos h o)
   (setq typ (cdr (assoc 0 ed)) obj (vlax-ename->vla-object e))
   (cond
@@ -504,9 +503,9 @@
      (list 'T o h (caddr (cdr (assoc 10 ed))) nil))))
 
 ;;; ------------------------------------------------------------
-;;;  ”»’è‚Æ’Tõ
+;;;  åˆ¤å®šã¨æ¢ç´¢
 ;;; ------------------------------------------------------------
-;;; áŠQ•¨‚Ì‚¿åi¡–@Eƒ}ƒ‹ƒ`ˆøoü‚Ì”Ô†j
+;;; éšœå®³ç‰©ã®æŒã¡ä¸»ï¼ˆå¯¸æ³•ãƒ»ãƒãƒ«ãƒå¼•å‡ºç·šã®ç•ªå·ï¼‰
 (defun yk:owner (it) (if (eq (car it) 'S) (cadddr it) (caddr it)))
 
 (defun yk:hits (o idx / bb)
@@ -520,10 +519,10 @@
       (vl-some '(lambda (r) (and (/= (car r) idx) (yk:obb-hit o (cdr r))))
                (yk:gget "YKT" bb))))
 
-;;; Œ³‚ÌˆÊ’u‚Ì‚Ü‚í‚è‚ğ—Öó‚É’T‚µA“_”iˆÚ“®‹——£{•ûŒü‚É‚æ‚éŒ¸“_j‚Ì—Ç‚¢Š‚ğ‘I‚Ô
-;;; •¶šF•¶š‚Ì•À‚Ô•ûŒü‚Ö‚ÌˆÚ“®‚ğ­‚µŒ¸“_iã‰º‚É“¦‚ª‚·j
-;;; ¡–@F¡–@ü‚Æ’¼Šp•ûŒü‚Ö‚ÌˆÚ“®‚ğ‘å‚«‚­Œ¸“_i¡–@ü‚É‰ˆ‚Á‚Ä‰¡‚É‚¸‚ç‚·j
-;;; “_”‚ÍˆÚ“®‹——£ˆÈã‚É‚È‚é‚Ì‚ÅAu‚±‚êˆÈã‰“‚­‚Å‚Í¡‚ÌÅ—Ç‚ğ’´‚¦‚ç‚ê‚È‚¢vŠ‚Å’Tõ‚ğI‚¦‚é
+;;; å…ƒã®ä½ç½®ã®ã¾ã‚ã‚Šã‚’è¼ªçŠ¶ã«æ¢ã—ã€ç‚¹æ•°ï¼ˆç§»å‹•è·é›¢ï¼‹æ–¹å‘ã«ã‚ˆã‚‹æ¸›ç‚¹ï¼‰ã®è‰¯ã„æ‰€ã‚’é¸ã¶
+;;; æ–‡å­—ï¼šæ–‡å­—ã®ä¸¦ã¶æ–¹å‘ã¸ã®ç§»å‹•ã‚’å°‘ã—æ¸›ç‚¹ï¼ˆä¸Šä¸‹ã«é€ƒãŒã™ï¼‰
+;;; å¯¸æ³•ï¼šå¯¸æ³•ç·šã¨ç›´è§’æ–¹å‘ã¸ã®ç§»å‹•ã‚’å¤§ããæ¸›ç‚¹ï¼ˆå¯¸æ³•ç·šã«æ²¿ã£ã¦æ¨ªã«ãšã‚‰ã™ï¼‰
+;;; ç‚¹æ•°ã¯ç§»å‹•è·é›¢ä»¥ä¸Šã«ãªã‚‹ã®ã§ã€ã€Œã“ã‚Œä»¥ä¸Šé ãã§ã¯ä»Šã®æœ€è‰¯ã‚’è¶…ãˆã‚‰ã‚Œãªã„ã€æ‰€ã§æ¢ç´¢ã‚’çµ‚ãˆã‚‹
 (defun yk:search (idx obb h kind / m step kmax u base k j r ang dir dvec cand sc best bestsc)
   (setq m    (* *yk:clear* h)
         step (* 0.5 h)
@@ -550,7 +549,7 @@
   best)
 
 ;;; ------------------------------------------------------------
-;;;  }–Ê‚Ìî•ñ
+;;;  å›³é¢ã®æƒ…å ±
 ;;; ------------------------------------------------------------
 (defun yk:space ( )
   (if (and (= 0 (getvar "TILEMODE")) (/= 1 (getvar "CVPORT"))) "Model" (getvar "CTAB")))
@@ -571,7 +570,7 @@
   (yk:v+ c (yk:v+ (yk:vs u lx) (yk:vs v ly))))
 
 ;;; ------------------------------------------------------------
-;;;  ‘I‘ğ
+;;;  é¸æŠ
 ;;; ------------------------------------------------------------
 (defun yk:types ( )
   (strcat "TEXT,MTEXT" (if *yk:movdim* ",DIMENSION" "") (if *yk:movmld* ",MULTILEADER" "")))
@@ -582,13 +581,13 @@
      (sssetfirst nil nil)
      ss)
     (T
-     (princ "\n“¦‚ª‚·•¶š‚ğ‘I‘ği‰½‚à‘I‚Î‚¸ Enter ‚Å‘¼‚Ì‘I‘ğˆj")
+     (princ "\né€ƒãŒã™æ–‡å­—ã‚’é¸æŠï¼ˆä½•ã‚‚é¸ã°ãš Enter ã§ä»–ã®é¸æŠè‚¢ï¼‰")
      (setq ss (ssget (list (cons 0 (yk:types)))))
      (if ss
        ss
        (progn
          (initget "All Settings eXit")
-         (setq ans (getkword "\n‘I‘ğ‚È‚µ [}–Ê‘S‘Ì(A)/İ’è(S)/I—¹(X)] <I—¹>: "))
+         (setq ans (getkword "\né¸æŠãªã— [å›³é¢å…¨ä½“(A)/è¨­å®š(S)/çµ‚äº†(X)] <çµ‚äº†>: "))
          (cond ((= ans "All")
                 (ssget "_X" (list (cons 0 (yk:types)) (cons 410 space))))
                ((= ans "Settings")
@@ -598,16 +597,16 @@
                (T nil)))))))
 
 ;;; ------------------------------------------------------------
-;;;  Œ³‚É–ß‚·iŠm”F‚ÅuŒ³‚É–ß‚·vA‚Ü‚½‚Í EscEƒGƒ‰[‚Ì‚Æ‚«j
+;;;  å…ƒã«æˆ»ã™ï¼ˆç¢ºèªã§ã€Œå…ƒã«æˆ»ã™ã€ã€ã¾ãŸã¯ Escãƒ»ã‚¨ãƒ©ãƒ¼ã®ã¨ãï¼‰
 ;;; ------------------------------------------------------------
-;;; “®‚©‚µ‚½—Ê‚ğ‹L˜^  yk-moved ‚Ì’†g = (”Ô† ƒIƒuƒWƒFƒNƒg ‡Œvdx ‡Œvdy ‘ÎÛ‚Ìî•ñ)
+;;; å‹•ã‹ã—ãŸé‡ã‚’è¨˜éŒ²  yk-moved ã®ä¸­èº« = (ç•ªå· ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ åˆè¨ˆdx åˆè¨ˆdy å¯¾è±¡ã®æƒ…å ±)
 (defun yk:rec-move (r d / old)
   (if (setq old (assoc (car r) yk-moved))
     (setq yk-moved (subst (list (car r) (nth 6 r) (+ (caddr old) (car d)) (+ (cadddr old) (cadr d)) r)
                           old yk-moved))
     (setq yk-moved (cons (list (car r) (nth 6 r) (car d) (cadr d) r) yk-moved))))
 
-;;; ƒ}ƒ‹ƒ`ˆøoüF–îˆó‚ÌæiŠeˆøoü‚ÌÅ‰‚Ì“_j‚ğŒ³‚ÌˆÊ’u‚Ö–ß‚·
+;;; ãƒãƒ«ãƒå¼•å‡ºç·šï¼šçŸ¢å°ã®å…ˆï¼ˆå„å¼•å‡ºç·šã®æœ€åˆã®ç‚¹ï¼‰ã‚’å…ƒã®ä½ç½®ã¸æˆ»ã™
 (defun yk:mld-fix-arrows (obj lines / cur org)
   (foreach ln lines
     (setq org (cdr ln)
@@ -617,27 +616,27 @@
         (list obj 'SetLeaderLineVertices (car ln)
               (append (list (car org) (cadr org) (caddr org)) (cdddr cur)))))))
 
-;;; 1‚Â“®‚©‚·id = ¡‰ñ‚ÌˆÚ“®—Êj
+;;; 1ã¤å‹•ã‹ã™ï¼ˆd = ä»Šå›ã®ç§»å‹•é‡ï¼‰
 (defun yk:apply-move (r d / mv p obj)
   (yk:rec-move r d)
   (setq mv (assoc (car r) yk-moved) obj (nth 6 r))
   (cond
-    ((eq (nth 7 r) 'D)                     ; ¡–@F•¶š‚ÌˆÊ’u‚ğw’èi¡–@‚Ìd‘g‚İ‚Å“®‚©‚·j
+    ((eq (nth 7 r) 'D)                     ; å¯¸æ³•ï¼šæ–‡å­—ã®ä½ç½®ã‚’æŒ‡å®šï¼ˆå¯¸æ³•ã®ä»•çµ„ã¿ã§å‹•ã‹ã™ï¼‰
      (setq p (car (nth 8 r)))
      (vlax-put obj 'TextPosition (list (+ (car p) (caddr mv)) (+ (cadr p) (cadddr mv)) (caddr p))))
-    ((eq (nth 7 r) 'M)                     ; ƒ}ƒ‹ƒ`ˆøoüF‘S‘Ì‚ğ“®‚©‚µA–îˆó‚Ìæ‚¾‚¯–ß‚·
+    ((eq (nth 7 r) 'M)                     ; ãƒãƒ«ãƒå¼•å‡ºç·šï¼šå…¨ä½“ã‚’å‹•ã‹ã—ã€çŸ¢å°ã®å…ˆã ã‘æˆ»ã™
      (vla-move obj (vlax-3d-point '(0.0 0.0 0.0)) (vlax-3d-point (list (car d) (cadr d) 0.0)))
      (yk:mld-fix-arrows obj (nth 8 r)))
     (T
      (vla-move obj (vlax-3d-point '(0.0 0.0 0.0)) (vlax-3d-point (list (car d) (cadr d) 0.0))))))
 
-;;; 1‚ÂŒ³‚É–ß‚·
+;;; 1ã¤å…ƒã«æˆ»ã™
 (defun yk:undo-one (r dx dy / obj e ed)
   (setq obj (nth 6 r))
   (cond
     ((eq (nth 7 r) 'D)
      (vlax-put obj 'TextPosition (car (nth 8 r)))
-     ;; Œ³‚ªu•W€‚ÌˆÊ’uv‚¾‚Á‚½¡–@‚ÍA‚»‚Ìó‘Ôiƒ†[ƒU[w’èˆÊ’u‚Ìˆó‚È‚µj‚É–ß‚·
+     ;; å…ƒãŒã€Œæ¨™æº–ã®ä½ç½®ã€ã ã£ãŸå¯¸æ³•ã¯ã€ãã®çŠ¶æ…‹ï¼ˆãƒ¦ãƒ¼ã‚¶ãƒ¼æŒ‡å®šä½ç½®ã®å°ãªã—ï¼‰ã«æˆ»ã™
      (if (and (setq e (vlax-vla-object->ename obj)) (setq ed (entget e))
               (/= (cdr (assoc 70 ed)) (cadr (nth 8 r))))
        (progn
@@ -659,7 +658,7 @@
   (setq yk-moved nil yk-leaders nil yk-masks nil yk-pending nil))
 
 ;;; ------------------------------------------------------------
-;;;  ƒƒCƒ“
+;;;  ãƒ¡ã‚¤ãƒ³
 ;;; ------------------------------------------------------------
 (defun c:YOKERU ( / *error* doc undo space ss i n e ed lay o h z idx recs
                     hidden nlock nfix nskip hmax hsum bb reg ext rw rh ss2 cnt
@@ -673,10 +672,10 @@
     (yk:cleanup)
     (if (and doc undo) (progn (vla-EndUndoMark doc) (setq undo nil)))
     (cond ((and msg (not (wcmatch (strcase msg) "*BREAK*,*CANCEL*,*EXIT*")))
-           (princ (strcat "\n[YOKERU] ƒGƒ‰[: " msg
-                          (if reverted "i•ÏX‚ÍŒ³‚É–ß‚µ‚Ü‚µ‚½j" ""))))
-          (reverted (princ "\n[YOKERU] ’†~‚µ‚Ü‚µ‚½B•ÏX‚ÍŒ³‚É–ß‚µ‚Ü‚µ‚½B"))
-          (T (princ "\n[YOKERU] ’†~‚µ‚Ü‚µ‚½B")))
+           (princ (strcat "\n[YOKERU] ã‚¨ãƒ©ãƒ¼: " msg
+                          (if reverted "ï¼ˆå¤‰æ›´ã¯å…ƒã«æˆ»ã—ã¾ã—ãŸï¼‰" ""))))
+          (reverted (princ "\n[YOKERU] ä¸­æ­¢ã—ã¾ã—ãŸã€‚å¤‰æ›´ã¯å…ƒã«æˆ»ã—ã¾ã—ãŸã€‚"))
+          (T (princ "\n[YOKERU] ä¸­æ­¢ã—ã¾ã—ãŸã€‚")))
     (princ))
 
   (setq doc (vla-get-ActiveDocument (vlax-get-acad-object)) *yk:hav* nil)
@@ -686,11 +685,11 @@
 
   (if (setq ss (yk:select space))
     (progn
-      (yk:load-cfg)                       ; ‘I‘ğ’†‚Éİ’è‚ğ•Ï‚¦‚½ê‡‚É”õ‚¦‚Ä“Ç‚İ’¼‚·
+      (yk:load-cfg)                       ; é¸æŠä¸­ã«è¨­å®šã‚’å¤‰ãˆãŸå ´åˆã«å‚™ãˆã¦èª­ã¿ç›´ã™
       (vla-StartUndoMark doc)
       (setq undo T t0 (getvar "MILLISECS"))
 
-      ;; ---- 1. ‘ÎÛ‚Ì•¶š ----
+      ;; ---- 1. å¯¾è±¡ã®æ–‡å­— ----
       (setq hidden (yk:hidden-layers)
             nlock 0 nfix 0 nskip 0 ndim 0 nmld 0 idx 0 hmax 0.0 hsum 0.0 i 0 n (sslength ss))
       (repeat n
@@ -703,7 +702,7 @@
                (null inf))
            (setq nskip (1+ nskip)))
           (T
-           ;; recs ‚Ì’†g = (”Ô† }Œ`–¼ ‚‚³ lŠp Z ‰æ‘w ƒIƒuƒWƒFƒNƒg í—Ş •â‘«)
+           ;; recs ã®ä¸­èº« = (ç•ªå· å›³å½¢å é«˜ã• å››è§’ Z ç”»å±¤ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ ç¨®é¡ è£œè¶³)
            (setq idx  (1+ idx)
                  h    (nth 2 inf)
                  recs (cons (list idx e h (nth 1 inf) (nth 3 inf) lay (vlax-ename->vla-object e)
@@ -717,10 +716,10 @@
       (setq recs (reverse recs))
 
       (if (null recs)
-        (princ (strcat "\n[YOKERU] “®‚©‚¹‚é•¶š‚ª‚ ‚è‚Ü‚¹‚ñ"
-                       "iƒƒbƒN " (itoa nlock) "EŒÅ’è " (itoa nfix) "E‘ÎÛŠO " (itoa nskip) "jB"))
+        (princ (strcat "\n[YOKERU] å‹•ã‹ã›ã‚‹æ–‡å­—ãŒã‚ã‚Šã¾ã›ã‚“"
+                       "ï¼ˆãƒ­ãƒƒã‚¯ " (itoa nlock) "ãƒ»å›ºå®š " (itoa nfix) "ãƒ»å¯¾è±¡å¤– " (itoa nskip) "ï¼‰ã€‚"))
         (progn
-          ;; ---- 2. ˆ—”ÍˆÍ‚Æƒ}ƒX–Ú ----
+          ;; ---- 2. å‡¦ç†ç¯„å›²ã¨ãƒã‚¹ç›® ----
           (setq *yk:hav* (/ hsum (length recs)))
           (foreach r recs
             (setq bb (yk:obb-aabb (nth 3 r))
@@ -737,29 +736,29 @@
                 *yk:gy0* (cadr reg)
                 *yk:cs*  (max (* 2.0 *yk:hav*) (/ (max rw rh) 3000.0)))
 
-          ;; ---- 3. áŠQ•¨‚ğ“Ç‚İ‚Şi‰æ–Ê‚ÌƒY[ƒ€‚ÉŠÖŒW‚È‚­}–Ê‘S‘Ì‚©‚çj----
-          (princ "\n[YOKERU] ü‚è‚Ì}Œ`‚ğ“Ç‚İ‚İ’†...")
+          ;; ---- 3. éšœå®³ç‰©ã‚’èª­ã¿è¾¼ã‚€ï¼ˆç”»é¢ã®ã‚ºãƒ¼ãƒ ã«é–¢ä¿‚ãªãå›³é¢å…¨ä½“ã‹ã‚‰ï¼‰----
+          (princ "\n[YOKERU] å‘¨ã‚Šã®å›³å½¢ã‚’èª­ã¿è¾¼ã¿ä¸­...")
           (if (setq ss2 (ssget "_X" (list (cons 410 space))))
             (progn
               (setq i 0)
               (repeat (sslength ss2)
                 (setq e (ssname ss2 i) ed (entget e) lay (cdr (assoc 8 ed)) i (1+ i)
                       mk (yk:marked-p ed))
-                (if (not (or (eq mk T)          ; “®‚©‚·•¶š‚»‚Ì‚à‚Ì‚Í•Ê‚Éˆµ‚¤
+                (if (not (or (eq mk T)          ; å‹•ã‹ã™æ–‡å­—ãã®ã‚‚ã®ã¯åˆ¥ã«æ‰±ã†
                              (member (strcase lay) hidden)
                              (and *yk:ignpat* (wcmatch (strcase lay) *yk:ignpat*))))
                   (progn
-                    ;; “®‚©‚·¡–@Eƒ}ƒ‹ƒ`ˆøoü‚Ìü‚ÍA©•ª‚Ì•¶šˆÈŠO‚ÌáŠQ•¨‚Æ‚µ‚Ä“o˜^
+                    ;; å‹•ã‹ã™å¯¸æ³•ãƒ»ãƒãƒ«ãƒå¼•å‡ºç·šã®ç·šã¯ã€è‡ªåˆ†ã®æ–‡å­—ä»¥å¤–ã®éšœå®³ç‰©ã¨ã—ã¦ç™»éŒ²
                     (setq *yk:own* (if (numberp mk) mk))
                     (vl-catch-all-apply 'yk:add-entity (list e ed))
                     (setq *yk:own* nil))))))
 
-          ;; ---- 4. •¶š‚ğƒ}ƒX–Ú‚Ö ----
+          ;; ---- 4. æ–‡å­—ã‚’ãƒã‚¹ç›®ã¸ ----
           (foreach r recs
             (yk:gadd "YKT" (yk:obb-aabb (nth 3 r)) (cons (car r) (nth 3 r)))
             (setq yk-cur (cons (cons (car r) (nth 3 r)) yk-cur)))
 
-          ;; ---- 5. d‚È‚Á‚Ä‚¢‚é•¶š‚ğ’T‚µA‚İ‡‚Á‚Ä‚¢‚é‡‚É•À‚×‚é ----
+          ;; ---- 5. é‡ãªã£ã¦ã„ã‚‹æ–‡å­—ã‚’æ¢ã—ã€è¾¼ã¿åˆã£ã¦ã„ã‚‹é †ã«ä¸¦ã¹ã‚‹ ----
           (foreach r recs
             (setq o (nth 3 r) m (* *yk:clear* (nth 2 r)))
             (if (yk:hits (yk:obb-grow o m) (car r))
@@ -770,7 +769,7 @@
           (setq nhit (length pend)
                 pend (mapcar 'cdr (vl-sort pend '(lambda (a b) (> (car a) (car b))))))
 
-          ;; ---- 6. “¦‚ª‚·iÅ‘å3üB“¦‚°‚ç‚ê‚È‚©‚Á‚½•¶š‚Íü‚è‚ª“®‚¢‚½Œã‚É‚à‚¤ˆê“xj----
+          ;; ---- 6. é€ƒãŒã™ï¼ˆæœ€å¤§3å‘¨ã€‚é€ƒã’ã‚‰ã‚Œãªã‹ã£ãŸæ–‡å­—ã¯å‘¨ã‚ŠãŒå‹•ã„ãŸå¾Œã«ã‚‚ã†ä¸€åº¦ï¼‰----
           (setq pass 1 yk-pending T)
           (while (and pend (<= pass 3))
             (setq fails nil)
@@ -788,7 +787,7 @@
                   (setq fails (cons r fails)))))
             (setq pend (reverse fails) pass (1+ pass)))
 
-          ;; ---- 7. ˆøoüi•¶š‚¾‚¯B¡–@Eƒ}ƒ‹ƒ`ˆøoü‚Í©•ª‚Ìd‘g‚İ‚Åü‚ª•t‚­j----
+          ;; ---- 7. å¼•å‡ºç·šï¼ˆæ–‡å­—ã ã‘ã€‚å¯¸æ³•ãƒ»ãƒãƒ«ãƒå¼•å‡ºç·šã¯è‡ªåˆ†ã®ä»•çµ„ã¿ã§ç·šãŒä»˜ãï¼‰----
           (if *yk:ldr*
             (foreach mv yk-moved
               (setq r   (assoc (car mv) recs)
@@ -806,7 +805,7 @@
                                                  (list 11 (car p1) (cadr p1) (nth 4 r)))))
                       (setq yk-leaders (cons le yk-leaders))))))))
 
-          ;; ---- 8. “¦‚°ê‚ª‚È‚©‚Á‚½ƒ}ƒ‹ƒ`ƒeƒLƒXƒg‚É”wŒiƒ}ƒXƒNiİ’è‚Ì‚İj----
+          ;; ---- 8. é€ƒã’å ´ãŒãªã‹ã£ãŸãƒãƒ«ãƒãƒ†ã‚­ã‚¹ãƒˆã«èƒŒæ™¯ãƒã‚¹ã‚¯ï¼ˆè¨­å®šæ™‚ã®ã¿ï¼‰----
           (if *yk:mask*
             (foreach r pend
               (if (and (eq (nth 7 r) 'T) (= "MTEXT" (cdr (assoc 0 (entget (nth 1 r))))))
@@ -818,7 +817,7 @@
 
           (setq nmoved (length yk-moved))
 
-          ;; ---- 9. Šm”Fi“®‚¢‚½•¶š—Î‚Ì–îˆóA“¦‚°ê‚È‚µÔ˜gj----
+          ;; ---- 9. ç¢ºèªï¼ˆå‹•ã„ãŸæ–‡å­—ï¼ç·‘ã®çŸ¢å°ã€é€ƒã’å ´ãªã—ï¼èµ¤æ ï¼‰----
           (if (and *yk:confirm* (or yk-moved pend))
             (progn
               (foreach mv yk-moved
@@ -836,10 +835,10 @@
                                                   (trans (list (car (cadr cnt)) (cadr (cadr cnt)) z) 0 1)))
                         cnt (cdr cnt))))
               (if vecs (grvecs vecs))
-              (princ (strcat "\n[YOKERU] ˆÚ“® " (itoa nmoved) " ŒÂi—Î‚Ì–îˆój"
-                             (if pend (strcat "E“¦‚°ê‚È‚µ " (itoa (length pend)) " ŒÂiÔ˜gj") "")))
+              (princ (strcat "\n[YOKERU] ç§»å‹• " (itoa nmoved) " å€‹ï¼ˆç·‘ã®çŸ¢å°ï¼‰"
+                             (if pend (strcat "ãƒ»é€ƒã’å ´ãªã— " (itoa (length pend)) " å€‹ï¼ˆèµ¤æ ï¼‰") "")))
               (initget "Yes Undo")
-              (setq ans (getkword "\nŠm’è‚µ‚Ü‚·‚©H [Šm’è(Y)/Œ³‚É–ß‚·(U)] <Šm’è>: "))
+              (setq ans (getkword "\nç¢ºå®šã—ã¾ã™ã‹ï¼Ÿ [ç¢ºå®š(Y)/å…ƒã«æˆ»ã™(U)] <ç¢ºå®š>: "))
               (redraw)
               (if (= ans "Undo")
                 (progn
@@ -847,32 +846,32 @@
                   (setq nmoved -1)))))
           (setq yk-pending nil)
 
-          ;; ---- 10. Œ‹‰Ê‚Ì’Ê’m ----
+          ;; ---- 10. çµæœã®é€šçŸ¥ ----
           (if (= nmoved -1)
-            (princ "\n[YOKERU] Œ³‚É–ß‚µ‚Ü‚µ‚½B")
+            (princ "\n[YOKERU] å…ƒã«æˆ»ã—ã¾ã—ãŸã€‚")
             (progn
-              (princ (strcat "\n[YOKERU] Š®—¹F‘ÎÛ " (itoa (length recs)) " ŒÂ"
+              (princ (strcat "\n[YOKERU] å®Œäº†ï¼šå¯¾è±¡ " (itoa (length recs)) " å€‹"
                              (if (> (+ ndim nmld) 0)
-                               (strcat "i‚¤‚¿¡–@ " (itoa ndim) "Eƒ}ƒ‹ƒ`ˆøoü " (itoa nmld) "j")
+                               (strcat "ï¼ˆã†ã¡å¯¸æ³• " (itoa ndim) "ãƒ»ãƒãƒ«ãƒå¼•å‡ºç·š " (itoa nmld) "ï¼‰")
                                "")
-                             " / d‚È‚è " (itoa nhit)
-                             " ŒÂ ¨ ˆÚ“® " (itoa nmoved)
-                             " ŒÂiˆøoü " (itoa (length yk-leaders)) " –{j"))
+                             " / é‡ãªã‚Š " (itoa nhit)
+                             " å€‹ â†’ ç§»å‹• " (itoa nmoved)
+                             " å€‹ï¼ˆå¼•å‡ºç·š " (itoa (length yk-leaders)) " æœ¬ï¼‰"))
               (if pend
-                (princ (strcat "\n          “¦‚°ê‚È‚µ " (itoa (length pend)) " ŒÂ"
-                               (if yk-masks (strcat "i‚¤‚¿ " (itoa (length yk-masks)) " ŒÂ‚É”wŒiƒ}ƒXƒNj") "")
-                               " ¨ ‘I‘ğó‘Ô‚É‚µ‚Ü‚µ‚½")))
+                (princ (strcat "\n          é€ƒã’å ´ãªã— " (itoa (length pend)) " å€‹"
+                               (if yk-masks (strcat "ï¼ˆã†ã¡ " (itoa (length yk-masks)) " å€‹ã«èƒŒæ™¯ãƒã‚¹ã‚¯ï¼‰") "")
+                               " â†’ é¸æŠçŠ¶æ…‹ã«ã—ã¾ã—ãŸ")))
               (if (> (+ nlock nfix nskip) 0)
-                (princ (strcat "\n          ‘ÎÛŠOFƒƒbƒN‰æ‘w " (itoa nlock)
-                               "EŒÅ’è‰æ‘w " (itoa nfix) "E”ñ•\¦/3D/‚»‚Ì‘¼ " (itoa nskip))))
-              (princ (strcat "\n          ˆ—ŠÔ "
-                             (rtos (/ (- (getvar "MILLISECS") t0) 1000.0) 2 2) " •b"))))
+                (princ (strcat "\n          å¯¾è±¡å¤–ï¼šãƒ­ãƒƒã‚¯ç”»å±¤ " (itoa nlock)
+                               "ãƒ»å›ºå®šç”»å±¤ " (itoa nfix) "ãƒ»éè¡¨ç¤º/3D/ãã®ä»– " (itoa nskip))))
+              (princ (strcat "\n          å‡¦ç†æ™‚é–“ "
+                             (rtos (/ (- (getvar "MILLISECS") t0) 1000.0) 2 2) " ç§’"))))
 
           (yk:cleanup)
           (vla-EndUndoMark doc)
           (setq undo nil)
 
-          ;; “¦‚°ê‚ª‚È‚©‚Á‚½•¶š‚ğ‘I‘ğó‘Ô‚ÉiŠm”FEè’¼‚µ—pj
+          ;; é€ƒã’å ´ãŒãªã‹ã£ãŸæ–‡å­—ã‚’é¸æŠçŠ¶æ…‹ã«ï¼ˆç¢ºèªãƒ»æ‰‹ç›´ã—ç”¨ï¼‰
           (if (and pend (/= nmoved -1))
             (progn
               (setq ssf (ssadd))
@@ -885,27 +884,27 @@
 (defun c:YK ( ) (c:YOKERU))
 
 ;;; ------------------------------------------------------------
-;;;  İ’è‰æ–Ê
+;;;  è¨­å®šç”»é¢
 ;;; ------------------------------------------------------------
-(defun yk:onoff (key) (if (yk:cfgb key) "‚·‚é" "‚µ‚È‚¢"))
+(defun yk:onoff (key) (if (yk:cfgb key) "ã™ã‚‹" "ã—ãªã„"))
 
 (defun yk:show-settings ( )
-  (princ "\n„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ YOKERU İ’è „Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ")
-  (princ (strcat "\n —]”’(C)       : •¶š‚‚³ ~ " (yk:cfg "Clear")))
-  (princ (strcat "\n ‹——£(D)       : Å‘å •¶š‚‚³ ~ " (yk:cfg "MaxDist") " ‚Ü‚Å“®‚©‚·"))
-  (princ (strcat "\n •ûŒü”(N)     : " (yk:cfg "Dirs") " •ûŒü‚ğ’T‚·"))
-  (princ (strcat "\n ˆøoü(L)     : " (yk:onoff "Leader")))
-  (princ (strcat "\n ˆøoü‹——£(E) : •¶š‚‚³ ~ " (yk:cfg "LdrDist") " ˆÈã“®‚¢‚½‚çˆøoü"))
-  (princ (strcat "\n ƒuƒƒbƒN(B)   : áŠQ•¨‚É" (yk:onoff "UseBlk")))
-  (princ (strcat "\n ¡–@(M)       : áŠQ•¨‚É" (yk:onoff "UseDim")))
-  (princ (strcat "\n ƒnƒbƒ`(H)     : áŠQ•¨‚É" (yk:onoff "UseHat")))
-  (princ (strcat "\n ŒÅ’è‰æ‘w(F)   : " (if (= (yk:cfg "FixLay") "") "i‚È‚µj" (yk:cfg "FixLay"))))
-  (princ (strcat "\n –³‹‰æ‘w(I)   : " (if (= (yk:cfg "IgnLay") "") "i‚È‚µj" (yk:cfg "IgnLay"))))
-  (princ (strcat "\n ƒ}ƒXƒN(K)     : “¦‚°ê‚Ì‚È‚¢ƒ}ƒ‹ƒ`ƒeƒLƒXƒg‚É”wŒiƒ}ƒXƒN‚ğ" (yk:onoff "MaskFail")))
-  (princ (strcat "\n Šm”F(O)       : ÀsŒã‚ÉŠm”F" (yk:onoff "Confirm")))
-  (princ (strcat "\n ¡–@‚Ì•¶š(T) : “®‚©‚·‘ÎÛ‚É" (yk:onoff "MoveDim")))
-  (princ (strcat "\n ƒ}ƒ‹ƒ`ˆøoü(U): “®‚©‚·‘ÎÛ‚É" (yk:onoff "MoveMld")))
-  (princ "\n„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ"))
+  (princ "\nâ”€â”€â”€â”€â”€â”€â”€â”€ YOKERU è¨­å®š â”€â”€â”€â”€â”€â”€â”€â”€")
+  (princ (strcat "\n ä½™ç™½(C)       : æ–‡å­—é«˜ã• Ã— " (yk:cfg "Clear")))
+  (princ (strcat "\n è·é›¢(D)       : æœ€å¤§ æ–‡å­—é«˜ã• Ã— " (yk:cfg "MaxDist") " ã¾ã§å‹•ã‹ã™"))
+  (princ (strcat "\n æ–¹å‘æ•°(N)     : " (yk:cfg "Dirs") " æ–¹å‘ã‚’æ¢ã™"))
+  (princ (strcat "\n å¼•å‡ºç·š(L)     : " (yk:onoff "Leader")))
+  (princ (strcat "\n å¼•å‡ºç·šè·é›¢(E) : æ–‡å­—é«˜ã• Ã— " (yk:cfg "LdrDist") " ä»¥ä¸Šå‹•ã„ãŸã‚‰å¼•å‡ºç·š"))
+  (princ (strcat "\n ãƒ–ãƒ­ãƒƒã‚¯(B)   : éšœå®³ç‰©ã«" (yk:onoff "UseBlk")))
+  (princ (strcat "\n å¯¸æ³•(M)       : éšœå®³ç‰©ã«" (yk:onoff "UseDim")))
+  (princ (strcat "\n ãƒãƒƒãƒ(H)     : éšœå®³ç‰©ã«" (yk:onoff "UseHat")))
+  (princ (strcat "\n å›ºå®šç”»å±¤(F)   : " (if (= (yk:cfg "FixLay") "") "ï¼ˆãªã—ï¼‰" (yk:cfg "FixLay"))))
+  (princ (strcat "\n ç„¡è¦–ç”»å±¤(I)   : " (if (= (yk:cfg "IgnLay") "") "ï¼ˆãªã—ï¼‰" (yk:cfg "IgnLay"))))
+  (princ (strcat "\n ãƒã‚¹ã‚¯(K)     : é€ƒã’å ´ã®ãªã„ãƒãƒ«ãƒãƒ†ã‚­ã‚¹ãƒˆã«èƒŒæ™¯ãƒã‚¹ã‚¯ã‚’" (yk:onoff "MaskFail")))
+  (princ (strcat "\n ç¢ºèª(O)       : å®Ÿè¡Œå¾Œã«ç¢ºèª" (yk:onoff "Confirm")))
+  (princ (strcat "\n å¯¸æ³•ã®æ–‡å­—(T) : å‹•ã‹ã™å¯¾è±¡ã«" (yk:onoff "MoveDim")))
+  (princ (strcat "\n ãƒãƒ«ãƒå¼•å‡ºç·š(U): å‹•ã‹ã™å¯¾è±¡ã«" (yk:onoff "MoveMld")))
+  (princ "\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€"))
 
 (defun yk:ask-real (key msg bits / v)
   (initget bits)
@@ -915,8 +914,8 @@
 (defun yk:toggle (key) (yk:setcfg key (if (yk:cfgb key) "0" "1")))
 
 (defun yk:ask-layers (key msg / s)
-  (setq s (getstring T (strcat "\n" msg "iƒƒCƒ‹ƒhƒJ[ƒh‰ÂEƒJƒ“ƒ}‹æØ‚èAu.v‚Å‹ó‚Éj <"
-                               (if (= (yk:cfg key) "") "‚È‚µ" (yk:cfg key)) ">: ")))
+  (setq s (getstring T (strcat "\n" msg "ï¼ˆãƒ¯ã‚¤ãƒ«ãƒ‰ã‚«ãƒ¼ãƒ‰å¯ãƒ»ã‚«ãƒ³ãƒåŒºåˆ‡ã‚Šã€ã€Œ.ã€ã§ç©ºã«ï¼‰ <"
+                               (if (= (yk:cfg key) "") "ãªã—" (yk:cfg key)) ">: ")))
   (cond ((= s "") nil)
         ((= s ".") (yk:setcfg key ""))
         (T (yk:setcfg key s))))
@@ -925,43 +924,43 @@
   (while (not done)
     (yk:show-settings)
     (initget "Clear Dist Ndir Leader lEngth Block diMension Hatch Fix Ignore masK cOnfirm dimText mUltileader Reset eXit")
-    (setq k (getkword (strcat "\n•ÏX‚·‚é€–Ú [—]”’(C)/‹——£(D)/•ûŒü”(N)/ˆøoü(L)/ˆøoü‹——£(E)/"
-                              "ƒuƒƒbƒN(B)/¡–@(M)/ƒnƒbƒ`(H)/ŒÅ’è‰æ‘w(F)/–³‹‰æ‘w(I)/ƒ}ƒXƒN(K)/"
-                              "Šm”F(O)/¡–@‚Ì•¶š(T)/ƒ}ƒ‹ƒ`ˆøoü(U)/‰Šú’l(R)/I—¹(X)] <I—¹>: ")))
+    (setq k (getkword (strcat "\nå¤‰æ›´ã™ã‚‹é …ç›® [ä½™ç™½(C)/è·é›¢(D)/æ–¹å‘æ•°(N)/å¼•å‡ºç·š(L)/å¼•å‡ºç·šè·é›¢(E)/"
+                              "ãƒ–ãƒ­ãƒƒã‚¯(B)/å¯¸æ³•(M)/ãƒãƒƒãƒ(H)/å›ºå®šç”»å±¤(F)/ç„¡è¦–ç”»å±¤(I)/ãƒã‚¹ã‚¯(K)/"
+                              "ç¢ºèª(O)/å¯¸æ³•ã®æ–‡å­—(T)/ãƒãƒ«ãƒå¼•å‡ºç·š(U)/åˆæœŸå€¤(R)/çµ‚äº†(X)] <çµ‚äº†>: ")))
     (cond
       ((or (null k) (= k "eXit")) (setq done T))
-      ((= k "Clear")     (yk:ask-real "Clear" "—]”’i•¶š‚‚³‚É‘Î‚·‚éŠ„‡A—á 0.25j" 4))
-      ((= k "Dist")      (yk:ask-real "MaxDist" "Å‘åˆÚ“®‹——£i•¶š‚‚³‚Ì‰½”{A—á 6j" 6))
+      ((= k "Clear")     (yk:ask-real "Clear" "ä½™ç™½ï¼ˆæ–‡å­—é«˜ã•ã«å¯¾ã™ã‚‹å‰²åˆã€ä¾‹ 0.25ï¼‰" 4))
+      ((= k "Dist")      (yk:ask-real "MaxDist" "æœ€å¤§ç§»å‹•è·é›¢ï¼ˆæ–‡å­—é«˜ã•ã®ä½•å€ã€ä¾‹ 6ï¼‰" 6))
       ((= k "Ndir")
        (initget 6)
-       (if (setq v (getint (strcat "\n’T‚·•ûŒü‚Ì”i4`64j <" (yk:cfg "Dirs") ">: ")))
+       (if (setq v (getint (strcat "\næ¢ã™æ–¹å‘ã®æ•°ï¼ˆ4ã€œ64ï¼‰ <" (yk:cfg "Dirs") ">: ")))
          (yk:setcfg "Dirs" (itoa (max 4 (min 64 v))))))
       ((= k "Leader")    (yk:toggle "Leader"))
-      ((= k "lEngth")    (yk:ask-real "LdrDist" "ˆøoü‚ğ•t‚¯‚éˆÚ“®‹——£i•¶š‚‚³‚Ì‰½”{ˆÈãj" 4))
+      ((= k "lEngth")    (yk:ask-real "LdrDist" "å¼•å‡ºç·šã‚’ä»˜ã‘ã‚‹ç§»å‹•è·é›¢ï¼ˆæ–‡å­—é«˜ã•ã®ä½•å€ä»¥ä¸Šï¼‰" 4))
       ((= k "Block")     (yk:toggle "UseBlk"))
       ((= k "diMension") (yk:toggle "UseDim"))
       ((= k "Hatch")     (yk:toggle "UseHat"))
-      ((= k "Fix")       (yk:ask-layers "FixLay" "“®‚©‚³‚È‚¢‰æ‘w"))
-      ((= k "Ignore")    (yk:ask-layers "IgnLay" "áŠQ•¨‚É‚µ‚È‚¢‰æ‘w"))
+      ((= k "Fix")       (yk:ask-layers "FixLay" "å‹•ã‹ã•ãªã„ç”»å±¤"))
+      ((= k "Ignore")    (yk:ask-layers "IgnLay" "éšœå®³ç‰©ã«ã—ãªã„ç”»å±¤"))
       ((= k "masK")      (yk:toggle "MaskFail"))
       ((= k "cOnfirm")   (yk:toggle "Confirm"))
       ((= k "dimText")   (yk:toggle "MoveDim"))
       ((= k "mUltileader") (yk:toggle "MoveMld"))
       ((= k "Reset")
        (foreach c *yk:cfgdef* (yk:setcfg (car c) (cadr c)))
-       (princ "\n‰Šú’l‚É–ß‚µ‚Ü‚µ‚½B"))))
+       (princ "\nåˆæœŸå€¤ã«æˆ»ã—ã¾ã—ãŸã€‚"))))
   (princ))
 
 (defun c:YOKERUSET ( / *error*)
   (defun *error* (msg)
     (if (and msg (not (wcmatch (strcase msg) "*BREAK*,*CANCEL*,*EXIT*")))
-      (princ (strcat "\n[YOKERU] ƒGƒ‰[: " msg)))
+      (princ (strcat "\n[YOKERU] ã‚¨ãƒ©ãƒ¼: " msg)))
     (princ))
   (yk:settings)
-  (princ "\n[YOKERU] İ’è‚ğ•Û‘¶‚µ‚Ü‚µ‚½B")
+  (princ "\n[YOKERU] è¨­å®šã‚’ä¿å­˜ã—ã¾ã—ãŸã€‚")
   (princ))
 
 (defun c:YKS ( ) (c:YOKERUSET))
 
-(princ "\n[YokeruText 1.1.1] “Ç‚İ‚İŠ®—¹  YOKERU(YK)=•¶š‚Ìd‚È‚è‚ğ”ğ‚¯‚é / YOKERUSET(YKS)=İ’è")
+(princ "\n[YokeruText 1.1.0] èª­ã¿è¾¼ã¿å®Œäº†  YOKERU(YK)=æ–‡å­—ã®é‡ãªã‚Šã‚’é¿ã‘ã‚‹ / YOKERUSET(YKS)=è¨­å®š")
 (princ)

@@ -1,30 +1,28 @@
 ;;; ============================================================
-;;;  KirokuTsuzuki.lsp   \ ŠJ‚¢‚Ä‚¢‚é}–Ê‚ğ‹L˜^‚µ‚ÄA‚ ‚Æ‚Å‚Ü‚Æ‚ß‚ÄŠJ‚­ \
+;;;  KirokuTsuzuki.lsp   â€• é–‹ã„ã¦ã„ã‚‹å›³é¢ã‚’è¨˜éŒ²ã—ã¦ã€ã‚ã¨ã§ã¾ã¨ã‚ã¦é–‹ã â€•
 ;;;
-;;;  KIROKU    (ƒVƒ‡[ƒgƒJƒbƒg KR ) : ŠJ‚¢‚Ä‚¢‚é}–Ê‚ğ‹L˜^‚·‚éiƒ_ƒCƒAƒƒOj
-;;;  TSUZUKI   (ƒVƒ‡[ƒgƒJƒbƒg TZ ) : ‹L˜^‚µ‚½}–Ê‚ğ‚Ü‚Æ‚ß‚ÄŠJ‚­iƒ_ƒCƒAƒƒOj
-;;;  KIROKUSET (ƒVƒ‡[ƒgƒJƒbƒg KRS) : •Û‘¶æ‚Ìİ’èiƒ_ƒCƒAƒƒOj
-;;;  -KIROKU / -TSUZUKI / -KIROKUSET : “¯‚¶‘€ì‚ğƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ås‚¤”Å
+;;;  KIROKU    (ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ KR ) : é–‹ã„ã¦ã„ã‚‹å›³é¢ã‚’è¨˜éŒ²ã™ã‚‹ï¼ˆãƒ€ã‚¤ã‚¢ãƒ­ã‚°ï¼‰
+;;;  TSUZUKI   (ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ TZ ) : è¨˜éŒ²ã—ãŸå›³é¢ã‚’ã¾ã¨ã‚ã¦é–‹ãï¼ˆãƒ€ã‚¤ã‚¢ãƒ­ã‚°ï¼‰
+;;;  KIROKUSET (ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ KRS) : ä¿å­˜å…ˆã®è¨­å®šï¼ˆãƒ€ã‚¤ã‚¢ãƒ­ã‚°ï¼‰
+;;;  -KIROKU / -TSUZUKI / -KIROKUSET : åŒã˜æ“ä½œã‚’ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã§è¡Œã†ç‰ˆ
 ;;;
-;;;  ‘Î‰ : AutoCAD 2027
-;;;  ”Å   : 1.1.1  (2026-09-28)
-;;;         1.1.1: ‚±‚Ìƒtƒ@ƒCƒ‹‚Æƒ_ƒCƒAƒƒO’è‹`iDCLj‚ğ ANSIiShift-JISj‚É‚µ‚½iUTF-8 ‚Å‚Í“ú–{Œê‚ª•¶š‰»‚¯‚·‚é‚½‚ßj
-;;;         1.1.0: KR / TZ / KRS ‚ğƒ_ƒCƒAƒƒO‚É‚µ‚½iƒRƒ}ƒ“ƒhƒ‰ƒCƒ“”Å‚Í -KIROKU ‚È‚Çj
-;;;         1.0.0: Å‰‚Ì”Å
+;;;  å¯¾å¿œ : AutoCAD 2027
+;;;  ç‰ˆ   : 1.1.0  (2026-09-28)
+;;;         1.1.0: KR / TZ / KRS ã‚’ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã«ã—ãŸï¼ˆã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç‰ˆã¯ -KIROKU ãªã©ï¼‰
+;;;         1.0.0: æœ€åˆã®ç‰ˆ
 ;;;
-;;;  E}–Ê‚»‚Ì‚à‚Ì‚Í•Û‘¶‚µ‚È‚¢i‹L˜^‚·‚é‚Ì‚Í}–Ê‚ÌêŠ‚¾‚¯jB
-;;;  EƒVƒXƒeƒ€•Ï”‚Í•ÏX‚µ‚È‚¢B
-;;;  Eƒ_ƒCƒAƒƒO‚Ì’è‹`iDCLj‚ÍÀs‚Éˆêƒtƒ@ƒCƒ‹‚Ö ANSI ‚Å‘‚«o‚µ‚Äg‚¤iLSP 1–{‚Å“®‚­jB
-;;;  E‚±‚Ìƒtƒ@ƒCƒ‹‚Í ANSIiShift-JISj‚Å•Û‘¶‚·‚éB‹L˜^ƒtƒ@ƒCƒ‹i.krkj‚Í UTF-8B
+;;;  ãƒ»å›³é¢ãã®ã‚‚ã®ã¯ä¿å­˜ã—ãªã„ï¼ˆè¨˜éŒ²ã™ã‚‹ã®ã¯å›³é¢ã®å ´æ‰€ã ã‘ï¼‰ã€‚
+;;;  ãƒ»ã‚·ã‚¹ãƒ†ãƒ å¤‰æ•°ã¯å¤‰æ›´ã—ãªã„ã€‚
+;;;  ãƒ»ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®å®šç¾©ï¼ˆDCLï¼‰ã¯å®Ÿè¡Œæ™‚ã«ä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«ã¸æ›¸ãå‡ºã—ã¦ä½¿ã†ï¼ˆLSP 1æœ¬ã§å‹•ãï¼‰ã€‚
 ;;; ============================================================
 
 (vl-load-com)
 
-(setq *kr:default-name* "‘O‰ñ"
+(setq *kr:default-name* "å‰å›"
       *kr:ext*          ".krk")
 
 ;;; ------------------------------------------------------------
-;;;  •Û‘¶æ
+;;;  ä¿å­˜å…ˆ
 ;;; ------------------------------------------------------------
 (defun kr:slash (p)
   (if (and p (/= p "") (/= (substr p (strlen p)) "\\")) (strcat p "\\") p))
@@ -39,7 +37,7 @@
 (defun kr:folder-default-p ( )
   (member (getenv "KirokuTsuzuki_Folder") '(nil "")))
 
-;;; ƒtƒHƒ‹ƒ_‚ğ‰œ‚Ü‚Åì‚é
+;;; ãƒ•ã‚©ãƒ«ãƒ€ã‚’å¥¥ã¾ã§ä½œã‚‹
 (defun kr:mkdirs (p / parts cur)
   (setq p (vl-string-right-trim "\\" p) cur "")
   (while (setq parts (vl-string-search "\\" p))
@@ -52,15 +50,15 @@
 (defun kr:file (name) (strcat (kr:folder) name *kr:ext*))
 
 ;;; ------------------------------------------------------------
-;;;  ‹L˜^ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‘‚«
-;;;  1s–Ú KIROKU 1 / DATE “ú / FRONT ‘O–Ê‚Ì}–Ê / DWG }–Êi•¡”j
+;;;  è¨˜éŒ²ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿æ›¸ã
+;;;  1è¡Œç›® KIROKU 1 / DATE æ—¥æ™‚ / FRONT å‰é¢ã®å›³é¢ / DWG å›³é¢ï¼ˆè¤‡æ•°ï¼‰
 ;;; ------------------------------------------------------------
 (defun kr:now ( / s)
-  (setq s (rtos (getvar "CDATE") 2 6))       ; —á "20260927.180512"
+  (setq s (rtos (getvar "CDATE") 2 6))       ; ä¾‹ "20260927.180512"
   (strcat (substr s 1 4) "/" (substr s 5 2) "/" (substr s 7 2) " "
           (substr s 10 2) ":" (substr s 12 2)))
 
-;;; UTF-8 ‚ÅŠJ‚­ig‚¦‚È‚¢ŠÂ‹«‚Å‚Í’Êí‚ÌŠJ‚«•ûj
+;;; UTF-8 ã§é–‹ãï¼ˆä½¿ãˆãªã„ç’°å¢ƒã§ã¯é€šå¸¸ã®é–‹ãæ–¹ï¼‰
 (defun kr:open (file mode / fh)
   (setq fh (vl-catch-all-apply 'open (list file mode "utf8")))
   (if (vl-catch-all-error-p fh) (open file mode) fh))
@@ -77,7 +75,7 @@
       (setq *kr:fh* nil)
       T)))
 
-;;; ¨ (“ú ‘O–Ê‚Ì}–Ê (}–Ê ...)) ‚© nil
+;;; â†’ (æ—¥æ™‚ å‰é¢ã®å›³é¢ (å›³é¢ ...)) ã‹ nil
 (defun kr:read (file / l ok date front dwgs)
   (if (and file (findfile file) (setq *kr:fh* (kr:open file "r")))
     (progn
@@ -90,7 +88,7 @@
       (setq *kr:fh* nil)
       (if ok (list (if date date "") (if (/= front "") front) (reverse dwgs))))))
 
-;;; •Û‘¶æ‚É‚ ‚é‹L˜^ ¨ ((–¼‘O “ú –‡” ƒtƒ@ƒCƒ‹) ...) V‚µ‚¢‡
+;;; ä¿å­˜å…ˆã«ã‚ã‚‹è¨˜éŒ² â†’ ((åå‰ æ—¥æ™‚ æšæ•° ãƒ•ã‚¡ã‚¤ãƒ«) ...) æ–°ã—ã„é †
 (defun kr:records ( / dir res r)
   (setq dir (kr:folder))
   (foreach f (vl-directory-files dir (strcat "*" *kr:ext*) 1)
@@ -98,27 +96,27 @@
       (setq res (cons (list (vl-filename-base f) (car r) (length (caddr r)) (strcat dir f)) res))))
   (vl-sort res '(lambda (a b) (> (cadr a) (cadr b)))))
 
-;;; ÅŒã‚Ég‚Á‚½‹L˜^i–³‚¯‚ê‚Î‚¢‚¿‚Î‚ñV‚µ‚¢‹L˜^j
+;;; æœ€å¾Œã«ä½¿ã£ãŸè¨˜éŒ²ï¼ˆç„¡ã‘ã‚Œã°ã„ã¡ã°ã‚“æ–°ã—ã„è¨˜éŒ²ï¼‰
 (defun kr:last-rec (recs / lastname)
   (setq lastname (getenv "KirokuTsuzuki_Last"))
   (cond ((car (vl-remove-if-not '(lambda (x) (= (car x) lastname)) recs)))
         ((car recs))))
 
 (defun kr:rec-label (rec)
-  (strcat "u" (car rec) "v " (cadr rec) "E" (itoa (caddr rec)) "–‡"))
+  (strcat "ã€Œ" (car rec) "ã€ " (cadr rec) "ãƒ»" (itoa (caddr rec)) "æš"))
 
-;;; –¼‘O‚Ég‚¦‚È‚¢•¶š
+;;; åå‰ã«ä½¿ãˆãªã„æ–‡å­—
 (defun kr:bad-name-p (s)
   (or (= s "")
       (vl-some '(lambda (c) (vl-string-search c s)) '("\\" "/" ":" "*" "?" "\"" "<" ">" "|"))))
 
 (defun kr:join (lst / s)
   (setq s "")
-  (foreach x lst (setq s (if (= s "") x (strcat s "A" x))))
+  (foreach x lst (setq s (if (= s "") x (strcat s "ã€" x))))
   s)
 
 ;;; ------------------------------------------------------------
-;;;  ‹¤’Ê‚ÌƒGƒ‰[ˆ—
+;;;  å…±é€šã®ã‚¨ãƒ©ãƒ¼å‡¦ç†
 ;;; ------------------------------------------------------------
 (defun kr:start ( )
   (setq *kr:doc* (vla-get-ActiveDocument (vlax-get-acad-object)))
@@ -133,15 +131,15 @@
 (defun kr:error (tag msg)
   (kr:finish)
   (if (and msg (not (wcmatch (strcase msg) "*BREAK*,*CANCEL*,*EXIT*")))
-    (princ (strcat "\n[" tag "] ƒGƒ‰[: " msg))
-    (princ (strcat "\n[" tag "] ’†~‚µ‚Ü‚µ‚½B")))
+    (princ (strcat "\n[" tag "] ã‚¨ãƒ©ãƒ¼: " msg))
+    (princ (strcat "\n[" tag "] ä¸­æ­¢ã—ã¾ã—ãŸã€‚")))
   (princ))
 
 ;;; ------------------------------------------------------------
-;;;  ‹L˜^‚ÆÄŠJ‚Ì’†giƒ_ƒCƒAƒƒO”ÅEƒRƒ}ƒ“ƒhƒ‰ƒCƒ“”Å‚Å‹¤’Êj
+;;;  è¨˜éŒ²ã¨å†é–‹ã®ä¸­èº«ï¼ˆãƒ€ã‚¤ã‚¢ãƒ­ã‚°ç‰ˆãƒ»ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç‰ˆã§å…±é€šï¼‰
 ;;; ------------------------------------------------------------
-;;; ŠJ‚¢‚Ä‚¢‚é}–Ê ¨ (‹L˜^‚·‚é}–Ê ‘O–Ê‚Ì}–Ê –¢•Û‘¶‚Ì•ÏX‚ª‚ ‚é}–Ê–¼ ‹L˜^‚Å‚«‚È‚¢}–Ê–¼ •\¦—p)
-;;; •\¦—p = ((}–Ê–¼ ó‘Ô) ...)  ó‘ÔFnil / "modified" / "untitled"
+;;; é–‹ã„ã¦ã„ã‚‹å›³é¢ â†’ (è¨˜éŒ²ã™ã‚‹å›³é¢ å‰é¢ã®å›³é¢ æœªä¿å­˜ã®å¤‰æ›´ãŒã‚ã‚‹å›³é¢å è¨˜éŒ²ã§ããªã„å›³é¢å è¡¨ç¤ºç”¨)
+;;; è¡¨ç¤ºç”¨ = ((å›³é¢å çŠ¶æ…‹) ...)  çŠ¶æ…‹ï¼šnil / "modified" / "untitled"
 (defun kr:collect ( / acad active dwgs front modified untitled disp full nm)
   (setq acad (vlax-get-acad-object) active (vla-get-ActiveDocument acad))
   (vlax-for d (vla-get-Documents acad)
@@ -157,24 +155,24 @@
          (setq disp (cons (list nm nil) disp))))))
   (list (reverse dwgs) front (reverse modified) (reverse untitled) (reverse disp)))
 
-;;; ‹L˜^‚µ‚ÄŒ‹‰Ê‚ğ•\¦ ¨ T / nil
+;;; è¨˜éŒ²ã—ã¦çµæœã‚’è¡¨ç¤º â†’ T / nil
 (defun kr:save (name info / file)
   (cond
     ((not (kr:mkdirs (kr:folder)))
-     (princ (strcat "\n[KIROKU] •Û‘¶æƒtƒHƒ‹ƒ_‚ğì‚ê‚Ü‚¹‚ñ‚Å‚µ‚½F" (kr:folder)
-                    "\n          KRSiİ’èj‚Å•Û‘¶æ‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢B"))
+     (princ (strcat "\n[KIROKU] ä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ã‚’ä½œã‚Œã¾ã›ã‚“ã§ã—ãŸï¼š" (kr:folder)
+                    "\n          KRSï¼ˆè¨­å®šï¼‰ã§ä¿å­˜å…ˆã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚"))
      nil)
     ((not (kr:write (setq file (kr:file name)) (kr:now) (cadr info) (car info)))
-     (princ (strcat "\n[KIROKU] ‹L˜^ƒtƒ@ƒCƒ‹‚É‘‚«‚ß‚Ü‚¹‚ñ‚Å‚µ‚½F" file))
+     (princ (strcat "\n[KIROKU] è¨˜éŒ²ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚ã¾ã›ã‚“ã§ã—ãŸï¼š" file))
      nil)
     (T
      (setenv "KirokuTsuzuki_Last" name)
-     (princ (strcat "\n[KIROKU] u" name "v‚É}–Ê " (itoa (length (car info))) " –‡‚ğ‹L˜^‚µ‚Ü‚µ‚½B"))
+     (princ (strcat "\n[KIROKU] ã€Œ" name "ã€ã«å›³é¢ " (itoa (length (car info))) " æšã‚’è¨˜éŒ²ã—ã¾ã—ãŸã€‚"))
      (if (caddr info)
-       (princ (strcat "\n          ¦•Û‘¶‚µ‚Ä‚¢‚È‚¢•ÏX‚ª‚ ‚é}–Ê " (itoa (length (caddr info))) " –‡F"
-                      (kr:join (caddr info)) "i}–Ê‚Ì•Û‘¶‚Í•Ê‚És‚Á‚Ä‚­‚¾‚³‚¢j")))
+       (princ (strcat "\n          â€»ä¿å­˜ã—ã¦ã„ãªã„å¤‰æ›´ãŒã‚ã‚‹å›³é¢ " (itoa (length (caddr info))) " æšï¼š"
+                      (kr:join (caddr info)) "ï¼ˆå›³é¢ã®ä¿å­˜ã¯åˆ¥ã«è¡Œã£ã¦ãã ã•ã„ï¼‰")))
      (if (cadddr info)
-       (princ (strcat "\n          ¦ˆê“x‚à•Û‘¶‚µ‚Ä‚¢‚È‚¢‚½‚ß‹L˜^‚Å‚«‚È‚¢}–Ê " (itoa (length (cadddr info))) " –‡F"
+       (princ (strcat "\n          â€»ä¸€åº¦ã‚‚ä¿å­˜ã—ã¦ã„ãªã„ãŸã‚è¨˜éŒ²ã§ããªã„å›³é¢ " (itoa (length (cadddr info))) " æšï¼š"
                       (kr:join (cadddr info)))))
      T)))
 
@@ -183,7 +181,7 @@
     (if (/= (vla-get-FullName d) "") (setq res (cons (strcase (vla-get-FullName d)) res))))
   res)
 
-;;; ‹L˜^‚ğŠJ‚¢‚ÄŒ‹‰Ê‚ğ•\¦
+;;; è¨˜éŒ²ã‚’é–‹ã„ã¦çµæœã‚’è¡¨ç¤º
 (defun kr:open-record (rec / docs data opened nopen nskip ro missing failed nd)
   (setq docs (vla-get-Documents (vlax-get-acad-object)))
   (if (setq data (kr:read (nth 3 rec)))
@@ -194,7 +192,7 @@
           ((member (strcase f) opened) (setq nskip (1+ nskip)))
           ((null (findfile f)) (setq missing (cons f missing)))
           (T
-           ;; ’Êí‚ÅŠJ‚­ ¨ ‚¾‚ß‚È‚ç“Ç‚İæ‚èê—p‚ÅŠJ‚­
+           ;; é€šå¸¸ã§é–‹ã â†’ ã ã‚ãªã‚‰èª­ã¿å–ã‚Šå°‚ç”¨ã§é–‹ã
            (setq nd (vl-catch-all-apply 'vla-open (list docs f :vlax-false)))
            (if (vl-catch-all-error-p nd)
              (setq nd (vl-catch-all-apply 'vla-open (list docs f :vlax-true))))
@@ -204,48 +202,48 @@
                (setq nopen (1+ nopen) opened (cons (strcase f) opened))
                (if (= :vlax-true (vla-get-ReadOnly nd))
                  (setq ro (cons (vl-filename-base f) ro))))))))
-      ;; ‹L˜^‚µ‚½‚Æ‚«‚É‘O–Ê‚¾‚Á‚½}–Ê‚ğ‘O–Ê‚É
+      ;; è¨˜éŒ²ã—ãŸã¨ãã«å‰é¢ã ã£ãŸå›³é¢ã‚’å‰é¢ã«
       (if (cadr data)
         (vlax-for d docs
           (if (= (strcase (vla-get-FullName d)) (strcase (cadr data)))
             (vl-catch-all-apply 'vla-Activate (list d)))))
       (setenv "KirokuTsuzuki_Last" (car rec))
-      (princ (strcat "\n[TSUZUKI] u" (car rec) "vi" (car data) "jFŠJ‚¢‚½}–Ê " (itoa nopen)
-                     " –‡ / ‚·‚Å‚ÉŠJ‚¢‚Ä‚¢‚½}–Ê " (itoa nskip) " –‡"))
+      (princ (strcat "\n[TSUZUKI] ã€Œ" (car rec) "ã€ï¼ˆ" (car data) "ï¼‰ï¼šé–‹ã„ãŸå›³é¢ " (itoa nopen)
+                     " æš / ã™ã§ã«é–‹ã„ã¦ã„ãŸå›³é¢ " (itoa nskip) " æš"))
       (if ro
-        (princ (strcat "\n          ¦‚Ù‚©‚Ìl‚ªg—p’†‚Ì‚½‚ß“Ç‚İæ‚èê—p‚ÅŠJ‚¢‚½}–Ê " (itoa (length ro)) " –‡F"
+        (princ (strcat "\n          â€»ã»ã‹ã®äººãŒä½¿ç”¨ä¸­ã®ãŸã‚èª­ã¿å–ã‚Šå°‚ç”¨ã§é–‹ã„ãŸå›³é¢ " (itoa (length ro)) " æšï¼š"
                        (kr:join (reverse ro)))))
       (if missing
-        (princ (strcat "\n          ¦Œ©‚Â‚©‚ç‚È‚¢}–Ê " (itoa (length missing)) " –‡iˆÚ“®Eíœ‚³‚ê‚½‰Â”\«jF"
+        (princ (strcat "\n          â€»è¦‹ã¤ã‹ã‚‰ãªã„å›³é¢ " (itoa (length missing)) " æšï¼ˆç§»å‹•ãƒ»å‰Šé™¤ã•ã‚ŒãŸå¯èƒ½æ€§ï¼‰ï¼š"
                        (kr:join (mapcar 'vl-filename-base (reverse missing))))))
       (if failed
-        (princ (strcat "\n          ¦ŠJ‚¯‚È‚©‚Á‚½}–Ê " (itoa (length failed)) " –‡F"
+        (princ (strcat "\n          â€»é–‹ã‘ãªã‹ã£ãŸå›³é¢ " (itoa (length failed)) " æšï¼š"
                        (kr:join (mapcar 'vl-filename-base (reverse failed)))))))
-    (princ "\n[TSUZUKI] ‹L˜^ƒtƒ@ƒCƒ‹‚ğ“Ç‚ß‚Ü‚¹‚ñ‚Å‚µ‚½B")))
+    (princ "\n[TSUZUKI] è¨˜éŒ²ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã‚ã¾ã›ã‚“ã§ã—ãŸã€‚")))
 
 ;;; ------------------------------------------------------------
-;;;  ƒ_ƒCƒAƒƒOiDCL ‚ğˆêƒtƒ@ƒCƒ‹‚É‘‚«o‚µ‚Ä“Ç‚İ‚Şj
+;;;  ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ï¼ˆDCL ã‚’ä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãå‡ºã—ã¦èª­ã¿è¾¼ã‚€ï¼‰
 ;;; ------------------------------------------------------------
 (setq *kr:dcl-lines*
   '("kr_save : dialog {"
-    "  label = \"}–Ê‚ğ‹L˜^iKIROKUj\";"
+    "  label = \"å›³é¢ã‚’è¨˜éŒ²ï¼ˆKIROKUï¼‰\";"
     "  : text { key = \"head\"; width = 60; }"
     "  : list_box { key = \"files\"; width = 60; height = 9; }"
-    "  : edit_box { key = \"name\"; label = \"‹L˜^‚Ì–¼‘OF\"; edit_width = 36; allow_accept = true; }"
+    "  : edit_box { key = \"name\"; label = \"è¨˜éŒ²ã®åå‰ï¼š\"; edit_width = 36; allow_accept = true; }"
     "  : text { key = \"note\"; width = 60; }"
     "  spacer;"
     "  : row { alignment = right; fixed_width = true;"
-    "    : button { key = \"accept\"; label = \"‹L˜^‚·‚é\"; is_default = true; width = 14; fixed_width = true; }"
-    "    : button { key = \"cancel\"; label = \"ƒLƒƒƒ“ƒZƒ‹\"; is_cancel = true; width = 14; fixed_width = true; }"
+    "    : button { key = \"accept\"; label = \"è¨˜éŒ²ã™ã‚‹\"; is_default = true; width = 14; fixed_width = true; }"
+    "    : button { key = \"cancel\"; label = \"ã‚­ãƒ£ãƒ³ã‚»ãƒ«\"; is_cancel = true; width = 14; fixed_width = true; }"
     "  }"
     "}"
     "kr_open : dialog {"
-    "  label = \"}–Ê‚ğ‚Ü‚Æ‚ß‚ÄŠJ‚­iTSUZUKIj\";"
+    "  label = \"å›³é¢ã‚’ã¾ã¨ã‚ã¦é–‹ãï¼ˆTSUZUKIï¼‰\";"
     "  : row {"
     "    : column {"
-    "      : text { label = \"‹L˜^\"; }"
+    "      : text { label = \"è¨˜éŒ²\"; }"
     "      : list_box { key = \"recs\"; width = 36; height = 12; }"
-    "      : button { key = \"del\"; label = \"‚±‚Ì‹L˜^‚ğíœ\"; width = 18; fixed_width = true; }"
+    "      : button { key = \"del\"; label = \"ã“ã®è¨˜éŒ²ã‚’å‰Šé™¤\"; width = 18; fixed_width = true; }"
     "    }"
     "    : column {"
     "      : text { key = \"fhead\"; width = 48; }"
@@ -255,31 +253,31 @@
     "  }"
     "  : text { key = \"msg\"; width = 86; }"
     "  : row {"
-    "    : button { key = \"chfolder\"; label = \"•Û‘¶æ‚ğ•ÏX...\"; width = 18; fixed_width = true; }"
+    "    : button { key = \"chfolder\"; label = \"ä¿å­˜å…ˆã‚’å¤‰æ›´...\"; width = 18; fixed_width = true; }"
     "    : spacer { width = 30; }"
-    "    : button { key = \"accept\"; label = \"ŠJ‚­\"; is_default = true; width = 14; fixed_width = true; }"
-    "    : button { key = \"cancel\"; label = \"ƒLƒƒƒ“ƒZƒ‹\"; is_cancel = true; width = 14; fixed_width = true; }"
+    "    : button { key = \"accept\"; label = \"é–‹ã\"; is_default = true; width = 14; fixed_width = true; }"
+    "    : button { key = \"cancel\"; label = \"ã‚­ãƒ£ãƒ³ã‚»ãƒ«\"; is_cancel = true; width = 14; fixed_width = true; }"
     "  }"
     "}"
     "kr_set : dialog {"
-    "  label = \"‹L˜^‚Ì•Û‘¶æiKIROKUSETj\";"
-    "  : text { label = \"‹L˜^ƒtƒ@ƒCƒ‹‚Ì•Û‘¶æF\"; }"
+    "  label = \"è¨˜éŒ²ã®ä¿å­˜å…ˆï¼ˆKIROKUSETï¼‰\";"
+    "  : text { label = \"è¨˜éŒ²ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜å…ˆï¼š\"; }"
     "  : text { key = \"folder\"; width = 70; }"
     "  : text { key = \"msg\"; width = 70; }"
     "  : row {"
-    "    : button { key = \"change\"; label = \"•ÏX...\"; width = 14; fixed_width = true; }"
-    "    : button { key = \"reset\"; label = \"‰Šú’l‚É–ß‚·\"; width = 16; fixed_width = true; }"
+    "    : button { key = \"change\"; label = \"å¤‰æ›´...\"; width = 14; fixed_width = true; }"
+    "    : button { key = \"reset\"; label = \"åˆæœŸå€¤ã«æˆ»ã™\"; width = 16; fixed_width = true; }"
     "    : spacer { width = 10; }"
-    "    : button { key = \"cancel\"; label = \"•Â‚¶‚é\"; is_cancel = true; is_default = true; width = 14; fixed_width = true; }"
+    "    : button { key = \"cancel\"; label = \"é–‰ã˜ã‚‹\"; is_cancel = true; is_default = true; width = 14; fixed_width = true; }"
     "  }"
     "}"))
 
-;;; “Ç‚İ‚İ ¨ ƒ_ƒCƒAƒƒO”Ô†i¸”s‚È‚ç nilj
+;;; èª­ã¿è¾¼ã¿ â†’ ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ç•ªå·ï¼ˆå¤±æ•—ãªã‚‰ nilï¼‰
 (defun kr:dcl-load ( / fh id)
   (if (null *kr:dcl-id*)
     (progn
       (setq *kr:dcl-file* (vl-filename-mktemp "kirokutsuzuki" nil ".dcl"))
-      (if (setq fh (open *kr:dcl-file* "w"))          ; DCL ‚Í ANSIiUTF-8 ‚¾‚Æ•¶š‰»‚¯j
+      (if (setq fh (kr:open *kr:dcl-file* "w"))
         (progn
           (foreach l *kr:dcl-lines* (write-line l fh))
           (close fh)
@@ -292,7 +290,7 @@
   (if (and *kr:dcl-file* (findfile *kr:dcl-file*)) (vl-file-delete *kr:dcl-file*))
   (setq *kr:dcl-file* nil))
 
-;;; ƒpƒX‚©‚çƒtƒ@ƒCƒ‹–¼iŠg’£q‚Â‚«j
+;;; ãƒ‘ã‚¹ã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆæ‹¡å¼µå­ã¤ãï¼‰
 (defun kr:fname (f) (strcat (vl-filename-base f) (cond ((vl-filename-extension f)) (""))))
 
 (defun kr:fill-list (key items)
@@ -300,14 +298,14 @@
   (foreach it items (add_list it))
   (end_list))
 
-;;; s‚ğ‘µ‚¦‚é‚½‚ß‚Ì‹ó”’–„‚ßi‘SŠp‚Í2•¶š•ª‚Æ‚µ‚Ä”‚¦‚éj
+;;; è¡Œã‚’æƒãˆã‚‹ãŸã‚ã®ç©ºç™½åŸ‹ã‚ï¼ˆå…¨è§’ã¯2æ–‡å­—åˆ†ã¨ã—ã¦æ•°ãˆã‚‹ï¼‰
 (defun kr:pad (s n / w)
   (setq w 0)
   (foreach c (vl-string->list s) (setq w (+ w (if (> c 255) 2 1))))
   (while (< w n) (setq s (strcat s " ") w (1+ w)))
   s)
 
-;;; ƒtƒHƒ‹ƒ_‚ğ‘I‚Ô‰æ–ÊiWindows •W€j¨ ƒpƒX ‚© nil
+;;; ãƒ•ã‚©ãƒ«ãƒ€ã‚’é¸ã¶ç”»é¢ï¼ˆWindows æ¨™æº–ï¼‰â†’ ãƒ‘ã‚¹ ã‹ nil
 (defun kr:browse-folder (msg / sh f p)
   (if (setq sh (vl-catch-all-apply 'vlax-create-object (list "Shell.Application")))
     (if (not (vl-catch-all-error-p sh))
@@ -319,54 +317,54 @@
   (if (and p (not (vl-catch-all-error-p p)) (/= p "")) (kr:slash p)))
 
 (defun kr:change-folder ( / p)
-  (if (setq p (kr:browse-folder "‹L˜^ƒtƒ@ƒCƒ‹‚Ì•Û‘¶æ‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢"))
+  (if (setq p (kr:browse-folder "è¨˜éŒ²ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜å…ˆã‚’é¸ã‚“ã§ãã ã•ã„"))
     (if (kr:mkdirs p)
       (progn (setenv "KirokuTsuzuki_Folder" p) T))))
 
-;;; ---- KR ‚Ìƒ_ƒCƒAƒƒO ----
+;;; ---- KR ã®ãƒ€ã‚¤ã‚¢ãƒ­ã‚° ----
 (defun kr:dlg-save-accept ( / nm)
   (setq nm (vl-string-trim " \t" (get_tile "name")))
   (cond
-    ((= nm "") (set_tile "note" "‹L˜^‚Ì–¼‘O‚ğ“ü‚ê‚Ä‚­‚¾‚³‚¢B"))
-    ((kr:bad-name-p nm) (set_tile "note" "–¼‘O‚ÉŸ‚Ì•¶š‚Íg‚¦‚Ü‚¹‚ñF \\ / : * ? \" < > |"))
+    ((= nm "") (set_tile "note" "è¨˜éŒ²ã®åå‰ã‚’å…¥ã‚Œã¦ãã ã•ã„ã€‚"))
+    ((kr:bad-name-p nm) (set_tile "note" "åå‰ã«æ¬¡ã®æ–‡å­—ã¯ä½¿ãˆã¾ã›ã‚“ï¼š \\ / : * ? \" < > |"))
     ((and (/= nm *kr:default-name*) (findfile (kr:file nm)) (/= *kr:confirm* nm))
      (setq *kr:confirm* nm)
-     (set_tile "note" (strcat "u" nm "v‚ÍŠù‚É‚ ‚è‚Ü‚·B‚à‚¤ˆê“xm‹L˜^‚·‚én‚ğ‰Ÿ‚·‚Æã‘‚«‚µ‚Ü‚·B")))
+     (set_tile "note" (strcat "ã€Œ" nm "ã€ã¯æ—¢ã«ã‚ã‚Šã¾ã™ã€‚ã‚‚ã†ä¸€åº¦ï¼»è¨˜éŒ²ã™ã‚‹ï¼½ã‚’æŠ¼ã™ã¨ä¸Šæ›¸ãã—ã¾ã™ã€‚")))
     (T (setq *kr:dlg-name* nm) (done_dialog 1))))
 
 (defun kr:dlg-save (info / r)
   (setq *kr:confirm* nil *kr:dlg-name* nil)
   (if (and (kr:dcl-load) (new_dialog "kr_save" *kr:dcl-id*))
     (progn
-      (set_tile "head" (strcat "ŠJ‚¢‚Ä‚¢‚é}–Ê‚ğ‹L˜^‚µ‚Ü‚·i‹L˜^‚³‚ê‚é}–Ê " (itoa (length (car info))) " –‡j"))
+      (set_tile "head" (strcat "é–‹ã„ã¦ã„ã‚‹å›³é¢ã‚’è¨˜éŒ²ã—ã¾ã™ï¼ˆè¨˜éŒ²ã•ã‚Œã‚‹å›³é¢ " (itoa (length (car info))) " æšï¼‰"))
       (kr:fill-list "files"
         (mapcar '(lambda (x)
-                   (cond ((= (cadr x) "modified") (strcat (kr:pad (car x) 34) "¦•Û‘¶‚µ‚Ä‚¢‚È‚¢•ÏX‚ ‚è"))
-                         ((= (cadr x) "untitled") (strcat (kr:pad (car x) 34) "¦ˆê“x‚à•Û‘¶‚µ‚Ä‚¢‚È‚¢‚½‚ß‹L˜^‚³‚ê‚Ü‚¹‚ñ"))
+                   (cond ((= (cadr x) "modified") (strcat (kr:pad (car x) 34) "â€»ä¿å­˜ã—ã¦ã„ãªã„å¤‰æ›´ã‚ã‚Š"))
+                         ((= (cadr x) "untitled") (strcat (kr:pad (car x) 34) "â€»ä¸€åº¦ã‚‚ä¿å­˜ã—ã¦ã„ãªã„ãŸã‚è¨˜éŒ²ã•ã‚Œã¾ã›ã‚“"))
                          (T (car x))))
                 (nth 4 info)))
       (set_tile "name" *kr:default-name*)
-      (set_tile "note" "“¯‚¶–¼‘O‚Ì‹L˜^‚ª‚ ‚é‚Æã‘‚«‚³‚ê‚Ü‚·iu‘O‰ñv‚Í‚¢‚Â‚àã‘‚«jB")
+      (set_tile "note" "åŒã˜åå‰ã®è¨˜éŒ²ãŒã‚ã‚‹ã¨ä¸Šæ›¸ãã•ã‚Œã¾ã™ï¼ˆã€Œå‰å›ã€ã¯ã„ã¤ã‚‚ä¸Šæ›¸ãï¼‰ã€‚")
       (action_tile "accept" "(kr:dlg-save-accept)")
       (action_tile "cancel" "(done_dialog 0)")
       (setq r (start_dialog))
       (if (= r 1) *kr:dlg-name* 'CANCEL))))
 
-;;; ---- TZ ‚Ìƒ_ƒCƒAƒƒO ----
+;;; ---- TZ ã®ãƒ€ã‚¤ã‚¢ãƒ­ã‚° ----
 (defun kr:dlg-open-files ( / rec data nopen nskip nmiss items st)
   (if (setq rec (nth *kr:sel* *kr:recs*))
     (progn
       (setq data (kr:read (nth 3 rec)) nopen 0 nskip 0 nmiss 0)
       (foreach f (caddr data)
-        (setq st (cond ((member (strcase f) *kr:opened*) (setq nskip (1+ nskip)) "¦‚·‚Å‚ÉŠJ‚¢‚Ä‚¢‚Ü‚·")
-                       ((null (findfile f)) (setq nmiss (1+ nmiss)) "¦Œ©‚Â‚©‚è‚Ü‚¹‚ñ")
+        (setq st (cond ((member (strcase f) *kr:opened*) (setq nskip (1+ nskip)) "â€»ã™ã§ã«é–‹ã„ã¦ã„ã¾ã™")
+                       ((null (findfile f)) (setq nmiss (1+ nmiss)) "â€»è¦‹ã¤ã‹ã‚Šã¾ã›ã‚“")
                        (T (setq nopen (1+ nopen)) nil))
               items (cons (if st (strcat (kr:pad (kr:fname f) 34) st) (kr:fname f)) items)))
       (kr:fill-list "files" (reverse items))
-      (set_tile "fhead" (strcat "u" (car rec) "v‚Ì}–Ê " (itoa (length (caddr data))) " –‡"
-                               "iŠJ‚­ " (itoa nopen) " –‡"
-                               (if (> nskip 0) (strcat "EŠJ‚¢‚Ä‚¢‚é " (itoa nskip) " –‡") "")
-                               (if (> nmiss 0) (strcat "EŒ©‚Â‚©‚ç‚È‚¢ " (itoa nmiss) " –‡") "") "j"))
+      (set_tile "fhead" (strcat "ã€Œ" (car rec) "ã€ã®å›³é¢ " (itoa (length (caddr data))) " æš"
+                               "ï¼ˆé–‹ã " (itoa nopen) " æš"
+                               (if (> nskip 0) (strcat "ãƒ»é–‹ã„ã¦ã„ã‚‹ " (itoa nskip) " æš") "")
+                               (if (> nmiss 0) (strcat "ãƒ»è¦‹ã¤ã‹ã‚‰ãªã„ " (itoa nmiss) " æš") "") "ï¼‰"))
       (mode_tile "accept" (if (> nopen 0) 0 1))
       (mode_tile "del" 0))
     (progn
@@ -377,13 +375,13 @@
 
 (defun kr:dlg-open-fill ( )
   (kr:fill-list "recs"
-    (mapcar '(lambda (r) (strcat (kr:pad (car r) 14) (cadr r) "  " (itoa (caddr r)) "–‡")) *kr:recs*))
-  (set_tile "folder" (strcat "•Û‘¶æF" (kr:folder) (if (kr:folder-default-p) "i‰Šú’lj" "")))
+    (mapcar '(lambda (r) (strcat (kr:pad (car r) 14) (cadr r) "  " (itoa (caddr r)) "æš")) *kr:recs*))
+  (set_tile "folder" (strcat "ä¿å­˜å…ˆï¼š" (kr:folder) (if (kr:folder-default-p) "ï¼ˆåˆæœŸå€¤ï¼‰" "")))
   (if *kr:recs*
     (progn
       (set_tile "recs" (itoa *kr:sel*))
       (set_tile "msg" ""))
-    (set_tile "msg" "‹L˜^‚ª‚ ‚è‚Ü‚¹‚ñBæ‚É KR ‚Å‹L˜^‚µ‚Ä‚­‚¾‚³‚¢i•Û‘¶æ‚ğ•Ï‚¦‚½ê‡‚Ím•Û‘¶æ‚ğ•ÏX...njB"))
+    (set_tile "msg" "è¨˜éŒ²ãŒã‚ã‚Šã¾ã›ã‚“ã€‚å…ˆã« KR ã§è¨˜éŒ²ã—ã¦ãã ã•ã„ï¼ˆä¿å­˜å…ˆã‚’å¤‰ãˆãŸå ´åˆã¯ï¼»ä¿å­˜å…ˆã‚’å¤‰æ›´...ï¼½ï¼‰ã€‚"))
   (kr:dlg-open-files))
 
 (defun kr:dlg-open-pick (val reason)
@@ -397,20 +395,20 @@
     (if (/= *kr:delconf* (car rec))
       (progn
         (setq *kr:delconf* (car rec))
-        (set_tile "msg" (strcat "u" (car rec) "v‚ğíœ‚µ‚Ü‚·B‚à‚¤ˆê“xm‚±‚Ì‹L˜^‚ğíœn‚ğ‰Ÿ‚·‚Æíœ‚µ‚Ü‚·B")))
+        (set_tile "msg" (strcat "ã€Œ" (car rec) "ã€ã‚’å‰Šé™¤ã—ã¾ã™ã€‚ã‚‚ã†ä¸€åº¦ï¼»ã“ã®è¨˜éŒ²ã‚’å‰Šé™¤ï¼½ã‚’æŠ¼ã™ã¨å‰Šé™¤ã—ã¾ã™ã€‚")))
       (progn
         (if (vl-file-delete (nth 3 rec))
           (progn
             (if (= (getenv "KirokuTsuzuki_Last") (car rec)) (setenv "KirokuTsuzuki_Last" ""))
             (setq *kr:recs* (kr:records) *kr:sel* (min *kr:sel* (max 0 (1- (length *kr:recs*)))) *kr:delconf* nil)
             (kr:dlg-open-fill)
-            (set_tile "msg" (strcat "u" (car rec) "v‚ğíœ‚µ‚Ü‚µ‚½B")))
-          (set_tile "msg" "íœ‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½B"))))))
+            (set_tile "msg" (strcat "ã€Œ" (car rec) "ã€ã‚’å‰Šé™¤ã—ã¾ã—ãŸã€‚")))
+          (set_tile "msg" "å‰Šé™¤ã§ãã¾ã›ã‚“ã§ã—ãŸã€‚"))))))
 
 (defun kr:dlg-open-accept ( )
-  (if (nth *kr:sel* *kr:recs*) (done_dialog 1) (set_tile "msg" "ŠJ‚­‹L˜^‚ğ‘I‚ñ‚Å‚­‚¾‚³‚¢B")))
+  (if (nth *kr:sel* *kr:recs*) (done_dialog 1) (set_tile "msg" "é–‹ãè¨˜éŒ²ã‚’é¸ã‚“ã§ãã ã•ã„ã€‚")))
 
-;;; ¨ ŠJ‚­‹L˜^ / niliƒLƒƒƒ“ƒZƒ‹j / 'NODIALOGiƒ_ƒCƒAƒƒO‚ğo‚¹‚È‚¢j
+;;; â†’ é–‹ãè¨˜éŒ² / nilï¼ˆã‚­ãƒ£ãƒ³ã‚»ãƒ«ï¼‰ / 'NODIALOGï¼ˆãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã›ãªã„ï¼‰
 (defun kr:dlg-open ( / r done res)
   (setq *kr:recs* (kr:records)
         *kr:sel* (max 0 (cond ((vl-position (kr:last-rec *kr:recs*) *kr:recs*)) (0)))
@@ -431,48 +429,48 @@
         (setq r (start_dialog))
         (cond
           ((= r 1) (setq res (nth *kr:sel* *kr:recs*) done T))
-          ((= r 2)                              ; •Û‘¶æ‚ğ•Ï‚¦‚ÄAƒ_ƒCƒAƒƒO‚ğo‚µ’¼‚·
+          ((= r 2)                              ; ä¿å­˜å…ˆã‚’å¤‰ãˆã¦ã€ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã—ç›´ã™
            (if (kr:change-folder)
              (setq *kr:recs* (kr:records) *kr:sel* (max 0 (cond ((vl-position (kr:last-rec *kr:recs*) *kr:recs*)) (0))))))
           (T (setq done T))))))
   res)
 
-;;; ---- KRS ‚Ìƒ_ƒCƒAƒƒO ----
+;;; ---- KRS ã®ãƒ€ã‚¤ã‚¢ãƒ­ã‚° ----
 (defun kr:dlg-set ( / r done msg)
   (setq msg "")
   (while (not done)
     (if (not (and (kr:dcl-load) (new_dialog "kr_set" *kr:dcl-id*)))
       (setq done 'NODIALOG)
       (progn
-        (set_tile "folder" (strcat (kr:folder) (if (kr:folder-default-p) "i‰Šú’lj" "")))
+        (set_tile "folder" (strcat (kr:folder) (if (kr:folder-default-p) "ï¼ˆåˆæœŸå€¤ï¼‰" "")))
         (set_tile "msg" msg)
         (action_tile "change" "(done_dialog 2)")
         (action_tile "reset" "(done_dialog 3)")
         (action_tile "cancel" "(done_dialog 0)")
         (setq r (start_dialog))
         (cond
-          ((= r 2) (setq msg (if (kr:change-folder) "•Û‘¶æ‚ğ•ÏX‚µ‚Ü‚µ‚½B" "")))
-          ((= r 3) (setenv "KirokuTsuzuki_Folder" "") (setq msg "‰Šú’l‚É–ß‚µ‚Ü‚µ‚½B"))
+          ((= r 2) (setq msg (if (kr:change-folder) "ä¿å­˜å…ˆã‚’å¤‰æ›´ã—ã¾ã—ãŸã€‚" "")))
+          ((= r 3) (setenv "KirokuTsuzuki_Folder" "") (setq msg "åˆæœŸå€¤ã«æˆ»ã—ã¾ã—ãŸã€‚"))
           (T (setq done T))))))
   done)
 
 ;;; ------------------------------------------------------------
-;;;  KIROKUiKRj
+;;;  KIROKUï¼ˆKRï¼‰
 ;;; ------------------------------------------------------------
 (defun c:KIROKU ( / *error* info name)
   (defun *error* (msg) (kr:error "KIROKU" msg))
   (kr:start)
   (setq info (kr:collect))
   (if (null (car info))
-    (princ "\n[KIROKU] ‹L˜^‚Å‚«‚é}–Ê‚ª‚ ‚è‚Ü‚¹‚ñiˆê“x‚à•Û‘¶‚µ‚Ä‚¢‚È‚¢}–Ê‚Í‹L˜^‚Å‚«‚Ü‚¹‚ñjB")
+    (princ "\n[KIROKU] è¨˜éŒ²ã§ãã‚‹å›³é¢ãŒã‚ã‚Šã¾ã›ã‚“ï¼ˆä¸€åº¦ã‚‚ä¿å­˜ã—ã¦ã„ãªã„å›³é¢ã¯è¨˜éŒ²ã§ãã¾ã›ã‚“ï¼‰ã€‚")
     (progn
       (setq name (kr:dlg-save info))
       (cond
-        ((null name)                       ; ƒ_ƒCƒAƒƒO‚ğo‚¹‚È‚¢ ¨ ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Å
-         (princ "\n[KIROKU] ƒ_ƒCƒAƒƒO‚ğ•\¦‚Å‚«‚È‚¢‚½‚ßAƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Å‘€ì‚µ‚Ü‚·B")
+        ((null name)                       ; ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã›ãªã„ â†’ ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã§
+         (princ "\n[KIROKU] ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã§ããªã„ãŸã‚ã€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã§æ“ä½œã—ã¾ã™ã€‚")
          (kr:dcl-unload)
          (kr:save-cmd info))
-        ((eq name 'CANCEL) (princ "\n[KIROKU] ’†~‚µ‚Ü‚µ‚½B"))
+        ((eq name 'CANCEL) (princ "\n[KIROKU] ä¸­æ­¢ã—ã¾ã—ãŸã€‚"))
         (T (kr:save name info)))))
   (kr:finish)
   (princ))
@@ -480,21 +478,21 @@
 (defun c:KR ( ) (c:KIROKU))
 
 ;;; ------------------------------------------------------------
-;;;  TSUZUKIiTZj
+;;;  TSUZUKIï¼ˆTZï¼‰
 ;;; ------------------------------------------------------------
 (defun c:TSUZUKI ( / *error* rec)
   (defun *error* (msg) (kr:error "TSUZUKI" msg))
   (kr:start)
   (if (= 1 (getvar "SDI"))
-    (princ "\n[TSUZUKI] 1}–Ê‚¾‚¯‚ğŠJ‚­ƒ‚[ƒhiSDI=1j‚Ì‚½‚ßA‚Ü‚Æ‚ß‚ÄŠJ‚¯‚Ü‚¹‚ñB")
+    (princ "\n[TSUZUKI] 1å›³é¢ã ã‘ã‚’é–‹ããƒ¢ãƒ¼ãƒ‰ï¼ˆSDI=1ï¼‰ã®ãŸã‚ã€ã¾ã¨ã‚ã¦é–‹ã‘ã¾ã›ã‚“ã€‚")
     (progn
       (setq rec (kr:dlg-open))
       (kr:dcl-unload)
       (cond
         ((eq rec 'NODIALOG)
-         (princ "\n[TSUZUKI] ƒ_ƒCƒAƒƒO‚ğ•\¦‚Å‚«‚È‚¢‚½‚ßAƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Å‘€ì‚µ‚Ü‚·B")
+         (princ "\n[TSUZUKI] ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã§ããªã„ãŸã‚ã€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã§æ“ä½œã—ã¾ã™ã€‚")
          (kr:open-cmd))
-        ((null rec) (princ "\n[TSUZUKI] ’†~‚µ‚Ü‚µ‚½B"))
+        ((null rec) (princ "\n[TSUZUKI] ä¸­æ­¢ã—ã¾ã—ãŸã€‚"))
         (T (kr:open-record rec)))))
   (kr:finish)
   (princ))
@@ -502,13 +500,13 @@
 (defun c:TZ ( ) (c:TSUZUKI))
 
 ;;; ------------------------------------------------------------
-;;;  KIROKUSETiKRSj
+;;;  KIROKUSETï¼ˆKRSï¼‰
 ;;; ------------------------------------------------------------
 (defun c:KIROKUSET ( / *error*)
   (defun *error* (msg) (kr:error "KIROKUSET" msg))
   (if (eq (kr:dlg-set) 'NODIALOG)
     (progn
-      (princ "\n[KIROKUSET] ƒ_ƒCƒAƒƒO‚ğ•\¦‚Å‚«‚È‚¢‚½‚ßAƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Å‘€ì‚µ‚Ü‚·B")
+      (princ "\n[KIROKUSET] ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤ºã§ããªã„ãŸã‚ã€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã§æ“ä½œã—ã¾ã™ã€‚")
       (kr:dcl-unload)
       (kr:settings)))
   (kr:dcl-unload)
@@ -517,103 +515,103 @@
 (defun c:KRS ( ) (c:KIROKUSET))
 
 ;;; ============================================================
-;;;  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“”Åi-KIROKU / -TSUZUKI / -KIROKUSETj
-;;;  ƒ_ƒCƒAƒƒO‚ğo‚¹‚È‚¢‚Æ‚«‚àA‚±‚ê‚ğg‚¤
+;;;  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç‰ˆï¼ˆ-KIROKU / -TSUZUKI / -KIROKUSETï¼‰
+;;;  ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’å‡ºã›ãªã„ã¨ãã‚‚ã€ã“ã‚Œã‚’ä½¿ã†
 ;;; ============================================================
 (defun kr:show-records (recs / i)
   (setq i 0)
-  (princ "\n„Ÿ„Ÿ„Ÿ„Ÿ ‹L˜^‚Ìˆê——iV‚µ‚¢‡j„Ÿ„Ÿ„Ÿ„Ÿ")
+  (princ "\nâ”€â”€â”€â”€ è¨˜éŒ²ã®ä¸€è¦§ï¼ˆæ–°ã—ã„é †ï¼‰â”€â”€â”€â”€")
   (foreach r recs
     (setq i (1+ i))
     (princ (strcat "\n " (if (< i 10) " " "") (itoa i) ". " (kr:rec-label r))))
-  (princ "\n„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ"))
+  (princ "\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€"))
 
-;;; ˆê——‚©‚ç”Ô†‚Å‘I‚Ô ¨ ‹L˜^ ‚© nil
+;;; ä¸€è¦§ã‹ã‚‰ç•ªå·ã§é¸ã¶ â†’ è¨˜éŒ² ã‹ nil
 (defun kr:pick (recs msg / n done res)
   (kr:show-records recs)
   (while (not done)
     (initget 6)
-    (setq n (getint (strcat "\n" msg "‚Ì”Ô† <’†~>: ")))
+    (setq n (getint (strcat "\n" msg "ã®ç•ªå· <ä¸­æ­¢>: ")))
     (cond ((null n) (setq done T))
-          ((> n (length recs)) (princ "\n”Ô†‚ª”ÍˆÍŠO‚Å‚·B"))
+          ((> n (length recs)) (princ "\nç•ªå·ãŒç¯„å›²å¤–ã§ã™ã€‚"))
           (T (setq res (nth (1- n) recs) done T))))
   res)
 
 (defun kr:save-cmd (info / ans name done)
   (while (not done)
     (initget "Name Settings")
-    (setq ans (getkword (strcat "\n}–Ê " (itoa (length (car info))) " –‡‚ğ‹L˜^ [–¼‘O‚ğ•t‚¯‚é(N)/İ’è(S)] <u"
-                                *kr:default-name* "v‚Æ‚µ‚Ä‹L˜^>: ")))
+    (setq ans (getkword (strcat "\nå›³é¢ " (itoa (length (car info))) " æšã‚’è¨˜éŒ² [åå‰ã‚’ä»˜ã‘ã‚‹(N)/è¨­å®š(S)] <ã€Œ"
+                                *kr:default-name* "ã€ã¨ã—ã¦è¨˜éŒ²>: ")))
     (cond
       ((null ans) (setq name *kr:default-name* done T))
       ((= ans "Settings") (kr:settings))
       ((= ans "Name")
-       (setq name (vl-string-trim " \t" (getstring T "\n‹L˜^‚Ì–¼‘O <’†~>: ")))
+       (setq name (vl-string-trim " \t" (getstring T "\nè¨˜éŒ²ã®åå‰ <ä¸­æ­¢>: ")))
        (cond
-         ((= name "") (setq name nil done T))      ; Enter’†~
+         ((= name "") (setq name nil done T))      ; Enterï¼ä¸­æ­¢
          ((kr:bad-name-p name)
-          (princ "\n–¼‘O‚ÉŸ‚Ì•¶š‚Íg‚¦‚Ü‚¹‚ñF \\ / : * ? \" < > |")
+          (princ "\nåå‰ã«æ¬¡ã®æ–‡å­—ã¯ä½¿ãˆã¾ã›ã‚“ï¼š \\ / : * ? \" < > |")
           (setq name nil))
          ((findfile (kr:file name))
           (initget "Yes No")
-          (if (= "Yes" (getkword (strcat "\nu" name "v‚ÍŠù‚É‚ ‚è‚Ü‚·Bã‘‚«‚µ‚Ü‚·‚©H [‚Í‚¢(Y)/‚¢‚¢‚¦(N)] <‚¢‚¢‚¦>: ")))
+          (if (= "Yes" (getkword (strcat "\nã€Œ" name "ã€ã¯æ—¢ã«ã‚ã‚Šã¾ã™ã€‚ä¸Šæ›¸ãã—ã¾ã™ã‹ï¼Ÿ [ã¯ã„(Y)/ã„ã„ãˆ(N)] <ã„ã„ãˆ>: ")))
             (setq done T)
             (setq name nil)))
          (T (setq done T))))))
-  (if name (kr:save name info) (princ "\n[KIROKU] ’†~‚µ‚Ü‚µ‚½B")))
+  (if name (kr:save name info) (princ "\n[KIROKU] ä¸­æ­¢ã—ã¾ã—ãŸã€‚")))
 
 (defun kr:open-cmd ( / recs rec ans done r)
   (if (null (setq recs (kr:records)))
-    (princ (strcat "\n[TSUZUKI] ‹L˜^‚ª‚ ‚è‚Ü‚¹‚ñi•Û‘¶æF" (kr:folder) "jBæ‚É KR ‚Å‹L˜^‚µ‚Ä‚­‚¾‚³‚¢B"))
+    (princ (strcat "\n[TSUZUKI] è¨˜éŒ²ãŒã‚ã‚Šã¾ã›ã‚“ï¼ˆä¿å­˜å…ˆï¼š" (kr:folder) "ï¼‰ã€‚å…ˆã« KR ã§è¨˜éŒ²ã—ã¦ãã ã•ã„ã€‚"))
     (progn
       (setq rec (kr:last-rec recs))
       (while (not done)
         (initget "List Settings")
-        (setq ans (getkword (strcat "\n‘±‚«‚ğŠJ‚­ [ˆê——‚©‚ç‘I‚Ô(L)/İ’è(S)] <" (kr:rec-label rec) ">: ")))
+        (setq ans (getkword (strcat "\nç¶šãã‚’é–‹ã [ä¸€è¦§ã‹ã‚‰é¸ã¶(L)/è¨­å®š(S)] <" (kr:rec-label rec) ">: ")))
         (cond
           ((null ans) (setq done T))
           ((= ans "List")
-           (if (setq r (kr:pick recs "ŠJ‚­‹L˜^"))
+           (if (setq r (kr:pick recs "é–‹ãè¨˜éŒ²"))
              (setq rec r done T)))
           ((= ans "Settings")
            (kr:settings)
            (if (null (setq recs (kr:records)))
              (setq rec nil done T)
              (if (not (member rec recs)) (setq rec (car recs)))))))
-      (if rec (kr:open-record rec) (princ "\n[TSUZUKI] ‹L˜^‚ª‚ ‚è‚Ü‚¹‚ñB")))))
+      (if rec (kr:open-record rec) (princ "\n[TSUZUKI] è¨˜éŒ²ãŒã‚ã‚Šã¾ã›ã‚“ã€‚")))))
 
 (defun kr:settings ( / done k s recs rec)
   (while (not done)
     (setq recs (kr:records))
-    (princ "\n„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ KIROKU / TSUZUKI İ’è „Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ")
-    (princ (strcat "\n •Û‘¶æ(F) : " (kr:folder) (if (kr:folder-default-p) "i‰Šú’lj" "")))
-    (princ (strcat "\n ‹L˜^‚Ì”  : " (itoa (length recs)) " Œ"))
-    (princ "\n„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ„Ÿ")
+    (princ "\nâ”€â”€â”€â”€â”€â”€â”€â”€ KIROKU / TSUZUKI è¨­å®š â”€â”€â”€â”€â”€â”€â”€â”€")
+    (princ (strcat "\n ä¿å­˜å…ˆ(F) : " (kr:folder) (if (kr:folder-default-p) "ï¼ˆåˆæœŸå€¤ï¼‰" "")))
+    (princ (strcat "\n è¨˜éŒ²ã®æ•°  : " (itoa (length recs)) " ä»¶"))
+    (princ "\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€")
     (initget "Folder List Delete eXit")
-    (setq k (getkword "\n‘€ì [•Û‘¶æ(F)/ˆê——(L)/íœ(D)/I—¹(X)] <I—¹>: "))
+    (setq k (getkword "\næ“ä½œ [ä¿å­˜å…ˆ(F)/ä¸€è¦§(L)/å‰Šé™¤(D)/çµ‚äº†(X)] <çµ‚äº†>: "))
     (cond
       ((or (null k) (= k "eXit")) (setq done T))
       ((= k "Folder")
-       (setq s (vl-string-trim " \t\"" (getstring T (strcat "\n•Û‘¶æƒtƒHƒ‹ƒ_iu.v‚Å‰Šú’l‚É–ß‚·j <" (kr:folder) ">: "))))
+       (setq s (vl-string-trim " \t\"" (getstring T (strcat "\nä¿å­˜å…ˆãƒ•ã‚©ãƒ«ãƒ€ï¼ˆã€Œ.ã€ã§åˆæœŸå€¤ã«æˆ»ã™ï¼‰ <" (kr:folder) ">: "))))
        (cond
          ((= s "") nil)
-         ((= s ".") (setenv "KirokuTsuzuki_Folder" "") (princ "\n‰Šú’l‚É–ß‚µ‚Ü‚µ‚½B"))
-         ((kr:mkdirs (kr:slash s)) (setenv "KirokuTsuzuki_Folder" (kr:slash s)) (princ "\n•Û‘¶æ‚ğ•ÏX‚µ‚Ü‚µ‚½B"))
-         (T (princ "\n‚»‚ÌƒtƒHƒ‹ƒ_‚Íg‚¦‚Ü‚¹‚ñiì‚ê‚Ü‚¹‚ñ‚Å‚µ‚½jB"))))
+         ((= s ".") (setenv "KirokuTsuzuki_Folder" "") (princ "\nåˆæœŸå€¤ã«æˆ»ã—ã¾ã—ãŸã€‚"))
+         ((kr:mkdirs (kr:slash s)) (setenv "KirokuTsuzuki_Folder" (kr:slash s)) (princ "\nä¿å­˜å…ˆã‚’å¤‰æ›´ã—ã¾ã—ãŸã€‚"))
+         (T (princ "\nãã®ãƒ•ã‚©ãƒ«ãƒ€ã¯ä½¿ãˆã¾ã›ã‚“ï¼ˆä½œã‚Œã¾ã›ã‚“ã§ã—ãŸï¼‰ã€‚"))))
       ((= k "List")
-       (if recs (kr:show-records recs) (princ "\n‹L˜^‚Í‚ ‚è‚Ü‚¹‚ñB")))
+       (if recs (kr:show-records recs) (princ "\nè¨˜éŒ²ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚")))
       ((= k "Delete")
        (if (null recs)
-         (princ "\n‹L˜^‚Í‚ ‚è‚Ü‚¹‚ñB")
-         (if (setq rec (kr:pick recs "íœ‚·‚é‹L˜^"))
+         (princ "\nè¨˜éŒ²ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚")
+         (if (setq rec (kr:pick recs "å‰Šé™¤ã™ã‚‹è¨˜éŒ²"))
            (progn
              (initget "Yes No")
-             (if (= "Yes" (getkword (strcat "\n" (kr:rec-label rec) " ‚ğíœ‚µ‚Ü‚·‚©H [‚Í‚¢(Y)/‚¢‚¢‚¦(N)] <‚¢‚¢‚¦>: ")))
+             (if (= "Yes" (getkword (strcat "\n" (kr:rec-label rec) " ã‚’å‰Šé™¤ã—ã¾ã™ã‹ï¼Ÿ [ã¯ã„(Y)/ã„ã„ãˆ(N)] <ã„ã„ãˆ>: ")))
                (if (vl-file-delete (nth 3 rec))
                  (progn
                    (if (= (getenv "KirokuTsuzuki_Last") (car rec)) (setenv "KirokuTsuzuki_Last" ""))
-                   (princ (strcat "\nu" (car rec) "v‚ğíœ‚µ‚Ü‚µ‚½B")))
-                 (princ "\níœ‚Å‚«‚Ü‚¹‚ñ‚Å‚µ‚½B")))))))))
+                   (princ (strcat "\nã€Œ" (car rec) "ã€ã‚’å‰Šé™¤ã—ã¾ã—ãŸã€‚")))
+                 (princ "\nå‰Šé™¤ã§ãã¾ã›ã‚“ã§ã—ãŸã€‚")))))))))
   (princ))
 
 (defun c:-KIROKU ( / *error* info)
@@ -621,7 +619,7 @@
   (kr:start)
   (setq info (kr:collect))
   (if (null (car info))
-    (princ "\n[KIROKU] ‹L˜^‚Å‚«‚é}–Ê‚ª‚ ‚è‚Ü‚¹‚ñiˆê“x‚à•Û‘¶‚µ‚Ä‚¢‚È‚¢}–Ê‚Í‹L˜^‚Å‚«‚Ü‚¹‚ñjB")
+    (princ "\n[KIROKU] è¨˜éŒ²ã§ãã‚‹å›³é¢ãŒã‚ã‚Šã¾ã›ã‚“ï¼ˆä¸€åº¦ã‚‚ä¿å­˜ã—ã¦ã„ãªã„å›³é¢ã¯è¨˜éŒ²ã§ãã¾ã›ã‚“ï¼‰ã€‚")
     (kr:save-cmd info))
   (kr:finish)
   (princ))
@@ -630,7 +628,7 @@
   (defun *error* (msg) (kr:error "TSUZUKI" msg))
   (kr:start)
   (if (= 1 (getvar "SDI"))
-    (princ "\n[TSUZUKI] 1}–Ê‚¾‚¯‚ğŠJ‚­ƒ‚[ƒhiSDI=1j‚Ì‚½‚ßA‚Ü‚Æ‚ß‚ÄŠJ‚¯‚Ü‚¹‚ñB")
+    (princ "\n[TSUZUKI] 1å›³é¢ã ã‘ã‚’é–‹ããƒ¢ãƒ¼ãƒ‰ï¼ˆSDI=1ï¼‰ã®ãŸã‚ã€ã¾ã¨ã‚ã¦é–‹ã‘ã¾ã›ã‚“ã€‚")
     (kr:open-cmd))
   (kr:finish)
   (princ))
@@ -640,5 +638,5 @@
   (kr:settings)
   (princ))
 
-(princ "\n[KirokuTsuzuki 1.1.1] “Ç‚İ‚İŠ®—¹  KR=‹L˜^ / TZ=‚Ü‚Æ‚ß‚ÄŠJ‚­ / KRS=•Û‘¶æiƒRƒ}ƒ“ƒhƒ‰ƒCƒ“”Å‚Í -KIROKU ‚È‚Çj")
+(princ "\n[KirokuTsuzuki 1.1.0] èª­ã¿è¾¼ã¿å®Œäº†  KR=è¨˜éŒ² / TZ=ã¾ã¨ã‚ã¦é–‹ã / KRS=ä¿å­˜å…ˆï¼ˆã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç‰ˆã¯ -KIROKU ãªã©ï¼‰")
 (princ)

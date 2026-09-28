@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.4'
+VERSION = '0.1.5'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -954,6 +954,8 @@ class Interp:
 
     def load_file(self, path):
         text = read_text_file(path)
+        if utf8_japanese(path):
+            self.warn('%s は UTF-8 で保存されています（AutoCAD では日本語が文字化けする。ANSI＝Shift-JIS で保存してください）' % os.path.basename(path))
         self.loaded.append(path)
         old = self.g.get(S('*lc-current-file*'))
         self.g[S('*lc-current-file*')] = path
@@ -1059,6 +1061,18 @@ def parse_params(pl):
             raise LispError('bad argument type: symbolp ' + short(p))
         cur.append(p)
     return params, locs
+
+
+def utf8_japanese(path):
+    """UTF-8 で書かれていて、日本語など ASCII 以外を含むか（AutoCAD では文字化けする形）"""
+    raw = open(path, 'rb').read()
+    if all(b < 0x80 for b in raw):
+        return False
+    try:
+        raw.decode('utf-8')
+        return True
+    except UnicodeDecodeError:
+        return False
 
 
 def read_text_file(path):
@@ -4955,6 +4969,9 @@ def _open(I, a):
     name = strp(a[0])
     mode = strp(a[1]).lower()
     enc = 'utf-8'
+    enc = 'cp932'                         # AutoCAD と同じく、指定が無ければ ANSI（Shift-JIS）
+    if len(a) > 2 and type(a[2]) is str and 'utf' in a[2].lower():
+        enc = 'utf-8'
     if len(a) > 2 and type(a[2]) is str and 'ansi' in a[2].lower():
         enc = 'cp932'
     if mode.startswith('r'):
@@ -5087,10 +5104,41 @@ def _vl_file_delete(I, a):
     return T
 
 
-@bi('vl-file-copy vl-file-rename', 'stub', '実際には何もしない')
-def _vl_file_ops(I, a):
-    I.warn('ファイル操作（コピー/削除/名前変更/フォルダ作成）は実行せずログのみ（T を返しました）')
-    I.echo('[ファイル操作(未実行)] %s\n' % ' '.join(short(x, 60) for x in a))
+def vfile_copy(I, src, dst):
+    ps = resolve_path(I, src)
+    if ps is None or not os.path.isfile(ps) or resolve_path(I, dst) is not None:
+        return False                      # 元が無い・先が既にある → 失敗（AutoCAD と同じく nil）
+    kd = vkey(dst)
+    d = os.path.join(I.outdir, 'lisp_files')
+    os.makedirs(d, exist_ok=True)
+    pd = os.path.join(d, re.sub(r'[\\/:*?"<>|]', '_', dst))
+    open(pd, 'wb').write(open(ps, 'rb').read())
+    I.vfs[kd] = pd
+    I.vfs_names[kd] = dst
+    I.vdel.discard(kd)
+    I.vdirs.add(vparent(kd))
+    return True
+
+
+@bi('vl-file-copy', 'approx', '仮想ファイルとして複製（実ファイルは変更しない）')
+def _vl_file_copy(I, a):
+    argn(a, 2, 3)
+    if not vfile_copy(I, strp(a[0]), strp(a[1])):
+        return None
+    I.echo('[ファイル複製(仮想)] %s → %s\n' % (strp(a[0]), strp(a[1])))
+    return 1
+
+
+@bi('vl-file-rename', 'approx', '仮想ファイルとして名前変更（実ファイルは変更しない）')
+def _vl_file_rename(I, a):
+    argn(a, 2, 2)
+    src, dst = strp(a[0]), strp(a[1])
+    if not vfile_copy(I, src, dst):
+        return None
+    ks = vkey(src)
+    I.vfs.pop(ks, None)
+    I.vdel.add(ks)
+    I.echo('[名前変更(仮想)] %s → %s\n' % (src, dst))
     return T
 
 
@@ -9365,6 +9413,8 @@ def run_lint(paths):
     for p in paths:
         text = read_text_file(p)
         R, cmds = lint_text(text, os.path.basename(p))
+        if utf8_japanese(p):
+            R.issues.append(('警告', None, 'ファイルが UTF-8 で保存されています。AutoCAD では日本語が文字化けするため、ANSI（Shift-JIS）で保存してください'))
         for name, pos in lint_commands_used(text, os.path.basename(p)):
             if name and name not in COMMANDS and name not in NOOP_CMDS and name not in DEFAULT_SYSVARS:
                 R.issues.append(('再現度', pos, 'command "%s" は lispcheck では再現されません（実行時は読み飛ばし）' % name))
@@ -9718,6 +9768,8 @@ def _load_dialog(I, a):
     I.dcl_seq = getattr(I, 'dcl_seq', 0) + 1
     if not hasattr(I, 'dcl_files'):
         I.dcl_files = {}
+    if utf8_japanese(p):
+        I.warn('DCL "%s" が UTF-8 で書かれています。AutoCAD ではダイアログの日本語が文字化けします（ANSI で書き出してください）' % name)
     I.dcl_files[I.dcl_seq] = dcl_parse(I, read_text_file(p), name)
     return I.dcl_seq
 

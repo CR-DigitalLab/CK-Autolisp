@@ -1,151 +1,151 @@
-;;; KirokuTsuzuki 1.1.0 ã® lispcheck ç”¨ãƒ†ã‚¹ãƒˆ
-;;; å®Ÿè¡Œ: python tools/lispcheck/lispcheck.py run tools/KirokuTsuzuki/KirokuTsuzuki.lsp tools/KirokuTsuzuki/test/lispcheck/test_kiroku.lsp
-;;; ï¼ˆå›³é¢ã‚’é–‹ããƒ»å‰é¢ã«ã™ã‚‹ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿æ›¸ããƒ»ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã¯ lispcheck ã®ä»®æƒ³æ©Ÿèƒ½ã§å†ç¾ï¼‰
-;;; ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®æ“ä½œã¯ (lc:input '("DCL" ("set" ã‚­ãƒ¼ å€¤) ("click" ã‚­ãƒ¼) ...)) ã§æŒ‡å®šã€‚nilï¼Enterï¼ˆæ—¢å®šã®ãƒœã‚¿ãƒ³ï¼‰ã€å°æœ¬ãªã—ï¼Esc
+;;; KirokuTsuzuki 1.1.0 ‚Ì lispcheck —pƒeƒXƒg
+;;; Às: python tools/lispcheck/lispcheck.py run tools/KirokuTsuzuki/KirokuTsuzuki.lsp tools/KirokuTsuzuki/test/lispcheck/test_kiroku.lsp
+;;; i}–Ê‚ğŠJ‚­E‘O–Ê‚É‚·‚éEƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‘‚«Eƒ_ƒCƒAƒƒO‚Í lispcheck ‚Ì‰¼‘z‹@”\‚ÅÄŒ»j
+;;; ƒ_ƒCƒAƒƒO‚Ì‘€ì‚Í (lc:input '("DCL" ("set" ƒL[ ’l) ("click" ƒL[) ...)) ‚Åw’èBnilEnteriŠù’è‚Ìƒ{ƒ^ƒ“jA‘ä–{‚È‚µEsc
 
-(setq A "C:\\æ¡ˆä»¶\\Aæ£Ÿ\\å¹³é¢å›³.dwg"
-      B "C:\\æ¡ˆä»¶\\Aæ£Ÿ\\ç«‹é¢å›³.dwg"
-      C "C:\\æ¡ˆä»¶\\Bæ£Ÿ\\é…ç½®å›³.dwg")
+(setq A "C:\\ˆÄŒ\\A“\\•½–Ê}.dwg"
+      B "C:\\ˆÄŒ\\A“\\—§–Ê}.dwg"
+      C "C:\\ˆÄŒ\\B“\\”z’u}.dwg")
 (defun t:names (r) (mapcar 'vl-filename-base (caddr r)))
 (defun t:idx (name) (itoa (vl-position name (mapcar 'car (kr:records)))))
 
 ;;; ============================================================
-;;;  ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ç‰ˆï¼ˆKR / TZ / KRSï¼‰
+;;;  ƒ_ƒCƒAƒƒO”ÅiKR / TZ / KRSj
 ;;; ============================================================
 
-;;; 1. KR â†’ Enterï¼šã€Œå‰å›ã€ã«è¨˜éŒ²ã€‚ä¸€åº¦ã‚‚ä¿å­˜ã—ã¦ã„ãªã„å›³é¢ã¯è¨˜éŒ²ã—ãªã„
-(princ "\n\n===== 1. KR â†’ Enter =====")
+;;; 1. KR ¨ EnterFu‘O‰ñv‚É‹L˜^Bˆê“x‚à•Û‘¶‚µ‚Ä‚¢‚È‚¢}–Ê‚Í‹L˜^‚µ‚È‚¢
+(princ "\n\n===== 1. KR ¨ Enter =====")
 (lc:docs (list (list A) (list B "modified") (list "Drawing1.dwg" "untitled") (list C)))
 (foreach f (list A B C) (lc:file f))
 (lc:input nil)
 (c:KR)
-(setq r (kr:read (kr:file "å‰å›")))
-(lc:assert-equal (t:names r) '("å¹³é¢å›³" "ç«‹é¢å›³" "é…ç½®å›³") "1: ä¿å­˜æ¸ˆã¿ã®3æšã‚’è¨˜éŒ²")
-(lc:assert-equal (cadr r) A "1: å‰é¢ã®å›³é¢ï¼å¹³é¢å›³")
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "å‰å›" "1: æœ€å¾Œã®è¨˜éŒ²ï¼å‰å›")
+(setq r (kr:read (kr:file "‘O‰ñ")))
+(lc:assert-equal (t:names r) '("•½–Ê}" "—§–Ê}" "”z’u}") "1: •Û‘¶Ï‚İ‚Ì3–‡‚ğ‹L˜^")
+(lc:assert-equal (cadr r) A "1: ‘O–Ê‚Ì}–Ê•½–Ê}")
+(lc:assert-equal (getenv "KirokuTsuzuki_Last") "‘O‰ñ" "1: ÅŒã‚Ì‹L˜^‘O‰ñ")
 
-;;; 2. KR â†’ åå‰ã‚’å…¥ã‚Œã¦ï¼»è¨˜éŒ²ã™ã‚‹ï¼½
-(princ "\n\n===== 2. KR â†’ åå‰ã€Œç¾å ´Aã€â†’ è¨˜éŒ²ã™ã‚‹ =====")
-(lc:input '("DCL" ("set" "name" "ç¾å ´A") ("click" "accept")))
+;;; 2. KR ¨ –¼‘O‚ğ“ü‚ê‚Äm‹L˜^‚·‚én
+(princ "\n\n===== 2. KR ¨ –¼‘OuŒ»êAv¨ ‹L˜^‚·‚é =====")
+(lc:input '("DCL" ("set" "name" "Œ»êA") ("click" "accept")))
 (c:KR)
-(lc:assert (kr:read (kr:file "ç¾å ´A")) "2: ã€Œç¾å ´Aã€ã®è¨˜éŒ²ãŒã§ãã‚‹")
+(lc:assert (kr:read (kr:file "Œ»êA")) "2: uŒ»êAv‚Ì‹L˜^‚ª‚Å‚«‚é")
 
-;;; 3. ä½¿ãˆãªã„æ–‡å­— â†’ ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã«æ³¨æ„ãŒå‡ºã¦é–‰ã˜ãªã„ â†’ Esc
-(princ "\n\n===== 3. åå‰ã« / â†’ æ³¨æ„ â†’ Esc =====")
+;;; 3. g‚¦‚È‚¢•¶š ¨ ƒ_ƒCƒAƒƒO‚É’ˆÓ‚ªo‚Ä•Â‚¶‚È‚¢ ¨ Esc
+(princ "\n\n===== 3. –¼‘O‚É / ¨ ’ˆÓ ¨ Esc =====")
 (lc:input '("DCL" ("set" "name" "a/b") ("click" "accept")))
 (c:KR)
-(lc:assert (null (findfile (kr:file "a/b"))) "3: ä½¿ãˆãªã„åå‰ã§ã¯è¨˜éŒ²ã—ãªã„")
+(lc:assert (null (findfile (kr:file "a/b"))) "3: g‚¦‚È‚¢–¼‘O‚Å‚Í‹L˜^‚µ‚È‚¢")
 
-;;; 4. æ—¢ã«ã‚ã‚‹åå‰ â†’ 1å›ç›®ã¯æ³¨æ„ã€2å›ç›®ã§ä¸Šæ›¸ã
-(princ "\n\n===== 4. æ—¢ã«ã‚ã‚‹åå‰ â†’ 2å›æŠ¼ã—ã¦ä¸Šæ›¸ã =====")
-(setenv "KirokuTsuzuki_Last" "å‰å›")
-(lc:input '("DCL" ("set" "name" "ç¾å ´A") ("click" "accept") ("click" "accept")))
+;;; 4. Šù‚É‚ ‚é–¼‘O ¨ 1‰ñ–Ú‚Í’ˆÓA2‰ñ–Ú‚Åã‘‚«
+(princ "\n\n===== 4. Šù‚É‚ ‚é–¼‘O ¨ 2‰ñ‰Ÿ‚µ‚Äã‘‚« =====")
+(setenv "KirokuTsuzuki_Last" "‘O‰ñ")
+(lc:input '("DCL" ("set" "name" "Œ»êA") ("click" "accept") ("click" "accept")))
 (c:KR)
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "ç¾å ´A" "4: ä¸Šæ›¸ãã—ã¦æœ€å¾Œã®è¨˜éŒ²ï¼ç¾å ´A")
+(lc:assert-equal (getenv "KirokuTsuzuki_Last") "Œ»êA" "4: ã‘‚«‚µ‚ÄÅŒã‚Ì‹L˜^Œ»êA")
 
-;;; 5. æ—¢ã«ã‚ã‚‹åå‰ â†’ 1å›æŠ¼ã—ã¦ã€åå‰ã‚’å¤‰ãˆã¦æŠ¼ã™ â†’ æ–°ã—ã„åå‰ã§è¨˜éŒ²ï¼ˆç¢ºèªã¯åå‰ã”ã¨ï¼‰
-(princ "\n\n===== 5. æ—¢ã«ã‚ã‚‹åå‰ â†’ åå‰ã‚’å¤‰ãˆã‚‹ =====")
-(lc:input '("DCL" ("set" "name" "ç¾å ´A") ("click" "accept") ("set" "name" "ç¾å ´B") ("click" "accept")))
+;;; 5. Šù‚É‚ ‚é–¼‘O ¨ 1‰ñ‰Ÿ‚µ‚ÄA–¼‘O‚ğ•Ï‚¦‚Ä‰Ÿ‚· ¨ V‚µ‚¢–¼‘O‚Å‹L˜^iŠm”F‚Í–¼‘O‚²‚Æj
+(princ "\n\n===== 5. Šù‚É‚ ‚é–¼‘O ¨ –¼‘O‚ğ•Ï‚¦‚é =====")
+(lc:input '("DCL" ("set" "name" "Œ»êA") ("click" "accept") ("set" "name" "Œ»êB") ("click" "accept")))
 (c:KR)
-(lc:assert (kr:read (kr:file "ç¾å ´B")) "5: ã€Œç¾å ´Bã€ã§è¨˜éŒ²")
+(lc:assert (kr:read (kr:file "Œ»êB")) "5: uŒ»êBv‚Å‹L˜^")
 
-;;; 6. KR â†’ Esc
-(princ "\n\n===== 6. KR â†’ Esc =====")
+;;; 6. KR ¨ Esc
+(princ "\n\n===== 6. KR ¨ Esc =====")
 (setq n0 (length (kr:records)))
 (c:KR)
-(lc:assert-equal (length (kr:records)) n0 "6: è¨˜éŒ²ã¯å¢—ãˆãªã„")
+(lc:assert-equal (length (kr:records)) n0 "6: ‹L˜^‚Í‘‚¦‚È‚¢")
 
-;;; 7. ç¿Œæ—¥ï¼šé…ç½®å›³ã ã‘é–‹ã„ã¦ã„ã‚‹ã€‚ç«‹é¢å›³ã¯ã»ã‹ã®äººãŒä½¿ç”¨ä¸­ â†’ TZ â†’ Enterï¼ˆæœ€å¾Œã®è¨˜éŒ²ï¼ç¾å ´Bï¼‰
-(princ "\n\n===== 7. ç¿Œæ—¥ TZ â†’ Enter =====")
+;;; 7. —‚“úF”z’u}‚¾‚¯ŠJ‚¢‚Ä‚¢‚éB—§–Ê}‚Í‚Ù‚©‚Ìl‚ªg—p’† ¨ TZ ¨ EnteriÅŒã‚Ì‹L˜^Œ»êBj
+(princ "\n\n===== 7. —‚“ú TZ ¨ Enter =====")
 (lc:docs (list (list C)))
 (lc:file B "locked")
 (lc:input nil)
 (c:TZ)
 (setq od (lc:open-docs))
-(lc:assert-equal (length od) 3 "7: 3æšé–‹ã„ã¦ã„ã‚‹ï¼ˆé…ç½®å›³ã¯äºŒé‡ã«é–‹ã‹ãªã„ï¼‰")
-(lc:assert-equal (car od) A "7: å‰é¢ã¯è¨˜éŒ²æ™‚ã®å‰é¢ï¼ˆå¹³é¢å›³ï¼‰")
+(lc:assert-equal (length od) 3 "7: 3–‡ŠJ‚¢‚Ä‚¢‚éi”z’u}‚Í“ñd‚ÉŠJ‚©‚È‚¢j")
+(lc:assert-equal (car od) A "7: ‘O–Ê‚Í‹L˜^‚Ì‘O–Êi•½–Ê}j")
 
-;;; 8. è¦‹ã¤ã‹ã‚‰ãªã„å›³é¢ï¼šå¹³é¢å›³ã‚’å‰Šé™¤ â†’ ä¸€è¦§ã§ã€Œå‰å›ã€ã‚’é¸ã‚“ã§ï¼»é–‹ãï¼½
-(princ "\n\n===== 8. è¦‹ã¤ã‹ã‚‰ãªã„å›³é¢ â†’ è¨˜éŒ²ã‚’é¸ã‚“ã§é–‹ã =====")
+;;; 8. Œ©‚Â‚©‚ç‚È‚¢}–ÊF•½–Ê}‚ğíœ ¨ ˆê——‚Åu‘O‰ñv‚ğ‘I‚ñ‚ÅmŠJ‚­n
+(princ "\n\n===== 8. Œ©‚Â‚©‚ç‚È‚¢}–Ê ¨ ‹L˜^‚ğ‘I‚ñ‚ÅŠJ‚­ =====")
 (vl-file-delete A)
-(lc:docs (list (list "C:\\æ¡ˆä»¶\\ãã®ä»–\\åˆ¥ã®å›³é¢.dwg")))
-(lc:input (list "DCL" (list "pick" "recs" (t:idx "å‰å›")) (list "click" "accept")))
+(lc:docs (list (list "C:\\ˆÄŒ\\‚»‚Ì‘¼\\•Ê‚Ì}–Ê.dwg")))
+(lc:input (list "DCL" (list "pick" "recs" (t:idx "‘O‰ñ")) (list "click" "accept")))
 (c:TZ)
 (setq od (lc:open-docs))
-(lc:assert-equal (length od) 3 "8: å¹³é¢å›³ã‚’é™¤ã2æšã‚’é–‹ã")
-(lc:assert (not (member A od)) "8: è¦‹ã¤ã‹ã‚‰ãªã„å¹³é¢å›³ã¯é–‹ã‹ãªã„")
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "å‰å›" "8: æœ€å¾Œã®è¨˜éŒ²ï¼å‰å›")
+(lc:assert-equal (length od) 3 "8: •½–Ê}‚ğœ‚­2–‡‚ğŠJ‚­")
+(lc:assert (not (member A od)) "8: Œ©‚Â‚©‚ç‚È‚¢•½–Ê}‚ÍŠJ‚©‚È‚¢")
+(lc:assert-equal (getenv "KirokuTsuzuki_Last") "‘O‰ñ" "8: ÅŒã‚Ì‹L˜^‘O‰ñ")
 
-;;; 9. ãƒ€ãƒ–ãƒ«ã‚¯ãƒªãƒƒã‚¯ã§é–‹ã
-(princ "\n\n===== 9. è¨˜éŒ²ã‚’ãƒ€ãƒ–ãƒ«ã‚¯ãƒªãƒƒã‚¯ =====")
+;;; 9. ƒ_ƒuƒ‹ƒNƒŠƒbƒN‚ÅŠJ‚­
+(princ "\n\n===== 9. ‹L˜^‚ğƒ_ƒuƒ‹ƒNƒŠƒbƒN =====")
 (lc:file A)
-(lc:docs (list (list "C:\\æ¡ˆä»¶\\ãã®ä»–\\åˆ¥ã®å›³é¢.dwg")))
-(lc:input (list "DCL" (list "dclick" "recs" (t:idx "ç¾å ´A"))))
+(lc:docs (list (list "C:\\ˆÄŒ\\‚»‚Ì‘¼\\•Ê‚Ì}–Ê.dwg")))
+(lc:input (list "DCL" (list "dclick" "recs" (t:idx "Œ»êA"))))
 (c:TZ)
-(lc:assert-equal (length (lc:open-docs)) 4 "9: ç¾å ´A ã®3æšã‚’é–‹ã")
+(lc:assert-equal (length (lc:open-docs)) 4 "9: Œ»êA ‚Ì3–‡‚ğŠJ‚­")
 
-;;; 10. ã™ã¹ã¦é–‹ã„ã¦ã„ã‚‹ â†’ ï¼»é–‹ãï¼½ã¯ä½¿ãˆãªã„çŠ¶æ…‹ â†’ Esc
-(princ "\n\n===== 10. ã™ã§ã«å…¨éƒ¨é–‹ã„ã¦ã„ã‚‹ â†’ Esc =====")
+;;; 10. ‚·‚×‚ÄŠJ‚¢‚Ä‚¢‚é ¨ mŠJ‚­n‚Íg‚¦‚È‚¢ó‘Ô ¨ Esc
+(princ "\n\n===== 10. ‚·‚Å‚É‘S•”ŠJ‚¢‚Ä‚¢‚é ¨ Esc =====")
 (c:TZ)
-(lc:assert-equal (length (lc:open-docs)) 4 "10: ä½•ã‚‚é–‹ã‹ãªã„")
+(lc:assert-equal (length (lc:open-docs)) 4 "10: ‰½‚àŠJ‚©‚È‚¢")
 
-;;; 11. å‰Šé™¤ï¼š1å›ç›®ã¯æ³¨æ„ã€2å›ç›®ã§å‰Šé™¤ â†’ Esc
-(princ "\n\n===== 11. TZ â†’ ã“ã®è¨˜éŒ²ã‚’å‰Šé™¤ï¼ˆ2å›ï¼‰â†’ Esc =====")
-(setenv "KirokuTsuzuki_Last" "ç¾å ´B")
-(lc:input (list "DCL" (list "pick" "recs" (t:idx "ç¾å ´B")) (list "click" "del") (list "click" "del")))
+;;; 11. íœF1‰ñ–Ú‚Í’ˆÓA2‰ñ–Ú‚Åíœ ¨ Esc
+(princ "\n\n===== 11. TZ ¨ ‚±‚Ì‹L˜^‚ğíœi2‰ñj¨ Esc =====")
+(setenv "KirokuTsuzuki_Last" "Œ»êB")
+(lc:input (list "DCL" (list "pick" "recs" (t:idx "Œ»êB")) (list "click" "del") (list "click" "del")))
 (c:TZ)
-(lc:assert (not (member "ç¾å ´B" (mapcar 'car (kr:records)))) "11: ç¾å ´B ã‚’å‰Šé™¤")
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "" "11: æœ€å¾Œã®è¨˜éŒ²ã®å°ã‚‚æ¶ˆãˆã‚‹")
+(lc:assert (not (member "Œ»êB" (mapcar 'car (kr:records)))) "11: Œ»êB ‚ğíœ")
+(lc:assert-equal (getenv "KirokuTsuzuki_Last") "" "11: ÅŒã‚Ì‹L˜^‚Ìˆó‚àÁ‚¦‚é")
 
-;;; 12. KRSï¼šåˆæœŸå€¤ã«æˆ»ã™ â†’ é–‰ã˜ã‚‹
-(princ "\n\n===== 12. KRS â†’ åˆæœŸå€¤ã«æˆ»ã™ â†’ é–‰ã˜ã‚‹ =====")
-(setenv "KirokuTsuzuki_Folder" "D:\\å…±æœ‰\\è¨˜éŒ²\\")
+;;; 12. KRSF‰Šú’l‚É–ß‚· ¨ •Â‚¶‚é
+(princ "\n\n===== 12. KRS ¨ ‰Šú’l‚É–ß‚· ¨ •Â‚¶‚é =====")
+(setenv "KirokuTsuzuki_Folder" "D:\\‹¤—L\\‹L˜^\\")
 (lc:input '("DCL" ("click" "reset")) '("DCL" ("click" "cancel")))
 (c:KRS)
-(lc:assert (kr:folder-default-p) "12: ä¿å­˜å…ˆãŒåˆæœŸå€¤ã«æˆ»ã‚‹")
+(lc:assert (kr:folder-default-p) "12: •Û‘¶æ‚ª‰Šú’l‚É–ß‚é")
 
-;;; 13. æ–°è¦å›³é¢ã ã‘ â†’ è¨˜éŒ²ã—ãªã„ï¼ˆãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚‚å‡ºãªã„ï¼‰
-(princ "\n\n===== 13. æ–°è¦å›³é¢ã ã‘ =====")
+;;; 13. V‹K}–Ê‚¾‚¯ ¨ ‹L˜^‚µ‚È‚¢iƒ_ƒCƒAƒƒO‚ào‚È‚¢j
+(princ "\n\n===== 13. V‹K}–Ê‚¾‚¯ =====")
 (lc:docs (list (list "Drawing1.dwg" "untitled")))
 (setq n0 (length (kr:records)))
 (c:KR)
-(lc:assert-equal (length (kr:records)) n0 "13: è¨˜éŒ²ã¯å¢—ãˆãªã„")
+(lc:assert-equal (length (kr:records)) n0 "13: ‹L˜^‚Í‘‚¦‚È‚¢")
 
-;;; 14. SDI=1 â†’ é–‹ã‹ãªã„
+;;; 14. SDI=1 ¨ ŠJ‚©‚È‚¢
 (princ "\n\n===== 14. SDI=1 =====")
 (setvar "SDI" 1)
 (c:TZ)
-(lc:assert-equal (length (lc:open-docs)) 1 "14: ä½•ã‚‚é–‹ã‹ãªã„")
+(lc:assert-equal (length (lc:open-docs)) 1 "14: ‰½‚àŠJ‚©‚È‚¢")
 (setvar "SDI" 0)
 
 ;;; ============================================================
-;;;  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç‰ˆï¼ˆ-KIROKU / -TSUZUKI / -KIROKUSETï¼‰
+;;;  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“”Åi-KIROKU / -TSUZUKI / -KIROKUSETj
 ;;; ============================================================
 
-;;; 15. -KIROKU â†’ N â†’ ç¾å ´C
-(princ "\n\n===== 15. -KIROKU â†’ N â†’ ç¾å ´C =====")
+;;; 15. -KIROKU ¨ N ¨ Œ»êC
+(princ "\n\n===== 15. -KIROKU ¨ N ¨ Œ»êC =====")
 (lc:docs (list (list A) (list C)))
-(lc:input "Name" "ç¾å ´C")
+(lc:input "Name" "Œ»êC")
 (c:-KIROKU)
-(lc:assert-equal (t:names (kr:read (kr:file "ç¾å ´C"))) '("å¹³é¢å›³" "é…ç½®å›³") "15: ç¾å ´C ã«2æš")
+(lc:assert-equal (t:names (kr:read (kr:file "Œ»êC"))) '("•½–Ê}" "”z’u}") "15: Œ»êC ‚É2–‡")
 
-;;; 16. -TSUZUKI â†’ L â†’ ç•ªå·
-(princ "\n\n===== 16. -TSUZUKI â†’ L â†’ ç•ªå· =====")
-(lc:docs (list (list "C:\\æ¡ˆä»¶\\ãã®ä»–\\åˆ¥ã®å›³é¢.dwg")))
-(lc:input "List" (1+ (atoi (t:idx "ç¾å ´C"))))
+;;; 16. -TSUZUKI ¨ L ¨ ”Ô†
+(princ "\n\n===== 16. -TSUZUKI ¨ L ¨ ”Ô† =====")
+(lc:docs (list (list "C:\\ˆÄŒ\\‚»‚Ì‘¼\\•Ê‚Ì}–Ê.dwg")))
+(lc:input "List" (1+ (atoi (t:idx "Œ»êC"))))
 (c:-TSUZUKI)
-(lc:assert-equal (length (lc:open-docs)) 3 "16: ç¾å ´C ã®2æšã‚’é–‹ã")
+(lc:assert-equal (length (lc:open-docs)) 3 "16: Œ»êC ‚Ì2–‡‚ğŠJ‚­")
 
-;;; 17. -KIROKUSET â†’ ä¿å­˜å…ˆå¤‰æ›´ â†’ åˆæœŸå€¤ã«æˆ»ã™
-(princ "\n\n===== 17. -KIROKUSET â†’ ä¿å­˜å…ˆ =====")
-(lc:input "Folder" "D:\\å…±æœ‰\\è¨˜éŒ²" "Folder" "." nil)
+;;; 17. -KIROKUSET ¨ •Û‘¶æ•ÏX ¨ ‰Šú’l‚É–ß‚·
+(princ "\n\n===== 17. -KIROKUSET ¨ •Û‘¶æ =====")
+(lc:input "Folder" "D:\\‹¤—L\\‹L˜^" "Folder" "." nil)
 (c:-KIROKUSET)
-(lc:assert (kr:folder-default-p) "17: åˆæœŸå€¤ã«æˆ»ã‚‹")
+(lc:assert (kr:folder-default-p) "17: ‰Šú’l‚É–ß‚é")
 
-;;; 18. è¨˜éŒ²ãŒ1ã¤ã‚‚ãªã„ã¨ã TZ â†’ ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã«æ¡ˆå†… â†’ Esc
-(princ "\n\n===== 18. è¨˜éŒ²ãªã—ã§ TZ =====")
+;;; 18. ‹L˜^‚ª1‚Â‚à‚È‚¢‚Æ‚« TZ ¨ ƒ_ƒCƒAƒƒO‚ÉˆÄ“à ¨ Esc
+(princ "\n\n===== 18. ‹L˜^‚È‚µ‚Å TZ =====")
 (foreach r (kr:records) (vl-file-delete (nth 3 r)))
 (c:TZ)
-(lc:assert (null (kr:records)) "18: è¨˜éŒ²ã¯0ä»¶")
-(princ "\n\n===== ãƒ†ã‚¹ãƒˆçµ‚äº† =====")
+(lc:assert (null (kr:records)) "18: ‹L˜^‚Í0Œ")
+(princ "\n\n===== ƒeƒXƒgI—¹ =====")
 (princ)
