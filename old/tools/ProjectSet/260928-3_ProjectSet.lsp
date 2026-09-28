@@ -4,8 +4,7 @@
 ;;;  PROJECTSET (ショートカット PJ) : 記録と再開を1つのダイアログで行う
 ;;;
 ;;;  対応 : AutoCAD 2027
-;;;  版   : 1.1.3  (2026-09-28)
-;;;         1.1.3: 記録が1つも無いときに起動しない不具合を修正（空のリストに nth を使っていた）
+;;;  版   : 1.1.2  (2026-09-28)
 ;;;         1.1.2: エラーの場所をさらに細かく表示（原因調査用）
 ;;;         1.1.1: エラーのときに「どこで起きたか」を表示するようにした
 ;;;                読めない記録ファイルがあっても止まらないようにした
@@ -288,9 +287,6 @@
   (if (setq p (pj:browse-folder "記録ファイルの保存先を選んでください"))
     (if (pj:mkdirs p) (progn (setenv "ProjectSet_Folder" p) T))))
 
-;;; 選んでいる記録（記録が無いときは nil。空のリストに nth を使うと AutoCAD ではエラーになるため）
-(defun pj:cur ( ) (if *pj:recs* (nth *pj:sel* *pj:recs*)))
-
 (defun pj:dlg-save-check ( / nm )
   (pj:step "記録する")
   (setq nm (vl-string-trim " \t" (get_tile "name")))
@@ -298,14 +294,14 @@
     ((= nm "") (set_tile "save_note" "記録の名前を入れてください。"))
     ((pj:bad-name-p nm) (set_tile "save_note" "名前に次の文字は使えません： \\ / : * ? \" < > |"))
     ((and (findfile (pj:file nm)) (/= *pj:confirm* nm)
-          (/= nm (car (pj:cur))))      ; 選んでいる記録の更新は確認しない
+          (/= nm (car (nth *pj:sel* *pj:recs*))))      ; 選んでいる記録の更新は確認しない
      (setq *pj:confirm* nm)
      (set_tile "save_note" (strcat "「" nm "」は既にあります。もう一度［記録する］で上書きします。")))
     (T (setq *pj:dlg-name* nm) (done_dialog 3))))
 
 (defun pj:dlg-del-check ( / rec )
   (pj:step "記録の削除")
-  (if (and *pj:recs* (setq rec (pj:cur)))
+  (if (and *pj:recs* (setq rec (nth *pj:sel* *pj:recs*)))
     (if (/= *pj:delconf* (car rec))
       (progn
         (setq *pj:delconf* (car rec))
@@ -323,7 +319,7 @@
 
 (defun pj:do-rename ( / rec oldf newf )
   (pj:step "名前の変更")
-  (if (and *pj:recs* (setq rec (pj:cur)))
+  (if (and *pj:recs* (setq rec (nth *pj:sel* *pj:recs*)))
     (progn
       (setq *pj:ren-old* (car rec))
       (if (new_dialog "pj_ren" *pj:dcl-id*)
@@ -348,7 +344,7 @@
 (defun pj:dlg-update-open ( / rec data nopen nskip nmiss items st old)
   (setq old *pj:step*)
   (pj:step "記録の図面の表示")
-  (if (and *pj:recs* (setq rec (pj:cur)))
+  (if (and *pj:recs* (setq rec (nth *pj:sel* *pj:recs*)))
     (progn
       (setq data (pj:read (nth 3 rec)) nopen 0 nskip 0 nmiss 0)
       (if (caddr data)
@@ -385,15 +381,15 @@
   (pj:step "記録を選んだとき")
   (setq *pj:sel* (atoi val) *pj:delconf* nil *pj:confirm* nil)
   (set_tile "open_msg" "")
-  (if (pj:cur) (set_tile "name" (car (pj:cur))))
+  (if (nth *pj:sel* *pj:recs*) (set_tile "name" (car (nth *pj:sel* *pj:recs*))))
   (set_tile "save_note" *pj:save-note*)
   (pj:dlg-update-open)
-  (if (and (= reason 4) (not *pj:sdi*) *pj:recs* (pj:cur)) (done_dialog 1)))
+  (if (and (= reason 4) (not *pj:sdi*) *pj:recs* (nth *pj:sel* *pj:recs*)) (done_dialog 1)))
 
 (defun pj:dlg-open-accept ( )
   (pj:step "［開く］を押したとき")
   (cond (*pj:sdi* nil)
-        ((and *pj:recs* (pj:cur)) (done_dialog 1))
+        ((and *pj:recs* (nth *pj:sel* *pj:recs*)) (done_dialog 1))
         (T (set_tile "open_msg" "開く記録を選んでください。"))))
 
 (setq *pj:save-note* "名前が同じ記録は上書きされます（新しく記録するときは名前を変えてください）。")
@@ -439,7 +435,7 @@
                          (car x)))
                     disp)))
         (pj:step "ダイアログの表示（名前の初期値）")
-        (set_tile "name" (cond ((car (pj:cur))) ((pj:default-name))))
+        (set_tile "name" (cond ((car (nth *pj:sel* *pj:recs*))) ((pj:default-name))))
         (pj:step "ダイアログの表示（注意書き・ボタン）")
         (set_tile "save_note" *pj:save-note*)
         (if (null (car info)) (mode_tile "btn_save" 1))
@@ -464,16 +460,16 @@
         (pj:step "ダイアログを閉じた後の処理")
         
         (cond
-          ((= r 1) (setq res (pj:cur) done T))
+          ((= r 1) (setq res (nth *pj:sel* *pj:recs*) done T))
           ((= r 2) (if (pj:change-folder) (setq *pj:sel* nil)))
           ((= r 3)                                   ; 記録して閉じる
            (if (and *pj:dlg-name* (car info)) (pj:save *pj:dlg-name* info))
            (setq done T))
           ((= r 4)
-           (if (and *pj:recs* (pj:cur))
+           (if (and *pj:recs* (nth *pj:sel* *pj:recs*))
              (progn
-               (vl-file-delete (nth 3 (pj:cur)))
-               (if (= (getenv "ProjectSet_Last") (car (pj:cur))) (setenv "ProjectSet_Last" "")))))
+               (vl-file-delete (nth 3 (nth *pj:sel* *pj:recs*)))
+               (if (= (getenv "ProjectSet_Last") (car (nth *pj:sel* *pj:recs*))) (setenv "ProjectSet_Last" "")))))
           ((= r 5) nil) ; 名前変更によるUIリロード用
           (T (setq done T))
         )

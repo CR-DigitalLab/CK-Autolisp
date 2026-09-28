@@ -7,8 +7,7 @@
 ;;;  -KIROKU / -TSUZUKI / -KIROKUSET : 同じ操作をコマンドラインで行う版
 ;;;
 ;;;  対応 : AutoCAD 2027
-;;;  版   : 1.1.2  (2026-09-28)
-;;;         1.1.2: 記録が1つも無いときに TZ でエラーになる不具合を修正（空のリストに nth を使っていた）
+;;;  版   : 1.1.1  (2026-09-28)
 ;;;         1.1.1: このファイルとダイアログ定義（DCL）を ANSI（Shift-JIS）にした（UTF-8 では日本語が文字化けするため）
 ;;;         1.1.0: KR / TZ / KRS をダイアログにした（コマンドライン版は -KIROKU など）
 ;;;         1.0.0: 最初の版
@@ -354,11 +353,8 @@
       (if (= r 1) *kr:dlg-name* 'CANCEL))))
 
 ;;; ---- TZ のダイアログ ----
-;;; 選んでいる記録（記録が無いときは nil。空のリストに nth を使うと AutoCAD ではエラーになるため）
-(defun kr:cur ( ) (if *kr:recs* (nth *kr:sel* *kr:recs*)))
-
 (defun kr:dlg-open-files ( / rec data nopen nskip nmiss items st)
-  (if (setq rec (kr:cur))
+  (if (setq rec (nth *kr:sel* *kr:recs*))
     (progn
       (setq data (kr:read (nth 3 rec)) nopen 0 nskip 0 nmiss 0)
       (foreach f (caddr data)
@@ -394,10 +390,10 @@
   (setq *kr:sel* (atoi val) *kr:delconf* nil)
   (set_tile "msg" "")
   (kr:dlg-open-files)
-  (if (and (= reason 4) (kr:cur)) (done_dialog 1)))
+  (if (and (= reason 4) (nth *kr:sel* *kr:recs*)) (done_dialog 1)))
 
 (defun kr:dlg-open-del ( / rec)
-  (if (setq rec (kr:cur))
+  (if (setq rec (nth *kr:sel* *kr:recs*))
     (if (/= *kr:delconf* (car rec))
       (progn
         (setq *kr:delconf* (car rec))
@@ -412,7 +408,7 @@
           (set_tile "msg" "削除できませんでした。"))))))
 
 (defun kr:dlg-open-accept ( )
-  (if (kr:cur) (done_dialog 1) (set_tile "msg" "開く記録を選んでください。")))
+  (if (nth *kr:sel* *kr:recs*) (done_dialog 1) (set_tile "msg" "開く記録を選んでください。")))
 
 ;;; → 開く記録 / nil（キャンセル） / 'NODIALOG（ダイアログを出せない）
 (defun kr:dlg-open ( / r done res)
@@ -434,7 +430,7 @@
         (action_tile "cancel" "(done_dialog 0)")
         (setq r (start_dialog))
         (cond
-          ((= r 1) (setq res (kr:cur) done T))
+          ((= r 1) (setq res (nth *kr:sel* *kr:recs*) done T))
           ((= r 2)                              ; 保存先を変えて、ダイアログを出し直す
            (if (kr:change-folder)
              (setq *kr:recs* (kr:records) *kr:sel* (max 0 (cond ((vl-position (kr:last-rec *kr:recs*) *kr:recs*)) (0))))))
@@ -644,5 +640,5 @@
   (kr:settings)
   (princ))
 
-(princ "\n[KirokuTsuzuki 1.1.2] 読み込み完了  KR=記録 / TZ=まとめて開く / KRS=保存先（コマンドライン版は -KIROKU など）")
+(princ "\n[KirokuTsuzuki 1.1.1] 読み込み完了  KR=記録 / TZ=まとめて開く / KRS=保存先（コマンドライン版は -KIROKU など）")
 (princ)

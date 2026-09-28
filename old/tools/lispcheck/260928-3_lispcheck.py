@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.6'
+VERSION = '0.1.5'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -1813,9 +1813,6 @@ def _nth(I, a):
     argn(a, 2, 2)
     n = fixn(a[0])
     lst = a[1]
-    if lst is None:
-        # AutoCAD は空のリスト（nil）に nth を使うとエラーになる（チコさんの実機で確認）
-        raise LispError('bad argument type: consp nil')
     if type(lst) is Dotted:
         items = lst.items
     else:
