@@ -1,156 +1,311 @@
 ======================================================================
-lispcheck 0.1.3 実行レポート
+lispcheck 0.1.4 実行レポート
 ======================================================================
 図面: (空の新規図面)  (AC1024, 文字コード utf-8)
 読込: tools/KirokuTsuzuki/KirokuTsuzuki.lsp  OK
 読込: tools/KirokuTsuzuki/test/lispcheck/test_kiroku.lsp  OK
-定義されたコマンド: KIROKU, KIROKUSET, KR, KRS, TSUZUKI, TZ
+定義されたコマンド: -KIROKU, -KIROKUSET, -TSUZUKI, KIROKU, KIROKUSET, KR, KRS, TSUZUKI, TZ
 
 --- コマンドライン出力 ----------------------------------------------
-[KirokuTsuzuki 1.0.0] 読み込み完了  KIROKU(KR)=記録 / TSUZUKI(TZ)=まとめて開く / KIROKUSET(KRS)=設定
+[KirokuTsuzuki 1.1.0] 読み込み完了  KR=記録 / TZ=まとめて開く / KRS=保存先（コマンドライン版は -KIROKU など）
 
-===== 1. 記録なしで TZ =====
-[TSUZUKI] 記録がありません（保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\）。先に KR で記録してください。[assert OK] (NULL (KR:RECORDS)) 1: 記録はまだ無い
-
-
-===== 2. KR（Enter で「前回」）=====
-図面 3 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: Enter(空)>
+===== 1. KR → Enter =====
+[ダイアログ表示(仮想)] kr_save
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg                        ※保存していない変更あり
+    2: Drawing1.dwg                      ※一度も保存していないため記録されません
+    3: 配置図.dwg
+  head = 開いている図面を記録します（記録される図面 3 枚）
+  name = 前回
+  note = 同じ名前の記録があると上書きされます（「前回」はいつも上書き）。
+<ダイアログ操作: Enter(空)>
 
 [KIROKU] 「前回」に図面 3 枚を記録しました。
           ※保存していない変更がある図面 1 枚：立面図.dwg（図面の保存は別に行ってください）
-          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[assert OK] R 2: 「前回」の記録ができる
+          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki001.dcl
 [assert OK] (T:NAMES R) 
 [assert OK] (CADR R) 
 [assert OK] (GETENV "KirokuTsuzuki_Last") 
 
 
-===== 3. KR → N → 現場A =====
-図面 3 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: "Name">
-
-記録の名前 <中止>: <入力: "現場A">
+===== 2. KR → 名前「現場A」→ 記録する =====
+[ダイアログ表示(仮想)] kr_save
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg                        ※保存していない変更あり
+    2: Drawing1.dwg                      ※一度も保存していないため記録されません
+    3: 配置図.dwg
+  head = 開いている図面を記録します（記録される図面 3 枚）
+  name = 前回
+  note = 同じ名前の記録があると上書きされます（「前回」はいつも上書き）。
+<ダイアログ操作: ['DCL', ['set', 'name', '現場A'], ['click', 'accept']]>
 
 [KIROKU] 「現場A」に図面 3 枚を記録しました。
           ※保存していない変更がある図面 1 枚：立面図.dwg（図面の保存は別に行ってください）
-          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[assert OK] (KR:READ (KR:FILE "現場A")) 3: 「現場A」の記録ができる
+          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki002.dcl
+[assert OK] (KR:READ (KR:FILE "現場A")) 2: 「現場A」の記録ができる
+
+
+===== 3. 名前に / → 注意 → Esc =====
+[ダイアログ表示(仮想)] kr_save
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg                        ※保存していない変更あり
+    2: Drawing1.dwg                      ※一度も保存していないため記録されません
+    3: 配置図.dwg
+  head = 開いている図面を記録します（記録される図面 3 枚）
+  name = 前回
+  note = 同じ名前の記録があると上書きされます（「前回」はいつも上書き）。
+<ダイアログ操作: ['DCL', ['set', 'name', 'a/b'], ['click', 'accept']]>
+
+[ダイアログ表示(仮想)] kr_save
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg                        ※保存していない変更あり
+    2: Drawing1.dwg                      ※一度も保存していないため記録されません
+    3: 配置図.dwg
+  head = 開いている図面を記録します（記録される図面 3 枚）
+  name = a/b
+  note = 名前に次の文字は使えません： \ / : * ? " < > |
+<ダイアログ: Esc（台本なし）>
+
+[KIROKU] 中止しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki003.dcl
+[assert OK] (NULL (FINDFILE (KR:FILE "a/b"))) 3: 使えない名前では記録しない
+
+
+===== 4. 既にある名前 → 2回押して上書き =====
+[ダイアログ表示(仮想)] kr_save
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg                        ※保存していない変更あり
+    2: Drawing1.dwg                      ※一度も保存していないため記録されません
+    3: 配置図.dwg
+  head = 開いている図面を記録します（記録される図面 3 枚）
+  name = 前回
+  note = 同じ名前の記録があると上書きされます（「前回」はいつも上書き）。
+<ダイアログ操作: ['DCL', ['set', 'name', '現場A'], ['click', 'accept'], ['click', 'accept']]>
+
+[KIROKU] 「現場A」に図面 3 枚を記録しました。
+          ※保存していない変更がある図面 1 枚：立面図.dwg（図面の保存は別に行ってください）
+          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki004.dcl
 [assert OK] (GETENV "KirokuTsuzuki_Last") 
 
 
-===== 4. 名前に / を入れる =====
-図面 3 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: "Name">
+===== 5. 既にある名前 → 名前を変える =====
+[ダイアログ表示(仮想)] kr_save
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg                        ※保存していない変更あり
+    2: Drawing1.dwg                      ※一度も保存していないため記録されません
+    3: 配置図.dwg
+  head = 開いている図面を記録します（記録される図面 3 枚）
+  name = 前回
+  note = 同じ名前の記録があると上書きされます（「前回」はいつも上書き）。
+<ダイアログ操作: ['DCL', ['set', 'name', '現場A'], ['click', 'accept'], ['set', 'name', '現場B'], ['click', 'accept']]>
 
-記録の名前 <中止>: <入力: "a/b">
-
-名前に次の文字は使えません： \ / : * ? " < > |
-図面 3 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: Enter(空)>
-
-[KIROKU] 「前回」に図面 3 枚を記録しました。
+[KIROKU] 「現場B」に図面 3 枚を記録しました。
           ※保存していない変更がある図面 1 枚：立面図.dwg（図面の保存は別に行ってください）
-          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[assert OK] (NULL (FINDFILE (KR:FILE "a/b"))) 4: 使えない名前では記録しない
-[assert OK] (GETENV "KirokuTsuzuki_Last") 
+          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki005.dcl
+[assert OK] (KR:READ (KR:FILE "現場B")) 5: 「現場B」で記録
 
 
-===== 5. 既にある名前で「いいえ」=====
-図面 3 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: "Name">
+===== 6. KR → Esc =====
+[ダイアログ表示(仮想)] kr_save
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg                        ※保存していない変更あり
+    2: Drawing1.dwg                      ※一度も保存していないため記録されません
+    3: 配置図.dwg
+  head = 開いている図面を記録します（記録される図面 3 枚）
+  name = 前回
+  note = 同じ名前の記録があると上書きされます（「前回」はいつも上書き）。
+<ダイアログ: Esc（台本なし）>
 
-記録の名前 <中止>: <入力: "現場A">
-
-「現場A」は既にあります。上書きしますか？ [はい(Y)/いいえ(N)] <いいえ>: <入力: "No">
-
-図面 3 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: Enter(空)>
-
-[KIROKU] 「前回」に図面 3 枚を記録しました。
-          ※保存していない変更がある図面 1 枚：立面図.dwg（図面の保存は別に行ってください）
-          ※一度も保存していないため記録できない図面 1 枚：Drawing1.dwg[assert OK] (GETENV "KirokuTsuzuki_Last") 
+[KIROKU] 中止しました。[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki006.dcl
+[assert OK] (LENGTH (KR:RECORDS)) 
 
 
-===== 6. 翌日 TZ（Enter）=====
-続きを開く [一覧から選ぶ(L)/設定(S)] <「前回」 2026/09/27 13:50・3枚>: <入力: Enter(空)>
+===== 7. 翌日 TZ → Enter =====
+[ダイアログ表示(仮想)] kr_open
+  リスト recs:
+    0: 現場B         2026/09/28 00:39  3枚
+    1: 現場A         2026/09/28 00:39  3枚
+    2: 前回          2026/09/28 00:39  3枚
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg
+    2: 配置図.dwg                        ※すでに開いています
+  fhead = 「現場B」の図面 3 枚（開く 2 枚・開いている 1 枚）
+  folder = 保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  recs = 0
+<ダイアログ操作: Enter(空)>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki007.dcl
 [図面を開く(仮想)] C:\案件\A棟\平面図.dwg
 [図面を開く(仮想)] C:\案件\A棟\立面図.dwg（読み取り専用）
 [前面の図面(仮想)] C:\案件\A棟\平面図.dwg
 
-[TSUZUKI] 「前回」（2026/09/27 13:50）：開いた図面 2 枚 / すでに開いていた図面 1 枚
+[TSUZUKI] 「現場B」（2026/09/28 00:39）：開いた図面 2 枚 / すでに開いていた図面 1 枚
           ※ほかの人が使用中のため読み取り専用で開いた図面 1 枚：立面図[assert OK] (LENGTH OD) 
 [assert OK] (CAR OD) 
 
 
-===== 7. 見つからない図面がある =====[ファイル削除(仮想)] C:\案件\A棟\平面図.dwg
+===== 8. 見つからない図面 → 記録を選んで開く =====[ファイル削除(仮想)] C:\案件\A棟\平面図.dwg
 
-続きを開く [一覧から選ぶ(L)/設定(S)] <「現場A」 2026/09/27 13:50・3枚>: <入力: Enter(空)>
+[ダイアログ表示(仮想)] kr_open
+  リスト recs:
+    0: 現場B         2026/09/28 00:39  3枚
+    1: 現場A         2026/09/28 00:39  3枚
+    2: 前回          2026/09/28 00:39  3枚
+  リスト files:
+    0: 平面図.dwg                        ※見つかりません
+    1: 立面図.dwg
+    2: 配置図.dwg
+  fhead = 「現場B」の図面 3 枚（開く 2 枚・見つからない 1 枚）
+  folder = 保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  recs = 0
+<ダイアログ操作: ("DCL" ("pick" "recs" "2") ("click" "accept"))>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki008.dcl
 [図面を開く(仮想)] C:\案件\A棟\立面図.dwg（読み取り専用）
 [図面を開く(仮想)] C:\案件\B棟\配置図.dwg
 
-[TSUZUKI] 「現場A」（2026/09/27 13:50）：開いた図面 2 枚 / すでに開いていた図面 0 枚
+[TSUZUKI] 「前回」（2026/09/28 00:39）：開いた図面 2 枚 / すでに開いていた図面 0 枚
           ※ほかの人が使用中のため読み取り専用で開いた図面 1 枚：立面図
           ※見つからない図面 1 枚（移動・削除された可能性）：平面図[assert OK] (LENGTH OD) 
-[assert OK] (NOT (MEMBER A OD)) 7: 見つからない平面図は開かない
+[assert OK] (NOT (MEMBER A OD)) 8: 見つからない平面図は開かない
+[assert OK] (GETENV "KirokuTsuzuki_Last") 
 
 
-===== 8. TZ → L → 番号 =====
-続きを開く [一覧から選ぶ(L)/設定(S)] <「現場A」 2026/09/27 13:50・3枚>: <入力: "List">
-
-──── 記録の一覧（新しい順）────
-  1. 「現場A」 2026/09/27 13:50・3枚
-  2. 「前回」 2026/09/27 13:50・3枚
-──────────────────────
-開く記録の番号 <中止>: <入力: 2>
+===== 9. 記録をダブルクリック =====
+[ダイアログ表示(仮想)] kr_open
+  リスト recs:
+    0: 現場B         2026/09/28 00:39  3枚
+    1: 現場A         2026/09/28 00:39  3枚
+    2: 前回          2026/09/28 00:39  3枚
+  リスト files:
+    0: 平面図.dwg
+    1: 立面図.dwg
+    2: 配置図.dwg
+  fhead = 「前回」の図面 3 枚（開く 3 枚）
+  folder = 保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  recs = 2
+<ダイアログ操作: ("DCL" ("dclick" "recs" "1"))>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki009.dcl
 [図面を開く(仮想)] C:\案件\A棟\平面図.dwg
 [図面を開く(仮想)] C:\案件\A棟\立面図.dwg（読み取り専用）
 [図面を開く(仮想)] C:\案件\B棟\配置図.dwg
 [前面の図面(仮想)] C:\案件\A棟\平面図.dwg
 
-[TSUZUKI] 「前回」（2026/09/27 13:50）：開いた図面 3 枚 / すでに開いていた図面 0 枚
+[TSUZUKI] 「現場A」（2026/09/28 00:39）：開いた図面 3 枚 / すでに開いていた図面 0 枚
           ※ほかの人が使用中のため読み取り専用で開いた図面 1 枚：立面図[assert OK] (LENGTH (LC:OPEN-DOCS)) 
+
+
+===== 10. すでに全部開いている → Esc =====
+[ダイアログ表示(仮想)] kr_open
+  リスト recs:
+    0: 現場B         2026/09/28 00:39  3枚
+    1: 現場A         2026/09/28 00:39  3枚
+    2: 前回          2026/09/28 00:39  3枚
+  リスト files:
+    0: 平面図.dwg                        ※すでに開いています
+    1: 立面図.dwg                        ※すでに開いています
+    2: 配置図.dwg                        ※すでに開いています
+  fhead = 「現場A」の図面 3 枚（開く 0 枚・開いている 3 枚）
+  folder = 保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  recs = 1
+  使えない状態: accept
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki010.dcl
+
+[TSUZUKI] 中止しました。[assert OK] (LENGTH (LC:OPEN-DOCS)) 
+
+
+===== 11. TZ → この記録を削除（2回）→ Esc =====
+[ダイアログ表示(仮想)] kr_open
+  リスト recs:
+    0: 現場B         2026/09/28 00:39  3枚
+    1: 現場A         2026/09/28 00:39  3枚
+    2: 前回          2026/09/28 00:39  3枚
+  リスト files:
+    0: 平面図.dwg                        ※すでに開いています
+    1: 立面図.dwg                        ※すでに開いています
+    2: 配置図.dwg                        ※すでに開いています
+  fhead = 「現場B」の図面 3 枚（開く 0 枚・開いている 3 枚）
+  folder = 保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  recs = 0
+  使えない状態: accept
+<ダイアログ操作: ("DCL" ("pick" "recs" "0") ("click" "del") ("click" "del"))>
+[ファイル削除(仮想)] C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場B.krk
+
+[ダイアログ表示(仮想)] kr_open
+  リスト recs:
+    0: 現場A         2026/09/28 00:39  3枚
+    1: 前回          2026/09/28 00:39  3枚
+  リスト files:
+    0: 平面図.dwg                        ※すでに開いています
+    1: 立面図.dwg                        ※すでに開いています
+    2: 配置図.dwg                        ※すでに開いています
+  fhead = 「現場A」の図面 3 枚（開く 0 枚・開いている 3 枚）
+  folder = 保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  msg = 「現場B」を削除しました。
+  recs = 0
+  使えない状態: accept
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki011.dcl
+
+[TSUZUKI] 中止しました。[assert OK] (NOT (MEMBER "現場B" (MAPCAR (QUOTE CAR) (KR:RECORDS)))) 11: 現場B を削除
 [assert OK] (GETENV "KirokuTsuzuki_Last") 
 
 
-===== 9. すでに全部開いている =====
-続きを開く [一覧から選ぶ(L)/設定(S)] <「前回」 2026/09/27 13:50・3枚>: <入力: Enter(空)>
+===== 12. KRS → 初期値に戻す → 閉じる =====
+[ダイアログ表示(仮想)] kr_set
+  folder = D:\共有\記録\
+<ダイアログ操作: ['DCL', ['click', 'reset']]>
+
+[ダイアログ表示(仮想)] kr_set
+  folder = C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  msg = 初期値に戻しました。
+<ダイアログ操作: ['DCL', ['click', 'cancel']]>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki012.dcl
+[assert OK] (KR:FOLDER-DEFAULT-P) 12: 保存先が初期値に戻る
+
+
+===== 13. 新規図面だけ =====
+[KIROKU] 記録できる図面がありません（一度も保存していない図面は記録できません）。[assert OK] (LENGTH (KR:RECORDS)) 
+
+
+===== 14. SDI=1 =====
+[TSUZUKI] 1図面だけを開くモード（SDI=1）のため、まとめて開けません。[assert OK] (LENGTH (LC:OPEN-DOCS)) 
+
+
+===== 15. -KIROKU → N → 現場C =====
+図面 2 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: "Name">
+
+記録の名前 <中止>: <入力: "現場C">
+
+[KIROKU] 「現場C」に図面 2 枚を記録しました。[assert OK] (T:NAMES (KR:READ (KR:FILE "現場C"))) 
+
+
+===== 16. -TSUZUKI → L → 番号 =====
+続きを開く [一覧から選ぶ(L)/設定(S)] <「現場C」 2026/09/28 00:39・2枚>: <入力: "List">
+
+──── 記録の一覧（新しい順）────
+  1. 「現場C」 2026/09/28 00:39・2枚
+  2. 「現場A」 2026/09/28 00:39・3枚
+  3. 「前回」 2026/09/28 00:39・3枚
+──────────────────────
+開く記録の番号 <中止>: <入力: 1>
+[図面を開く(仮想)] C:\案件\A棟\平面図.dwg
+[図面を開く(仮想)] C:\案件\B棟\配置図.dwg
 [前面の図面(仮想)] C:\案件\A棟\平面図.dwg
 
-[TSUZUKI] 「前回」（2026/09/27 13:50）：開いた図面 0 枚 / すでに開いていた図面 3 枚[assert OK] (LENGTH (LC:OPEN-DOCS)) 
+[TSUZUKI] 「現場C」（2026/09/28 00:39）：開いた図面 2 枚 / すでに開いていた図面 0 枚[assert OK] (LENGTH (LC:OPEN-DOCS)) 
 
 
-===== 10. KRS 一覧・削除 =====
+===== 17. -KIROKUSET → 保存先 =====
 ──────── KIROKU / TSUZUKI 設定 ────────
  保存先(F) : C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
- 記録の数  : 2 件
-──────────────────────────────
-操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: "List">
-
-──── 記録の一覧（新しい順）────
-  1. 「現場A」 2026/09/27 13:50・3枚
-  2. 「前回」 2026/09/27 13:50・3枚
-──────────────────────
-──────── KIROKU / TSUZUKI 設定 ────────
- 保存先(F) : C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
- 記録の数  : 2 件
-──────────────────────────────
-操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: "Delete">
-
-──── 記録の一覧（新しい順）────
-  1. 「現場A」 2026/09/27 13:50・3枚
-  2. 「前回」 2026/09/27 13:50・3枚
-──────────────────────
-削除する記録の番号 <中止>: <入力: 1>
-
-「現場A」 2026/09/27 13:50・3枚 を削除しますか？ [はい(Y)/いいえ(N)] <いいえ>: <入力: "Yes">
-[ファイル削除(仮想)] C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場A.krk
-
-「現場A」を削除しました。
-──────── KIROKU / TSUZUKI 設定 ────────
- 保存先(F) : C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
- 記録の数  : 1 件
-──────────────────────────────
-操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: Enter(空)>
-[assert OK] (NOT (MEMBER "現場A" (MAPCAR (QUOTE CAR) (KR:RECORDS)))) 10: 現場A を削除
-[assert OK] (GETENV "KirokuTsuzuki_Last") 
-
-
-===== 11. KRS 保存先の変更 =====
-──────── KIROKU / TSUZUKI 設定 ────────
- 保存先(F) : C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
- 記録の数  : 1 件
+ 記録の数  : 3 件
 ──────────────────────────────
 操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: "Folder">
 
@@ -161,17 +316,6 @@ lispcheck 0.1.3 実行レポート
  保存先(F) : D:\共有\記録\
  記録の数  : 0 件
 ──────────────────────────────
-操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: Enter(空)>
-[assert OK] (KR:FOLDER) 
-
-図面 1 枚を記録 [名前を付ける(N)/設定(S)] <「前回」として記録>: <入力: Enter(空)>
-
-[KIROKU] 「前回」に図面 1 枚を記録しました。[assert OK] (LENGTH (KR:RECORDS)) 
-
-──────── KIROKU / TSUZUKI 設定 ────────
- 保存先(F) : D:\共有\記録\
- 記録の数  : 1 件
-──────────────────────────────
 操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: "Folder">
 
 保存先フォルダ（「.」で初期値に戻す） <D:\共有\記録\>: <入力: ".">
@@ -179,46 +323,26 @@ lispcheck 0.1.3 実行レポート
 初期値に戻しました。
 ──────── KIROKU / TSUZUKI 設定 ────────
  保存先(F) : C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
- 記録の数  : 1 件
+ 記録の数  : 3 件
 ──────────────────────────────
 操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: Enter(空)>
-[assert OK] (KR:FOLDER) 
-[assert OK] (MEMBER "前回" (MAPCAR (QUOTE CAR) (KR:RECORDS))) 11: 元の保存先の記録が見える
+[assert OK] (KR:FOLDER-DEFAULT-P) 17: 初期値に戻る
 
 
-===== 12. 新規図面だけ =====
-[KIROKU] 記録できる図面がありません（一度も保存していない図面は記録できません）。[assert OK] (LENGTH (KR:RECORDS)) 
-
-
-===== 13. SDI=1 =====
-[TSUZUKI] 1図面だけを開くモード（SDI=1）のため、まとめて開けません。[assert OK] (LENGTH (LC:OPEN-DOCS)) 
-
-
-===== 14. TZ → 設定で全部削除 =====
-続きを開く [一覧から選ぶ(L)/設定(S)] <「前回」 2026/09/27 13:50・3枚>: <入力: "Settings">
-
-──────── KIROKU / TSUZUKI 設定 ────────
- 保存先(F) : C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
- 記録の数  : 1 件
-──────────────────────────────
-操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: "Delete">
-
-──── 記録の一覧（新しい順）────
-  1. 「前回」 2026/09/27 13:50・3枚
-──────────────────────
-削除する記録の番号 <中止>: <入力: 1>
-
-「前回」 2026/09/27 13:50・3枚 を削除しますか？ [はい(Y)/いいえ(N)] <いいえ>: <入力: "Yes">
+===== 18. 記録なしで TZ =====[ファイル削除(仮想)] C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場C.krk
+[ファイル削除(仮想)] C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場A.krk
 [ファイル削除(仮想)] C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\前回.krk
 
-「前回」を削除しました。
-──────── KIROKU / TSUZUKI 設定 ────────
- 保存先(F) : C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
- 記録の数  : 0 件
-──────────────────────────────
-操作 [保存先(F)/一覧(L)/削除(D)/終了(X)] <終了>: <入力: Enter(空)>
+[ダイアログ表示(仮想)] kr_open
+  リスト recs:
+  リスト files:
+  folder = 保存先：C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\（初期値）
+  msg = 記録がありません。先に KR で記録してください（保存先を変えた場合は［保存先を変更...］）。
+  使えない状態: accept, del
+<ダイアログ: Esc（台本なし）>
+[ファイル削除(仮想)] C:\Users\user\AppData\Local\Temp\kirokutsuzuki013.dcl
 
-[TSUZUKI] 記録がありません。[assert OK] (NULL (KR:RECORDS)) 14: 記録は0件
+[TSUZUKI] 中止しました。[assert OK] (NULL (KR:RECORDS)) 18: 記録は0件
 
 
 ===== テスト終了 =====
@@ -227,25 +351,53 @@ lispcheck 0.1.3 実行レポート
 なし
 
 --- 警告（シミュレーションの限界・AutoCADとの差の可能性）----------
-△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\前回.krk" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr2/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_前回.krk に作成しました（実ファイルは変更しません）  ×3
-△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場A.krk" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr2/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場A.krk に作成しました（実ファイルは変更しません）
-△ 書込み用ファイル "D:\共有\記録\前回.krk" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr2/lisp_files/D__共有_記録_前回.krk に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki001.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki001.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\前回.krk" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_前回.krk に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki002.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki002.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場A.krk" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場A.krk に作成しました（実ファイルは変更しません）  ×2
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki003.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki003.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki004.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki004.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki005.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki005.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場B.krk" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場B.krk に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki006.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki006.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki007.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki007.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki008.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki008.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki009.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki009.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki010.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki010.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki011.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki011.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki012.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki012.dcl に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Roaming\Autodesk\AutoCAD 2027\R26.0\jpn\KirokuTsuzuki\現場C.krk" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場C.krk に作成しました（実ファイルは変更しません）
+△ 書込み用ファイル "C:\Users\user\AppData\Local\Temp\kirokutsuzuki013.dcl" は出力フォルダ /tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki013.dcl に作成しました（実ファイルは変更しません）
 
 --- 図面の変更: 追加 0 / 変更 0 / 削除 0 --------------------
 
 --- システム変数の変更（実行後に元へ戻っていないもの）------------
 なし
 
---- アサーション: 26/26 成功 ----------------------------------------
+--- アサーション: 24/24 成功 ----------------------------------------
 すべて成功
 
 --- ユーザー関数の呼び出し回数 -------------------------------------
-KR:SLASH×58, KR:FOLDER×55, KR:DEFAULT-FOLDER×47, KR:OPEN×39, KR:READ×34, KR:RECORDS×26, KR:REC-LABEL×14, KR:START×13, KR:FINISH×13, KR:JOIN×12, KR:FILE×10, C:TZ×7, C:TSUZUKI×7, C:KR×6, C:KIROKU×6, KR:MKDIRS×6, KR:NOW×5, KR:WRITE×5, KR:OPEN-NAMES×4, KR:SHOW-RECORDS×4, KR:SETTINGS×4, KR:BAD-NAME-P×3, KR:PICK×3, C:KRS×3, C:KIROKUSET×3
-一度も呼ばれなかった関数: *ERROR*, KR:ERROR
+KR:OPEN×88, KR:READ×70, KR:SLASH×59, KR:FOLDER×57, KR:DEFAULT-FOLDER×53, KR:PAD×44, KR:FNAME×27, KR:FILL-LIST×23, KR:DCL-UNLOAD×23, KR:RECORDS×22, KR:START×16, KR:FILE×16, KR:FINISH×16, KR:DCL-LOAD×14, KR:FOLDER-DEFAULT-P×14, KR:JOIN×12, KR:OPEN-NAMES×10, KR:DLG-OPEN-FILES×10, KR:COLLECT×8, KR:BAD-NAME-P×8, C:KR×7, C:KIROKU×7, KR:DLG-SAVE-ACCEPT×7, C:TZ×7, C:TSUZUKI×7
+一度も呼ばれなかった関数: *ERROR*, KR:BROWSE-FOLDER, KR:CHANGE-FOLDER, KR:ERROR
 
 --- 出力ファイル ----------------------------------------------------
-/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr2/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_前回.krk（LISPが書き込んだファイル）
-/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr2/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場A.krk（LISPが書き込んだファイル）
-/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr2/lisp_files/D__共有_記録_前回.krk（LISPが書き込んだファイル）
-/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr2/report.txt
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki001.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_前回.krk（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki002.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場A.krk（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki003.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki004.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki005.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場B.krk（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki006.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki007.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki008.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki009.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki010.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki011.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki012.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Roaming_Autodesk_AutoCAD 2027_R26.0_jpn_KirokuTsuzuki_現場C.krk（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/lisp_files/C__Users_user_AppData_Local_Temp_kirokutsuzuki013.dcl（LISPが書き込んだファイル）
+/tmp/claude-0/-home-user-CK-Autolisp/f7e7217b-99c2-5833-b7b8-252ad42f2666/scratchpad/kr4/report.txt
 ======================================================================

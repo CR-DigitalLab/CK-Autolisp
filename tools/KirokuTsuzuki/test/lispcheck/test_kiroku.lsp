@@ -1,130 +1,151 @@
-;;; KirokuTsuzuki の lispcheck 用テスト
+;;; KirokuTsuzuki 1.1.0 の lispcheck 用テスト
 ;;; 実行: python tools/lispcheck/lispcheck.py run tools/KirokuTsuzuki/KirokuTsuzuki.lsp tools/KirokuTsuzuki/test/lispcheck/test_kiroku.lsp
-;;; （図面を開く・前面にする・ファイルの読み書きは lispcheck の仮想機能で再現）
+;;; （図面を開く・前面にする・ファイルの読み書き・ダイアログは lispcheck の仮想機能で再現）
+;;; ダイアログの操作は (lc:input '("DCL" ("set" キー 値) ("click" キー) ...)) で指定。nil＝Enter（既定のボタン）、台本なし＝Esc
 
 (setq A "C:\\案件\\A棟\\平面図.dwg"
       B "C:\\案件\\A棟\\立面図.dwg"
       C "C:\\案件\\B棟\\配置図.dwg")
 (defun t:names (r) (mapcar 'vl-filename-base (caddr r)))
+(defun t:idx (name) (itoa (vl-position name (mapcar 'car (kr:records)))))
 
-;;; 1. 記録が1つもないとき TZ → 「記録がありません」
-(princ "\n\n===== 1. 記録なしで TZ =====")
-(c:TZ)
-(lc:assert (null (kr:records)) "1: 記録はまだ無い")
+;;; ============================================================
+;;;  ダイアログ版（KR / TZ / KRS）
+;;; ============================================================
 
-;;; 2. KR → Enter：一度も保存していない図面は記録しない。未保存の変更は知らせる
-(princ "\n\n===== 2. KR（Enter で「前回」）=====")
+;;; 1. KR → Enter：「前回」に記録。一度も保存していない図面は記録しない
+(princ "\n\n===== 1. KR → Enter =====")
 (lc:docs (list (list A) (list B "modified") (list "Drawing1.dwg" "untitled") (list C)))
 (foreach f (list A B C) (lc:file f))
 (lc:input nil)
 (c:KR)
 (setq r (kr:read (kr:file "前回")))
-(lc:assert r "2: 「前回」の記録ができる")
-(lc:assert-equal (t:names r) '("平面図" "立面図" "配置図") "2: 保存済みの3枚を記録（Drawing1 は記録しない）")
-(lc:assert-equal (cadr r) A "2: 前面の図面＝平面図")
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "前回" "2: 最後の記録＝前回")
+(lc:assert-equal (t:names r) '("平面図" "立面図" "配置図") "1: 保存済みの3枚を記録")
+(lc:assert-equal (cadr r) A "1: 前面の図面＝平面図")
+(lc:assert-equal (getenv "KirokuTsuzuki_Last") "前回" "1: 最後の記録＝前回")
 
-;;; 3. 名前を付けて記録
-(princ "\n\n===== 3. KR → N → 現場A =====")
-(lc:input "Name" "現場A")
+;;; 2. KR → 名前を入れて［記録する］
+(princ "\n\n===== 2. KR → 名前「現場A」→ 記録する =====")
+(lc:input '("DCL" ("set" "name" "現場A") ("click" "accept")))
 (c:KR)
-(lc:assert (kr:read (kr:file "現場A")) "3: 「現場A」の記録ができる")
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "現場A" "3: 最後の記録＝現場A")
+(lc:assert (kr:read (kr:file "現場A")) "2: 「現場A」の記録ができる")
 
-;;; 4. 使えない文字 → もう一度聞く → Enter で「前回」
-(princ "\n\n===== 4. 名前に / を入れる =====")
-(lc:input "Name" "a/b" nil)
+;;; 3. 使えない文字 → ダイアログに注意が出て閉じない → Esc
+(princ "\n\n===== 3. 名前に / → 注意 → Esc =====")
+(lc:input '("DCL" ("set" "name" "a/b") ("click" "accept")))
 (c:KR)
-(lc:assert (null (findfile (kr:file "a/b"))) "4: 使えない名前では記録しない")
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "前回" "4: Enter で「前回」に記録")
+(lc:assert (null (findfile (kr:file "a/b"))) "3: 使えない名前では記録しない")
 
-;;; 5. 既にある名前 → 上書きしない → Enter で「前回」
-(princ "\n\n===== 5. 既にある名前で「いいえ」=====")
-(lc:input "Name" "現場A" "No" nil)
+;;; 4. 既にある名前 → 1回目は注意、2回目で上書き
+(princ "\n\n===== 4. 既にある名前 → 2回押して上書き =====")
+(setenv "KirokuTsuzuki_Last" "前回")
+(lc:input '("DCL" ("set" "name" "現場A") ("click" "accept") ("click" "accept")))
 (c:KR)
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "前回" "5: 上書きせず「前回」に記録")
+(lc:assert-equal (getenv "KirokuTsuzuki_Last") "現場A" "4: 上書きして最後の記録＝現場A")
 
-;;; 6. 翌日：配置図だけ開いている。立面図はほかの人が使用中
-(princ "\n\n===== 6. 翌日 TZ（Enter）=====")
+;;; 5. 既にある名前 → 1回押して、名前を変えて押す → 新しい名前で記録（確認は名前ごと）
+(princ "\n\n===== 5. 既にある名前 → 名前を変える =====")
+(lc:input '("DCL" ("set" "name" "現場A") ("click" "accept") ("set" "name" "現場B") ("click" "accept")))
+(c:KR)
+(lc:assert (kr:read (kr:file "現場B")) "5: 「現場B」で記録")
+
+;;; 6. KR → Esc
+(princ "\n\n===== 6. KR → Esc =====")
+(setq n0 (length (kr:records)))
+(c:KR)
+(lc:assert-equal (length (kr:records)) n0 "6: 記録は増えない")
+
+;;; 7. 翌日：配置図だけ開いている。立面図はほかの人が使用中 → TZ → Enter（最後の記録＝現場B）
+(princ "\n\n===== 7. 翌日 TZ → Enter =====")
 (lc:docs (list (list C)))
 (lc:file B "locked")
 (lc:input nil)
 (c:TZ)
 (setq od (lc:open-docs))
-(lc:assert-equal (length od) 3 "6: 3枚開いている（配置図は二重に開かない）")
-(lc:assert-equal (car od) A "6: 前面は記録時の前面（平面図）")
+(lc:assert-equal (length od) 3 "7: 3枚開いている（配置図は二重に開かない）")
+(lc:assert-equal (car od) A "7: 前面は記録時の前面（平面図）")
 
-;;; 7. 図面が見つからない（平面図が移動・削除された）
-(princ "\n\n===== 7. 見つからない図面がある =====")
+;;; 8. 見つからない図面：平面図を削除 → 一覧で「前回」を選んで［開く］
+(princ "\n\n===== 8. 見つからない図面 → 記録を選んで開く =====")
 (vl-file-delete A)
 (lc:docs (list (list "C:\\案件\\その他\\別の図面.dwg")))
-(setenv "KirokuTsuzuki_Last" "現場A")
-(lc:input nil)
+(lc:input (list "DCL" (list "pick" "recs" (t:idx "前回")) (list "click" "accept")))
 (c:TZ)
 (setq od (lc:open-docs))
-(lc:assert-equal (length od) 3 "7: 平面図を除く2枚を開いて、元の1枚と合わせて3枚")
-(lc:assert (not (member A od)) "7: 見つからない平面図は開かない")
-
-;;; 8. 一覧から選ぶ
-(princ "\n\n===== 8. TZ → L → 番号 =====")
-(lc:file A)
-(lc:docs (list (list "C:\\案件\\その他\\別の図面.dwg")))
-(setq i (1+ (vl-position "前回" (mapcar 'car (kr:records)))))
-(lc:input "List" i)
-(c:TZ)
-(lc:assert-equal (length (lc:open-docs)) 4 "8: 一覧で選んだ「前回」の3枚を開く")
+(lc:assert-equal (length od) 3 "8: 平面図を除く2枚を開く")
+(lc:assert (not (member A od)) "8: 見つからない平面図は開かない")
 (lc:assert-equal (getenv "KirokuTsuzuki_Last") "前回" "8: 最後の記録＝前回")
 
-;;; 9. すべて開いている → 開く図面なし
-(princ "\n\n===== 9. すでに全部開いている =====")
-(lc:input nil)
+;;; 9. ダブルクリックで開く
+(princ "\n\n===== 9. 記録をダブルクリック =====")
+(lc:file A)
+(lc:docs (list (list "C:\\案件\\その他\\別の図面.dwg")))
+(lc:input (list "DCL" (list "dclick" "recs" (t:idx "現場A"))))
 (c:TZ)
-(lc:assert-equal (length (lc:open-docs)) 4 "9: 何も開かない")
+(lc:assert-equal (length (lc:open-docs)) 4 "9: 現場A の3枚を開く")
 
-;;; 10. 設定：一覧 → 削除（最後の記録を消すと、次は新しい記録が既定になる）
-(princ "\n\n===== 10. KRS 一覧・削除 =====")
-(setenv "KirokuTsuzuki_Last" "現場A")
-(setq i (1+ (vl-position "現場A" (mapcar 'car (kr:records)))))
-(lc:input "List" "Delete" i "Yes" nil)
-(c:KRS)
-(lc:assert (not (member "現場A" (mapcar 'car (kr:records)))) "10: 現場A を削除")
-(lc:assert-equal (getenv "KirokuTsuzuki_Last") "" "10: 最後の記録の印も消える")
+;;; 10. すべて開いている → ［開く］は使えない状態 → Esc
+(princ "\n\n===== 10. すでに全部開いている → Esc =====")
+(c:TZ)
+(lc:assert-equal (length (lc:open-docs)) 4 "10: 何も開かない")
 
-;;; 11. 設定：保存先を変える → そこに記録 → 初期値に戻す
-(princ "\n\n===== 11. KRS 保存先の変更 =====")
-(lc:input "Folder" "D:\\共有\\記録" nil)
-(c:KRS)
-(lc:assert-equal (kr:folder) "D:\\共有\\記録\\" "11: 保存先が変わる")
-(lc:docs (list (list A)))
-(lc:input nil)
-(c:KR)
-(lc:assert-equal (length (kr:records)) 1 "11: 新しい保存先には1件だけ")
-(lc:input "Folder" "." nil)
-(c:KRS)
-(lc:assert-equal (kr:folder) (kr:default-folder) "11: 初期値に戻る")
-(lc:assert (member "前回" (mapcar 'car (kr:records))) "11: 元の保存先の記録が見える")
+;;; 11. 削除：1回目は注意、2回目で削除 → Esc
+(princ "\n\n===== 11. TZ → この記録を削除（2回）→ Esc =====")
+(setenv "KirokuTsuzuki_Last" "現場B")
+(lc:input (list "DCL" (list "pick" "recs" (t:idx "現場B")) (list "click" "del") (list "click" "del")))
+(c:TZ)
+(lc:assert (not (member "現場B" (mapcar 'car (kr:records)))) "11: 現場B を削除")
+(lc:assert-equal (getenv "KirokuTsuzuki_Last") "" "11: 最後の記録の印も消える")
 
-;;; 12. 保存していない図面しかない → 記録しない
-(princ "\n\n===== 12. 新規図面だけ =====")
-(lc:docs (list (list "Drawing1.dwg" "untitled") (list "Drawing2.dwg" "untitled")))
+;;; 12. KRS：初期値に戻す → 閉じる
+(princ "\n\n===== 12. KRS → 初期値に戻す → 閉じる =====")
+(setenv "KirokuTsuzuki_Folder" "D:\\共有\\記録\\")
+(lc:input '("DCL" ("click" "reset")) '("DCL" ("click" "cancel")))
+(c:KRS)
+(lc:assert (kr:folder-default-p) "12: 保存先が初期値に戻る")
+
+;;; 13. 新規図面だけ → 記録しない（ダイアログも出ない）
+(princ "\n\n===== 13. 新規図面だけ =====")
+(lc:docs (list (list "Drawing1.dwg" "untitled")))
 (setq n0 (length (kr:records)))
 (c:KR)
-(lc:assert-equal (length (kr:records)) n0 "12: 記録は増えない")
+(lc:assert-equal (length (kr:records)) n0 "13: 記録は増えない")
 
-;;; 13. 1図面モード（SDI=1）→ 開かない
-(princ "\n\n===== 13. SDI=1 =====")
+;;; 14. SDI=1 → 開かない
+(princ "\n\n===== 14. SDI=1 =====")
 (setvar "SDI" 1)
 (c:TZ)
-(lc:assert-equal (length (lc:open-docs)) 2 "13: 何も開かない")
+(lc:assert-equal (length (lc:open-docs)) 1 "14: 何も開かない")
 (setvar "SDI" 0)
 
-;;; 14. TZ 実行中に設定から全記録を消す → 「記録がありません」
-(princ "\n\n===== 14. TZ → 設定で全部削除 =====")
-(setq recs (kr:records))
-(lc:input "Settings")
-(foreach r recs (lc:input "Delete" 1 "Yes"))
-(lc:input nil)
+;;; ============================================================
+;;;  コマンドライン版（-KIROKU / -TSUZUKI / -KIROKUSET）
+;;; ============================================================
+
+;;; 15. -KIROKU → N → 現場C
+(princ "\n\n===== 15. -KIROKU → N → 現場C =====")
+(lc:docs (list (list A) (list C)))
+(lc:input "Name" "現場C")
+(c:-KIROKU)
+(lc:assert-equal (t:names (kr:read (kr:file "現場C"))) '("平面図" "配置図") "15: 現場C に2枚")
+
+;;; 16. -TSUZUKI → L → 番号
+(princ "\n\n===== 16. -TSUZUKI → L → 番号 =====")
+(lc:docs (list (list "C:\\案件\\その他\\別の図面.dwg")))
+(lc:input "List" (1+ (atoi (t:idx "現場C"))))
+(c:-TSUZUKI)
+(lc:assert-equal (length (lc:open-docs)) 3 "16: 現場C の2枚を開く")
+
+;;; 17. -KIROKUSET → 保存先変更 → 初期値に戻す
+(princ "\n\n===== 17. -KIROKUSET → 保存先 =====")
+(lc:input "Folder" "D:\\共有\\記録" "Folder" "." nil)
+(c:-KIROKUSET)
+(lc:assert (kr:folder-default-p) "17: 初期値に戻る")
+
+;;; 18. 記録が1つもないとき TZ → ダイアログに案内 → Esc
+(princ "\n\n===== 18. 記録なしで TZ =====")
+(foreach r (kr:records) (vl-file-delete (nth 3 r)))
 (c:TZ)
-(lc:assert (null (kr:records)) "14: 記録は0件")
+(lc:assert (null (kr:records)) "18: 記録は0件")
 (princ "\n\n===== テスト終了 =====")
 (princ)

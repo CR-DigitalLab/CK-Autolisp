@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.4'
+VERSION = '0.1.3'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -5147,12 +5147,7 @@ def _vl_filename_directory(I, a):
 def _vl_filename_mktemp(I, a):
     I.uid += 1
     base = strp(a[0]) if a and a[0] else '$VL~~'
-    d = strp(a[1]) if len(a) > 1 and a[1] else 'C:\\Users\\user\\AppData\\Local\\Temp'
-    ext = strp(a[2]) if len(a) > 2 and a[2] else ('.' + base.rsplit('.', 1)[1] if '.' in base else '')
-    if ext and not ext.startswith('.'):
-        ext = '.' + ext
-    # AutoCAD と同じく一時フォルダ内のパスを返す（書込みは仮想ファイルになる）
-    return '%s\\%s%03d%s' % (d.rstrip('\\/'), base.split('.')[0], I.uid, ext)
+    return os.path.join(I.outdir, 'lisp_files', '%s%03d' % (base.split('.')[0], I.uid)).replace('/', '\\')
 
 
 @bi('load', 'full')
@@ -9498,9 +9493,6 @@ AutoCAD の無い環境で .lsp を実際に実行し、図面(DXF)がどう変�
   (lc:file "C:\\p\\A.dwg" ["locked"])       ディスク上にある（ことにする）ファイル。locked＝他の人が使用中
   (lc:open-docs)                            今開いている図面の一覧（先頭が前面）
   ※絶対パスへの書込み・読込・一覧・削除は仮想ファイルとして扱う（実ファイルは変更しない）
-  ダイアログの操作：--in '{"dcl":[["set","name","現場A"],["pick","list","1"],["click","accept"]]}'
-                    または (lc:input '("DCL" ("set" "name" "現場A") ("click" "accept")))
-                    set=値を入れる / click・pick=押す（値の指定も可）/ dclick=ダブルクリック。null=既定ボタン。台本なし=Esc
   テストファイル例:
      (load "foo.lsp")
      (lc:input '(0 0) '(100 0) "")
@@ -9520,8 +9512,7 @@ AutoCAD の無い環境で .lsp を実際に実行し、図面(DXF)がどう変�
     楕円/スプラインは折れ線近似）、command（LINE PLINE CIRCLE ARC POINT TEXT ERASE MOVE COPY ROTATE SCALE
     MIRROR CHPROP CHANGE LAYER INSERT BLOCK と システム変数名。その他は読み飛ばして警告）、
     ssget の窓/交差選択（外形枠で判定）、文字の大きさ（画像・外形枠は概算）
-  ○ 近似: DCL ダイアログ（見た目は再現しない。文法・キーの確認、タイルの値・リスト・ボタンの動作を再現）
-  × 未対応: リアクター、画面操作(grdraw等)、UCS/OCS変換、
+  × 未対応: DCL ダイアログ(load_dialog 等はエラー)、リアクター、画面操作(grdraw等)、UCS/OCS変換、
     ダイナミックブロック、寸法・ハッチングの作成、Express Tools(acet-*)、外部COM(Excel連携)、
     コンパイル済み .fas/.vlx
   書込みファイル(open "w")は出力フォルダ内の lisp_files/ に作られます（実ファイルは変更しない）。
@@ -9646,297 +9637,12 @@ def _lc_log(I, a):
     return a[-1] if a else None
 
 
-# ---------------------------------------------------------------- DCL ダイアログ（簡易再現）
-# ダイアログの見た目は再現しない。DCL の文法・キーの確認と、タイルの値・リスト・ボタンの動作を再現する。
-# 操作は入力台本で指定する：
-#   {"dcl": [["set","name","現場A"], ["pick","list","1"], ["click","accept"]]}
-#   LISP からは (lc:input '("DCL" ("set" "name" "現場A") ("click" "accept")))
-#   set=値を入れるだけ / click=ボタン等を押す（値を指定すると値を入れてから） / dclick=ダブルクリック
-#   null（Enter）は既定のボタン（is_default、無ければ accept）を押す。台本が無いときは Esc（キャンセル）
-DCL_PREDEF = {'ok_cancel': ['accept', 'cancel'], 'ok_only': ['accept'], 'ok_cancel_help': ['accept', 'cancel', 'help'],
-              'ok_cancel_help_info': ['accept', 'cancel', 'help', 'info'], 'ok_cancel_help_errtile': ['accept', 'cancel', 'help', 'error'],
-              'errtile': ['error']}
-
-
-def dcl_parse(I, text, path):
-    src = re.sub(r'//[^\n]*', '', text)
-    src = re.sub(r'/\*.*?\*/', '', src, flags=re.S)
-    # 文字列を一時的に取り除いて括弧を数える
-    strs = []
-
-    def keep(m):
-        strs.append(m.group(0))
-        return '"%d"' % (len(strs) - 1)
-    body = re.sub(r'"(?:\\.|[^"\\])*"', keep, src)
-    if body.count('{') != body.count('}'):
-        I.warn('DCL の { と } の数が合いません: %s' % path)
-    if body.count('"') % 2:
-        I.warn('DCL の " が閉じていません: %s' % path)
-    dialogs = {}
-    for m in re.finditer(r'([A-Za-z_][\w]*)\s*:\s*dialog\s*\{', body):
-        i = m.end()
-        depth = 1
-        while i < len(body) and depth:
-            depth += {'{': 1, '}': -1}.get(body[i], 0)
-            i += 1
-        blk = body[m.end():i]
-        info = {'keys': set(), 'default': None, 'cancel': None, 'values': {}, 'labels': {}}
-        # タイルごとの属性（いちばん内側の { } ごとに key と属性を拾う）
-        for t in re.finditer(r':\s*(\w+)\s*\{([^{}]*)\}', blk):
-            attrs = dict((a, strs[int(v[1:-1])][1:-1] if re.match(r'^"\d+"$', v) else v) for a, v in
-                         re.findall(r'(\w+)\s*=\s*("\d+"|[^;\s]+)\s*;', t.group(2)))
-            k = attrs.get('key')
-            if k:
-                info['keys'].add(k)
-                if 'value' in attrs:
-                    info['values'][k] = attrs['value']
-                if 'label' in attrs:
-                    info['labels'][k] = attrs['label']
-                if attrs.get('is_default', '').lower() == 'true':
-                    info['default'] = k
-                if attrs.get('is_cancel', '').lower() == 'true':
-                    info['cancel'] = k
-        for name, keys in DCL_PREDEF.items():
-            if re.search(r'\b%s\s*;' % name, blk):
-                info['keys'].update(keys)
-                info['default'] = info['default'] or 'accept'
-                if 'cancel' in keys:
-                    info['cancel'] = info['cancel'] or 'cancel'
-        dialogs[m.group(1)] = info
-    if not dialogs:
-        I.warn('DCL にダイアログの定義（名前 : dialog {）が見つかりません: %s' % path)
-    return dialogs
-
-
-@bi('load_dialog', 'approx', 'DCL の文法とキーを確認（見た目は再現しない）')
-def _load_dialog(I, a):
-    argn(a, 1, 1)
-    name = strp(a[0])
-    p = resolve_path(I, name) or resolve_path(I, name + '.dcl')
-    if p is None:
-        return -1
-    I.dcl_seq = getattr(I, 'dcl_seq', 0) + 1
-    if not hasattr(I, 'dcl_files'):
-        I.dcl_files = {}
-    I.dcl_files[I.dcl_seq] = dcl_parse(I, read_text_file(p), name)
-    return I.dcl_seq
-
-
-@bi('unload_dialog')
-def _unload_dialog(I, a):
-    getattr(I, 'dcl_files', {}).pop(a[0] if a else None, None)
-    return None
-
-
-def dlg_top(I, fn):
-    st = getattr(I, 'dlg_stack', [])
-    if not st:
-        raise LispError('%s: ダイアログが開いていません（new_dialog の前に呼ばれた）' % fn)
-    return st[-1]
-
-
-@bi('new_dialog')
-def _new_dialog(I, a):
-    argn(a, 2, 4)
-    name = strp(a[0])
-    d = getattr(I, 'dcl_files', {}).get(a[1])
-    if d is None or name not in d:
-        I.warn('new_dialog: ダイアログ "%s" が見つかりません' % name)
-        return None
-    info = d[name]
-    if not hasattr(I, 'dlg_stack'):
-        I.dlg_stack = []
-    I.dlg_stack.append({'name': name, 'info': info, 'tiles': dict(info['values']), 'actions': {},
-                        'lists': {}, 'modes': {}, 'done': None, 'lk': None, 'lop': 3, 'li': 0})
-    return T
-
-
-def dlg_key(I, dlg, key, fn):
-    if key not in dlg['info']['keys']:
-        I.warn('%s: キー "%s" はダイアログ "%s" にありません' % (fn, key, dlg['name']))
-
-
-@bi('set_tile')
-def _set_tile(I, a):
-    argn(a, 2, 2)
-    dlg = dlg_top(I, 'set_tile')
-    k, v = strp(a[0]), strp(a[1])
-    dlg_key(I, dlg, k, 'set_tile')
-    dlg['tiles'][k] = v
-    return v
-
-
-@bi('get_tile')
-def _get_tile(I, a):
-    argn(a, 1, 1)
-    dlg = dlg_top(I, 'get_tile')
-    k = strp(a[0])
-    dlg_key(I, dlg, k, 'get_tile')
-    return dlg['tiles'].get(k, '')
-
-
-@bi('get_attr')
-def _get_attr(I, a):
-    dlg = dlg_top(I, 'get_attr')
-    k, at = strp(a[0]), strp(a[1]).lower()
-    if at == 'label':
-        return dlg['info']['labels'].get(k, '')
-    if at == 'value':
-        return dlg['tiles'].get(k, '')
-    return ''
-
-
-@bi('mode_tile')
-def _mode_tile(I, a):
-    argn(a, 2, 2)
-    dlg = dlg_top(I, 'mode_tile')
-    dlg_key(I, dlg, strp(a[0]), 'mode_tile')
-    dlg['modes'][strp(a[0])] = int(num(a[1]))
-    return None
-
-
-@bi('action_tile')
-def _action_tile(I, a):
-    argn(a, 2, 2)
-    dlg = dlg_top(I, 'action_tile')
-    k = strp(a[0])
-    dlg_key(I, dlg, k, 'action_tile')
-    dlg['actions'][k] = strp(a[1])
-    return T
-
-
-@bi('client_data_tile')
-def _client_data_tile(I, a):
-    return None
-
-
-@bi('start_list')
-def _start_list(I, a):
-    argn(a, 1, 3)
-    dlg = dlg_top(I, 'start_list')
-    k = strp(a[0])
-    dlg_key(I, dlg, k, 'start_list')
-    dlg['lk'] = k
-    dlg['lop'] = int(num(a[1])) if len(a) > 1 and a[1] is not None else 3
-    dlg['li'] = int(num(a[2])) if len(a) > 2 and a[2] is not None else 0
-    if dlg['lop'] == 3:
-        dlg['lists'][k] = []
-    return k
-
-
-@bi('add_list')
-def _add_list(I, a):
-    argn(a, 1, 1)
-    dlg = dlg_top(I, 'add_list')
-    if dlg['lk'] is None:
-        raise LispError('add_list: start_list の前に呼ばれました')
-    lst = dlg['lists'].setdefault(dlg['lk'], [])
-    if dlg['lop'] == 1:
-        if 0 <= dlg['li'] < len(lst):
-            lst[dlg['li']] = strp(a[0])
-    else:
-        lst.append(strp(a[0]))
-    return a[0]
-
-
-@bi('end_list')
-def _end_list(I, a):
-    dlg_top(I, 'end_list')['lk'] = None
-    return None
-
-
-@bi('dimx_tile dimy_tile')
-def _dim_tile(I, a):
-    return 100
-
-
-@bi('start_image fill_image vector_image slide_image end_image', 'stub', '画像タイルは描かない')
-def _dcl_image(I, a):
-    return None
-
-
-@bi('done_dialog')
-def _done_dialog(I, a):
-    dlg = dlg_top(I, 'done_dialog')
-    dlg['done'] = int(num(a[0])) if a and a[0] is not None else 1
-    return [0.0, 0.0]
-
-
-@bi('term_dialog')
-def _term_dialog(I, a):
-    for d in getattr(I, 'dlg_stack', []):
-        d['done'] = 0
-    return None
-
-
-def dlg_run_action(I, dlg, key, reason=1):
-    code = dlg['actions'].get(key)
-    I.g[Sym('$key')] = key
-    I.g[Sym('$value')] = dlg['tiles'].get(key, '')
-    I.g[Sym('$reason')] = reason
-    if code:
-        for f, line in read_all(code, '<action_tile %s>' % key):
-            I.ev(f)
-    elif key in ('accept',):
-        dlg['done'] = 1
-    elif key in ('cancel',) or key == dlg['info']['cancel']:
-        dlg['done'] = 0
-
-
-def dlg_show(I, dlg):
-    I.echo('\n[ダイアログ表示(仮想)] %s\n' % dlg['name'])
-    for k, lst in dlg['lists'].items():
-        I.echo('  リスト %s:\n' % k)
-        for i, it in enumerate(lst):
-            I.echo('    %d: %s\n' % (i, it))
-    for k, v in sorted(dlg['tiles'].items()):
-        if v not in ('', None):
-            I.echo('  %s = %s\n' % (k, v))
-    off = [k for k, m in dlg['modes'].items() if m == 1]
-    if off:
-        I.echo('  使えない状態: %s\n' % ', '.join(sorted(off)))
-
-
-@bi('start_dialog')
-def _start_dialog(I, a):
-    dlg = dlg_top(I, 'start_dialog')
-    try:
-        while dlg['done'] is None:
-            dlg_show(I, dlg)
-            if not I.inputs:
-                I.echo('<ダイアログ: Esc（台本なし）>\n')
-                k = dlg['info']['cancel'] or 'cancel'
-                if k in dlg['actions']:
-                    dlg_run_action(I, dlg, k)
-                if dlg['done'] is None:
-                    dlg['done'] = 0
-                break
-            v = I.inputs.pop(0)
-            I.echo('<ダイアログ操作: %s>\n' % show_input(v))
-            if v is None:
-                steps = [['click', dlg['info']['default'] or 'accept']]
-            elif isinstance(v, dict) and 'dcl' in v:
-                steps = v['dcl']
-            elif isinstance(v, list) and v and isinstance(v[0], str) and v[0].upper() == 'DCL':
-                steps = [[strp(x) if not isinstance(x, list) else x for x in st] if isinstance(st, list) else st
-                         for st in v[1:]]
-            else:
-                raise LispError('ダイアログの操作台本の形が違います: %s' % show_input(v))
-            for st in steps:
-                st = [x if isinstance(x, str) else str(x) for x in st]
-                op, key = st[0].lower(), st[1]
-                dlg_key(I, dlg, key, 'ダイアログ操作')
-                if dlg['modes'].get(key) == 1:
-                    I.warn('ダイアログ操作: "%s" は使えない状態（mode_tile 1）なのに操作しました' % key)
-                if len(st) > 2:
-                    dlg['tiles'][key] = st[2]
-                if op in ('click', 'pick', 'dclick'):
-                    dlg_run_action(I, dlg, key, 4 if op == 'dclick' else 1)
-                if dlg['done'] is not None:
-                    break
-        return dlg['done']
-    finally:
-        I.dlg_stack.pop()
+@bi('load_dialog new_dialog start_dialog done_dialog action_tile set_tile get_tile get_attr mode_tile '
+    'start_list add_list end_list unload_dialog start_image fill_image vector_image slide_image end_image '
+    'client_data_tile dimx_tile dimy_tile term_dialog', 'stub', 'DCL ダイアログは未対応')
+def _dcl(I, a):
+    I.warn('DCL ダイアログ関数は再現できません（ダイアログ部分は AutoCAD で確認してください）')
+    raise LispError('DCL ダイアログは lispcheck では未対応です')
 
 
 @bi('vlr-object-reactor vlr-editor-reactor vlr-command-reactor vlr-dwg-reactor vlr-acdb-reactor '
