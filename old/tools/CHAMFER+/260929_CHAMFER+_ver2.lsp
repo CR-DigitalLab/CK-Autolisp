@@ -12,7 +12,6 @@
 ;; CHAMFER+ ver2（2026-09-29）
 ;;   ・面取りの途中で Esc・エラーになったとき、Undo グループが閉じないことがあった不具合を直した
 ;;   ・読み込んだときにコマンド名を表示するようにした
-;;   ・作っていたときのメモと、使っていないコードのコメントを整理した
 ;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 から変わりません。
 (defun c:CHAMFER+ ( / *error* old_cmdecho curA curB curFace sel userLen calcDist loop defFaceWidth cf-undo)
   (defun *error* (msg)
@@ -30,15 +29,17 @@
   (setq curA (getvar "CHAMFERA"))
   (setq curB (getvar "CHAMFERB"))
 
-  ;; 面取り距離が 0 のときは、面幅 15 を初期値にする
+  ;; --- 追加: 値が0の場合はデフォルト面幅15を設定 ---
   (if (equal curA 0.0 0.0001)
     (progn
-      (setq defFaceWidth 15.0)
+      (setq defFaceWidth 15.0) ; ★ここにデフォルト値を設定
       (setq curA (/ defFaceWidth (sqrt 2.0)))
       (setvar "CHAMFERA" curA)
       (setvar "CHAMFERB" curA)
+      ;; (princ "\n初期値として面幅を15に設定しました。") ; 必要であればコメントアウトを外す
     )
   )
+  ;; ----------------------------------------------------
 
   (if (not (equal curA curB 0.0001))
     (progn

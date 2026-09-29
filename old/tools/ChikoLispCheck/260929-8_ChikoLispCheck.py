@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.8"
+VERSION = "1.0.7"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -705,12 +705,6 @@ def check_file(path):
 
     # ---------------- E2 試し書きの残り ----------------
     dbg = [(ln, c.strip()) for ln, c in comments if re.search(r"(?i)debug|デバッグ|TODO|FIXME|XXX|仮置き|あとで消す|テスト用", c)]
-    # 作業中のメモ（★印・「追加:」「ここに〜を設定」「必要であれば〜外す」など）
-    memo = [(ln, c.strip()) for ln, c in comments
-            if re.search(r"★|☆|(追加|修正|変更)\s*[:：]|ここに.{0,12}(設定|入れ|書)|コメントアウト|必要であれば|要確認|暫定", c)]
-    # コメントにしたままのコード（例：;; (princ "…")）
-    code_cm = [(ln, c.strip()) for ln, c in comments
-               if re.match(r"^;+\|?\s*\((?:[A-Za-z][A-Za-z0-9\-:*]*|c:[A-Za-z]+)[\s)]", c.strip())]
     dbg += [(s.line, s) for s in all_strs if re.search(r"(?i)^\s*(debug|デバッグ|test|テスト)\b", s)]
     called = set()
     for t in top:
@@ -727,16 +721,12 @@ def check_file(path):
     msgs = []
     if dbg:
         msgs.append("試し書きらしい所：" + "、".join(f"{ln}行目" for ln, _ in dbg[:5]))
-    if memo:
-        msgs.append("作業中のメモらしいコメント：" + "、".join(f"{ln}行目" for ln, _ in memo[:5]))
-    if code_cm:
-        msgs.append("コメントにしたままのコード：" + "、".join(f"{ln}行目" for ln, _ in code_cm[:5]))
     if unused:
         msgs.append("どこからも使われていない関数：" + "、".join(unused)[:120])
     if msgs:
         R.add(WARN, "E2", "試し書きの残り", " ／ ".join(msgs) + "。不要なら消してください。")
     else:
-        R.add(OK, "E2", "試し書きの残り", "試し書き・作業中のメモ・コメントにしたままのコード・使われていない関数は見つかりませんでした。")
+        R.add(OK, "E2", "試し書きの残り", "試し書き・使われていない関数は見つかりませんでした。")
 
     # ---------------- E3 作者・利用条件 ----------------
     has_author = re.search(r"(?i)作者|作成|制作|開発者|著作権|author|copyright|©|\(c\)", htxt)
