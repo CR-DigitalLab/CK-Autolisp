@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.4"
+VERSION = "1.0.3"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -391,17 +391,10 @@ def check_file(path):
             raw, nm = cmd_name_of(x)
             if nm and nm.lstrip("-") in LT_NG_COMMANDS:
                 bad.append((x, f"コマンド {raw}"))
-    # 「LT 対応」とうたっているか（先頭のコメント・表示する文字）。記事そのものは見えないので LSP の中で判断
-    lt_claim = [ln for ln, c in comments if re.search(r"LT", c) and re.search(r"対応|使え|OK|可", c) and not re.search(r"非対応|使えません|不可|未対応", c)]
-    lt_claim += [s_.line for s_ in all_strs if re.search(r"LT", s_) and re.search(r"対応|使え", s_) and not re.search(r"非対応|使えません|不可|未対応", s_)]
-    what = "、".join(sorted({b for _, b in bad})) + "（" + lines_of([n for n, _ in bad]) + "）"
-    if bad and lt_claim:
+    if bad:
         R.add(NG, "A1", "AutoCAD LT 2024 以降で使えるか",
-              "「LT 対応」と書いてありますが（" + "・".join(str(x) for x in sorted(set(lt_claim))[:3]) + "行目）、LT で使えないものがあります：" + what +
-              "。LT 対応の表記を消すか、別の方法に置き換えてください。")
-    elif bad:
-        R.add(OK, "A1", "AutoCAD LT 2024 以降で使えるか",
-              "LT で使えないものがあります：" + what + "。LT 対応とうたっていないので問題ありません。記事に「LT でも使える」と書かないでください（記事用の文章は「LT では使えません」になります）。")
+              "LT で使えないものがあります：" + "、".join(sorted({b for _, b in bad})) + "（" + lines_of([n for n, _ in bad]) +
+              "）。LT でも使いたい場合は別の方法に置き換えてください。")
     else:
         R.add(OK, "A1", "AutoCAD LT 2024 以降で使えるか", "LT で使えない関数・コマンドは見つかりませんでした。")
     R.info["lt"] = not bad

@@ -1,4 +1,4 @@
-ChikoLispCheck 1.0.4 チェック結果
+ChikoLispCheck 1.0.0 チェック結果
 
 ■ ProjectSet.lsp：確認してから（○16 △1 ×0）
   △ E3 作者・利用条件の表記
