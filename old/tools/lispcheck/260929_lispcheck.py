@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.7'
+VERSION = '0.1.6'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -2658,7 +2658,7 @@ class Drawing:
         d = cls()
         d.force_enc = enc
         d.path = path
-        d.name = os.path.basename(path)          # AutoCAD と同じく DXF を開いたときは .dxf のまま
+        d.name = os.path.splitext(os.path.basename(path))[0] + '.dwg'
         d._parse(raw)
         return d
 
@@ -3091,12 +3091,12 @@ DEFAULT_SYSVARS = {
     'OFFSETGAPTYPE': 0, 'TSTACKALIGN': 1, 'MTEXTED': 'Internal', 'FONTALT': 'simplex.shx',
     'LOGINNAME': 'user', 'ROAMABLEROOTPREFIX': 'C:\\Users\\user\\AppData\\Roaming\\Autodesk\\AutoCAD 2027\\R26.0\\jpn\\', 'MYDOCUMENTSPREFIX': 'C:\\Users\\user\\Documents',
     'TEMPPREFIX': 'C:\\Temp\\', 'VIEWTWIST': 0.0, 'VIEWDIR': [0.0, 0.0, 1.0], 'WORLDVIEW': 1,
-    'HANDSEED': '0', 'WRITESTAT': 1, 'MENUNAME': 'ACAD', 'SNAPANG': 0.0, 'SNAPUNIT': [10.0, 10.0], 'GRIDUNIT': [10.0, 10.0],
+    'HANDSEED': '0', 'MENUNAME': 'ACAD', 'SNAPANG': 0.0, 'SNAPUNIT': [10.0, 10.0], 'GRIDUNIT': [10.0, 10.0],
 }
 READONLY_SYSVARS = {'ACADVER', 'DWGNAME', 'DWGPREFIX', 'CDATE', 'DATE', 'MILLISECS', 'PRODUCT', 'PLATFORM',
                     'LOGINNAME', 'CMDACTIVE', 'CMDNAMES', 'DBMOD', 'EXTMIN', 'EXTMAX', 'ACADPREFIX',
                     'LOCALE', 'SYSCODEPAGE', 'DWGCODEPAGE', 'SCREENSIZE', 'VIEWCTR', 'VIEWSIZE', 'VIEWDIR',
-                    'PROGRAM', 'TEMPPREFIX', 'HANDSEED', 'DWGTITLED', 'WRITESTAT'}
+                    'PROGRAM', 'TEMPPREFIX', 'HANDSEED', 'DWGTITLED'}
 
 
 def default_sysvars(dwg):
@@ -6983,8 +6983,6 @@ def vla_invoke(I, obj, meth, args, raw=False):
             I.warn('SendCommand は非同期のため再現していません（ログのみ）: %s' % short(A[0] if A else '', 60))
             I.echo('[SendCommand(未実行)] %s\n' % (A[0] if A else ''))
             return None
-        if m == 'saveas' and A:
-            return virtual_saveas(I, strp(A[0]), int(num(A[1])) if len(A) > 1 and A[1] is not None else 64)
         if m in ('save', 'saveas', 'close'):
             I.warn('図面の保存/閉じる(%s)は実行しません' % meth)
             return None
@@ -9626,38 +9624,6 @@ def ensure_docs(I):
     return I.docs
 
 
-SAVEAS_CODES = {1: 'AC1009', 12: 'AC1015', 13: 'AC1015', 14: 'AC1015', 24: 'AC1018', 25: 'AC1018', 26: 'AC1018',
-                36: 'AC1021', 37: 'AC1021', 38: 'AC1021', 48: 'AC1024', 49: 'AC1024', 50: 'AC1024',
-                60: 'AC1027', 61: 'AC1027', 62: 'AC1027', 64: 'AC1032', 65: 'AC1032', 66: 'AC1032'}
-SAVEAS_DXF = {1, 13, 25, 37, 49, 61, 65}
-
-
-def virtual_saveas(I, name, typ):
-    """実行中の図面の SaveAs を仮想ファイルで再現（先頭に形式コードだけを書いた中身）。
-    使用中(lc:file ... "locked")のファイルへの保存はエラー。"""
-    code = SAVEAS_CODES.get(typ)
-    if code is None:
-        raise LispError('Automation Error. Invalid argument SaveAsType %s' % typ)
-    k = vkey(name)
-    if k in I.vlocked:
-        raise LispError('Automation Error. File access error（ほかの人が使用中）')
-    d = os.path.join(I.outdir, 'lisp_files')
-    os.makedirs(d, exist_ok=True)
-    p = I.vfs.get(k) or os.path.join(d, re.sub(r'[\\/:*?"<>|]', '_', name))
-    with open(p, 'w', encoding='utf-8', newline='') as f:
-        if typ in SAVEAS_DXF:
-            f.write('  0\nSECTION\n  2\nHEADER\n  9\n$ACADVER\n  1\n%s\n  0\nENDSEC\n  0\nEOF\n' % code)
-        else:
-            f.write(code + '(DWG の中身は省略)')
-    I.vfs[k] = p
-    I.vfs_names[k] = name
-    I.vdel.discard(k)
-    I.vdirs.add(vparent(k))
-    I.echo('[SaveAs(仮想)] %s  形式番号 %d（%s %s）\n' % (name, typ, code, 'DXF' if typ in SAVEAS_DXF else 'DWG'))
-    I.warn('図面の保存(SaveAs)は仮想ファイルで再現しました（実ファイルは変更しません）')
-    return None
-
-
 @bi('lc:docs')
 def _lc_docs(I, a):
     """開いている図面を設定する。(lc:docs '(("C:\\p\\A.dwg" "modified") ("Drawing1.dwg" "untitled")))
@@ -9672,12 +9638,6 @@ def _lc_docs(I, a):
                      'mod': 'modified' in flags, 'titled': titled, 'ro': 'readonly' in flags})
     I.docs = docs
     I.active_doc = 0
-    if docs:                               # 実行中の図面のシステム変数も合わせる
-        d = docs[0]
-        I.sysvars['DWGNAME'] = d['name']
-        I.sysvars['DWGPREFIX'] = (d['full'].replace('/', '\\').rsplit('\\', 1)[0] + '\\') if d['full'] else 'C:\\Users\\user\\Documents\\'
-        I.sysvars['DWGTITLED'] = 1 if d['titled'] else 0
-        I.sysvars['WRITESTAT'] = 0 if d['ro'] else 1
     return T
 
 
