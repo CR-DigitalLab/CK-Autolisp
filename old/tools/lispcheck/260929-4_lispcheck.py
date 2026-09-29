@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.10'
+VERSION = '0.1.9'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -5078,8 +5078,6 @@ def _read_char(I, a):
 def _findfile(I, a):
     argn(a, 1, 1)
     p = resolve_path(I, strp(a[0]))
-    if p and not is_abs_path(p) and not os.path.isabs(p) and os.path.exists(p):
-        p = os.path.abspath(p)                 # AutoCAD と同じく、フォルダ込みの場所を返す
     return p.replace('/', '\\') if p else None
 
 

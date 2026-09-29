@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.10"
+VERSION = "1.0.9"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -667,11 +667,6 @@ def check_file(path):
 
     # ---------------- D5 ほかの LISP とぶつからないか ----------------
     all_locals = {v for d in defs + nested for v in d.args + d.locals}
-    # (lambda (引数 / ローカル変数) …) の中で宣言した変数も数える
-    for t in top:
-        for x in walk(t):
-            if head(x) == "LAMBDA" and len(x) > 1 and isinstance(x[1], Node):
-                all_locals |= {a for a in x[1] if isinstance(a, Sym) and a != "/"}
     leaks = {}
     for d in defs + nested:
         own = set(d.args + d.locals)
