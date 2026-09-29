@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.8'
+VERSION = '0.1.7'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -4690,11 +4690,6 @@ def _getenv(I, a):
     n = strp(a[0])
     if n in I.env:
         return I.env[n]
-    win = {'APPDATA': 'C:\\Users\\user\\AppData\\Roaming', 'LOCALAPPDATA': 'C:\\Users\\user\\AppData\\Local',
-           'TEMP': 'C:\\Users\\user\\AppData\\Local\\Temp', 'TMP': 'C:\\Users\\user\\AppData\\Local\\Temp',
-           'USERPROFILE': 'C:\\Users\\user', 'WINDIR': 'C:\\Windows', 'USERNAME': 'user', 'COMPUTERNAME': 'PC'}
-    if n.upper() in win:                   # Windows の環境変数（lispcheck は Linux でも動くため代わりの値）
-        return win[n.upper()]
     return os.environ.get(n)
 
 
@@ -4703,26 +4698,6 @@ def _setenv(I, a):
     argn(a, 2, 2)
     I.env[strp(a[0])] = strp(a[1])
     return a[1]
-
-
-@bi('layoutlist')
-def _layoutlist(I, a):
-    """レイアウト名の一覧（モデルを除く、タブの順）"""
-    lays = []
-    for o in I.dwg.by_h.values():
-        if getattr(o, 'deleted', False) or o.get(0) != 'LAYOUT':
-            continue
-        nm, order, inlay = '', 0, False       # 名前・順番は「AcDbLayout」の後ろにある
-        for c, v in o.p:
-            if c == 100:
-                inlay = (v == 'AcDbLayout')
-            elif inlay and c == 1:
-                nm = v
-            elif inlay and c == 71:
-                order = v
-        if nm and nm.upper() != 'MODEL':
-            lays.append((order, nm))
-    return L([nm for _, nm in sorted(lays)])
 
 
 @bi('ver')
@@ -6805,8 +6780,6 @@ def vla_get(I, obj, prop, raw=False):
             return (b['rec'] or b['block']).h
         if p == 'comments':
             return b['block'].get(4, '')
-        if p == 'explodable':
-            return vb(b['rec'] is None or b['rec'].get(280, 1) != 0, raw)
     if k == 'rec':
         return rec_get_prop(I, obj, p, raw)
     if k == 'ent':
@@ -6834,11 +6807,6 @@ def vla_put(I, obj, prop, v):
         if p == 'activetextstyle':
             _setvar(I, ['TEXTSTYLE', rec_get_prop(I, v, 'name', False)])
             return
-    if obj.kind == 'blk' and p == 'explodable':
-        b = I.dwg.blocks().get(obj.ref)
-        if b is not None and b['rec'] is not None:
-            b['rec'].set(280, 1 if (v is T or v == -1 or v is True or v == 1) else 0)
-        return
     if obj.kind == 'blk' and p == 'origin':
         b = I.dwg.blocks().get(obj.ref)
         b['block'].set(10, _pt_arg(pyval(v)))

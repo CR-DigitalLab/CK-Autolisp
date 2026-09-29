@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.6"
+VERSION = "1.0.5"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -88,9 +88,8 @@ TEMP_SYSVARS = {"CMDECHO", "OSMODE", "QAFLAGS", "NOMUTT", "EXPERT", "FILEDIA", "
                 "DELOBJ", "UCSFOLLOW", "LOGFILEMODE", "LOGFILEPATH", "CTAB", "TILEMODE", "CLAYER_TEMP", "DIMZIN",
                 "PLINEWID", "TEXTEVAL", "REGENMODE", "MIRRTEXT", "BLIPMODE", "OSNAPCOORD", "3DOSMODE", "SELECTIONPREVIEW"}
 # 点を指定するコマンド（スナップの影響を受ける）
-# （CHAMFER・FILLET・TRIM・EXTEND の点は「どの線か」を選ぶためなので、スナップの影響を受けない → 対象外）
 POINT_COMMANDS = {"LINE", "PLINE", "CIRCLE", "ARC", "MOVE", "COPY", "ROTATE", "SCALE", "INSERT", "-INSERT", "TEXT",
-                  "MTEXT", "RECTANG", "STRETCH", "MIRROR", "BREAK", "POINT",
+                  "MTEXT", "RECTANG", "STRETCH", "MIRROR", "BREAK", "TRIM", "EXTEND", "FILLET", "CHAMFER", "POINT",
                   "DIMLINEAR", "DIMALIGNED", "DIMCONTINUE", "DIMBASELINE", "XLINE", "RAY", "SPLINE", "ELLIPSE",
                   "DONUT", "POLYGON", "LEADER", "QLEADER", "MLEADER", "HATCH", "-HATCH", "BOUNDARY", "-BOUNDARY"}
 # 図面を変える関数
