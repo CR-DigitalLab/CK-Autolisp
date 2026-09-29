@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.2"
+VERSION = "1.0.1"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -79,14 +79,7 @@ STD_NAMES = set(STD_ALIASES.split()) | set(STD_COMMANDS.split())
 
 # 図面を変えないコマンド（Undo グループが無くてもよい）
 NON_MODIFY_COMMANDS = {"UNDO", "REDRAW", "REGEN", "REGENALL", "ZOOM", "PAN", "SAVE", "QSAVE", "SAVEAS", "VIEW",
-                       "LIST", "DIST", "ID", "AREA", "DELAY", "TEXTSCR", "GRAPHSCR", "PLOT", "-PLOT", "OPEN", "CLOSE",
-                       "BROWSER", "SETVAR", "LOGFILEON", "LOGFILEOFF", "HELP", "SHELL", "START", "REDRAWALL",
-                       "APPLOAD", "NETLOAD", "EXPORT", "PUBLISH", "PNGOUT", "JPGOUT", "PDFOUT"}
-# 一時的に変えることが多いシステム変数（変えたら必ず元に戻すべきもの）
-TEMP_SYSVARS = {"CMDECHO", "OSMODE", "QAFLAGS", "NOMUTT", "EXPERT", "FILEDIA", "CMDDIA", "ATTREQ", "ATTDIA",
-                "PICKADD", "PICKFIRST", "PICKSTYLE", "HIGHLIGHT", "ORTHOMODE", "SNAPMODE", "AUTOSNAP", "PEDITACCEPT",
-                "DELOBJ", "UCSFOLLOW", "LOGFILEMODE", "LOGFILEPATH", "CTAB", "TILEMODE", "CLAYER_TEMP", "DIMZIN",
-                "PLINEWID", "TEXTEVAL", "REGENMODE", "MIRRTEXT", "BLIPMODE", "OSNAPCOORD", "3DOSMODE", "SELECTIONPREVIEW"}
+                       "LIST", "DIST", "ID", "AREA", "DELAY", "TEXTSCR", "GRAPHSCR", "PLOT", "-PLOT", "OPEN", "CLOSE"}
 # 点を指定するコマンド（スナップの影響を受ける）
 POINT_COMMANDS = {"LINE", "PLINE", "CIRCLE", "ARC", "MOVE", "COPY", "ROTATE", "SCALE", "INSERT", "-INSERT", "TEXT",
                   "MTEXT", "RECTANG", "STRETCH", "MIRROR", "BREAK", "TRIM", "EXTEND", "FILLET", "CHAMFER", "POINT",
@@ -557,16 +550,10 @@ def check_file(path):
         sysvars_all |= setvars
         # D1 *error*
         if d.errfun is None:
-            if modifies or setvars or unknown_sv:
-                d1.append((NG, d.cmd + "：*error* がありません"))
-            # 図面もシステム変数も変えないコマンドは、*error* が無くても困らない
+            (d1.append((NG if (modifies or setvars) else WARN, d.cmd + "：*error* がありません")))
         else:
             if "*ERROR*" not in d.locals:
-                keeps_old = any(head(x) == "SETQ" and any(a == "*ERROR*" for a in x[1:]) for x in main_nodes)
-                if keeps_old:
-                    d1.append((WARN, d.cmd + "：元の *error* を覚えて戻す古い書き方です。動きますが、*error* をローカル変数にする方が確実です"))
-                else:
-                    d1.append((NG, d.cmd + "：*error* をローカル変数に入れていません（ほかの LISP の *error* を上書きしたままになります）"))
+                d1.append((NG, d.cmd + "：*error* をローカル変数に入れていません（ほかの LISP の *error* を上書きしたままになります）"))
             bad_cmd = [x for x in err_nodes if head(x) in ("COMMAND", "VL-CMDF")]
             if bad_cmd:
                 d1.append((WARN, d.cmd + "：*error* の中で command を使っています（" + lines_of(bad_cmd) + "）。command-s にしてください"))
@@ -577,17 +564,11 @@ def check_file(path):
             quoted = {str(a).upper() for x in main_nodes if head(x) == "QUOTE" for a in atoms(x) if isinstance(a, Str)}
             err_restore = any(head(x) in ("SETVAR", "VLA-SETVARIABLE") for x in err_nodes) or \
                 any(isinstance(a, Sym) and a == "SETVAR" for x in err_nodes for a in x)
-            saved = {v for v in setvars if v in got or v in quoted}
-            temp = sorted(v for v in setvars if v in saved or v in TEMP_SYSVARS)      # 一時的に変えているもの
-            purpose = sorted(v for v in setvars if v not in temp)                     # 変えること自体が目的らしいもの
-            if temp and (d.errfun is None or not err_restore):
-                d2.append((NG, d.cmd + "：一時的に変えているシステム変数（" + "・".join(temp) + "）を、エラーのときに元に戻す処理が見当たりません"))
-            elif temp:
-                notsaved = sorted(v for v in temp if v not in saved)
-                if notsaved:
-                    d2.append((WARN, d.cmd + "：変える前の値を覚えずに戻しているように見えます：" + "・".join(notsaved) + "（元の値ではなく決まった値に戻すと、使う人の設定が変わります）"))
-            if purpose:
-                d2.append((WARN, d.cmd + "：システム変数（" + "・".join(purpose) + "）を変えています。コマンドの目的として変える設定なら問題ありません。一時的に変えているなら元に戻してください"))
+            notsaved = sorted(v for v in setvars if v not in got and v not in quoted)
+            if d.errfun is None or not err_restore:
+                d2.append((NG, d.cmd + "：システム変数（" + "・".join(sorted(setvars)) + "）を変えていますが、エラーのときに元に戻す処理が見当たりません"))
+            elif notsaved:
+                d2.append((WARN, d.cmd + "：変える前の値を覚えていないように見えます：" + "・".join(notsaved)))
             if unknown_sv:
                 d2.append((WARN, d.cmd + "：名前を変数で指定しているシステム変数があります（" + lines_of(unknown_sv) + "）。元に戻しているか目で確認してください"))
         # D3 Undo
