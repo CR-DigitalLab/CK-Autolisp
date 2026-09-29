@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.1"
+VERSION = "1.0.0"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -270,12 +270,9 @@ class Defun:
         return self.name[2:]
 
     def shortcut_target(self):
-        """(defun c:SV () (c:SAVEVERSION)) なら SAVEVERSION。後ろに (princ) が付いていてもよい"""
-        body = list(self.body)
-        if len(body) == 2 and head(body[1]) in ("PRINC", "PRIN1") and len(body[1]) == 1:
-            body = body[:1]
-        if self.is_cmd and len(body) == 1 and isinstance(body[0], Node) and len(body[0]) == 1:
-            h = head(body[0])
+        """(defun c:SV () (c:SAVEVERSION)) なら SAVEVERSION"""
+        if self.is_cmd and len(self.body) == 1 and isinstance(self.body[0], Node) and len(self.body[0]) == 1:
+            h = head(self.body[0])
             if h and h.startswith("C:"):
                 return h[2:]
         return None
@@ -499,21 +496,14 @@ def check_file(path):
     nomsg, noquiet = [], []
     for d in mains:
         cl = nodes_in(closure(body_without_err(d)))
-        # 結果の通知：件数（itoa・rtos）や「〜しました」「〜個」などの結果を表示しているか
-        def is_result(x):
-            if head(x) not in ("PRINC", "PROMPT", "ALERT"):
-                return False
-            if any(head(y) in ("ITOA", "RTOS") for y in walk(x)):
-                return True
-            return any(isinstance(a, Str) and re.search(r"しました|完了|終了|件|個|本|枚|箇所|か所", a) for a in atoms(x))
-        if not any(is_result(x) for x in cl):
+        if not any(head(x) in ("PRINC", "PROMPT", "ALERT") and any(isinstance(a, Str) and a.strip() for a in atoms(x)) for x in cl):
             nomsg.append(d.cmd)
         last = d.body[-1] if d.body else None
         if not (head(last) in ("PRINC", "PRIN1") and len(last) == 1):
             noquiet.append(d)
     if mains:
         if nomsg:
-            R.add(WARN, "C3", "結果の通知", "処理の結果（件数や「〜しました」）を表示していないように見えるコマンド：" + "、".join(nomsg) + "。処理した件数などを表示してください。")
+            R.add(WARN, "C3", "結果の通知", "結果を表示していないコマンドがあります：" + "、".join(nomsg) + "。処理した件数などを表示してください。")
         else:
             R.add(OK, "C3", "結果の通知", "各コマンドで結果を表示しています。")
         if noquiet:
@@ -699,7 +689,7 @@ def check_file(path):
         R.add(OK, "E2", "試し書きの残り", "試し書き・使われていない関数は見つかりませんでした。")
 
     # ---------------- E3 作者・利用条件 ----------------
-    has_author = re.search(r"(?i)作者|作成|制作|開発者|著作権|author|copyright|©|\(c\)", htxt)
+    has_author = re.search(r"(?i)作者|作成|author|copyright|©|\(c\)", htxt)
     has_terms = re.search(r"(?i)利用条件|ライセンス|license|再配布|転載|免責|自己責任|商用", htxt)
     miss = ([] if has_author else ["作者"]) + ([] if has_terms else ["利用条件（再配布の可否・免責など）"])
     if miss:
