@@ -11,6 +11,7 @@
 ;;----------------------------------------------------------------------------;;
 ;; XForce ver2（2026-09-29）
 ;;   ・分解の途中でエラーになったとき、Undo グループを閉じるようにした
+;;   ・分解後の確認に使う関数を、AutoCAD の正式な名前（vlax-safearray-get-u-bound）に直した
 ;;   ・読み込んだときにコマンド名を表示するようにした
 ;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 から変わりません。
 (defun c:Xforce (/ *error* doc layers ss i ent obj layName layObj blkName blkDef newObjsArr newObjsList finalSS x skipCount msg xf-undo)
@@ -61,7 +62,7 @@
                 (setq newObjsList (vlax-variant-value newObjsArr))
                 
                 ;; 配列に中身がある場合のみ処理
-                (if (> (safearray-get-u-bound newObjsList 1) -1)
+                (if (> (vlax-safearray-get-u-bound newObjsList 1) -1)
                   (progn
                     (setq newObjsList (vlax-safearray->list newObjsList))
                     
