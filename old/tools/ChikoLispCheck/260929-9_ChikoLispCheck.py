@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.9"
+VERSION = "1.0.8"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -427,9 +427,7 @@ def check_file(path):
     snap_risk = []
     for d in mains:
         cl = nodes_in(closure(body_without_err(d)))
-        # 点を利用者がクリックする（pause）ときは、スナップが効くのが正しい動きなので対象外
-        pcmds = [x for x in cl if head(x) in ("COMMAND", "COMMAND-S", "VL-CMDF") and (cmd_name_of(x)[1] or "") in POINT_COMMANDS
-                 and not any(isinstance(a, Sym) and a == "PAUSE" for a in x)]
+        pcmds = [x for x in cl if head(x) in ("COMMAND", "COMMAND-S", "VL-CMDF") and (cmd_name_of(x)[1] or "") in POINT_COMMANDS]
         if pcmds:
             strs = {str(a).upper() for x in cl for a in atoms(x) if isinstance(a, Str)}
             if "OSMODE" not in strs and not ({"_NON", "_NONE", "NON", "NONE"} & strs):
@@ -636,8 +634,7 @@ def check_file(path):
                     if isinstance(e, Node) and head(e) in getfuncs and isinstance(v, Sym) and v not in tested:
                         risky.append(e)
             h = head(x)
-            # (car (entsel)) は何も選ばなくても nil になるだけなので安全。数・名前を直接取り出すものだけ危ない
-            if h in ("SSLENGTH", "SSNAME", "ENTGET") and len(x) > 1 and head(x[1]) in ("SSGET", "ENTSEL", "NENTSEL"):
+            if h in ("SSLENGTH", "SSNAME", "CAR", "CADR", "ENTGET") and len(x) > 1 and head(x[1]) in ("SSGET", "ENTSEL", "NENTSEL"):
                 risky.append(x)
         if risky:
             d4.append((WARN, d.cmd + "：入力・選択の結果を、空かどうか確かめずに使っているように見えます（" + lines_of(risky) + "）"))

@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.9'
+VERSION = '0.1.8'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -8077,11 +8077,6 @@ class CmdEnd(Exception):
     pass
 
 
-OSNAP_WORDS = {'NON', 'NONE', 'END', 'ENDP', 'ENDPOINT', 'MID', 'MIDPOINT', 'CEN', 'CENTER', 'INT', 'INTERSECTION',
-               'NEA', 'NEAREST', 'PER', 'PERPENDICULAR', 'QUA', 'QUADRANT', 'NOD', 'NODE', 'INS', 'INSERT', 'TAN',
-               'TANGENT', 'APP', 'EXT', 'PAR', 'GCE', 'MTP', 'M2P'}
-
-
 class CArgs:
     def __init__(self, I, args):
         self.I = I
@@ -8110,9 +8105,6 @@ class CArgs:
 
     def point(self, base=None):
         v = self.raw('点')
-        # 「_NON」「_END」などのスナップ指定は、次の点に付く印なので読み飛ばす（AutoCAD と同じ）
-        while type(v) is str and v.strip().upper().lstrip('_').lstrip("'") in OSNAP_WORDS:
-            v = self.raw('点')
         if self.is_enter(v):
             return None
         p = input_point(v, base) if not isinstance(v, (Ename,)) else None
