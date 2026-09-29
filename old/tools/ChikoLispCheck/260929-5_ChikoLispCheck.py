@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.5"
+VERSION = "1.0.4"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -647,11 +647,7 @@ def check_file(path):
     if global_err:
         d1.insert(0, (NG, "*error* をファイル全体で定義しています（" + lines_of([g.node for g in global_err]) + "）。ほかの LISP の *error* を上書きしてしまいます"))
     if mains:
-        no_err = [d.cmd for d in mains if d.errfun is None]
-        put("D1", "エラー時の後始末（*error*）", d1,
-            "各コマンドに *error* があり、ローカル変数にしています。" if not no_err else
-            ("*error* の無いコマンド（" + "・".join(no_err) + "）は、図面もシステム変数も変えないため、無くても困りません。"
-             if len(no_err) < len(mains) else "図面もシステム変数も変えないため、*error* が無くても困りません。"))
+        put("D1", "エラー時の後始末（*error*）", d1, "各コマンドに *error* があり、ローカル変数にしています。")
         put("D2", "システム変数を元に戻すか", d2,
             "システム変数を変えていません。" if not sysvars_all else "変えたシステム変数（" + "・".join(sorted(sysvars_all)) + "）を元に戻す作りです。")
         put("D3", "Undo グループ", d3, "図面を変えるコマンドは Undo グループを正しく使っています。" if modifies_any else "図面を変える処理が見当たらないため対象外です。")
