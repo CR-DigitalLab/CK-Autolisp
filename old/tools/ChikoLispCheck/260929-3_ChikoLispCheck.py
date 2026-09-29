@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.3"
+VERSION = "1.0.2"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -456,13 +456,15 @@ def check_file(path):
     header = [c for ln, c in comments if ln < first_code]
     htxt = "\n".join(header)
     R.info["header"] = header
-    # バージョンは初版では不要（2回目の公開＝ver2 から付ける）ので、無くても △ にしない
-    has_ver = re.search(r"(?i)ver\.?\s*\d|\d+\.\d+", htxt) or any(re.fullmatch(r"\d+\.\d+(\.\d+)?", str(s)) for s in all_strs)
-    ver_note = "" if has_ver else "（バージョンの表記はありません。初版なら不要、2回目の公開から付けてください）"
+    miss = []
+    if not re.search(r"\d+\.\d+", htxt) and not any(re.fullmatch(r"\d+\.\d+(\.\d+)?", str(s)) for s in all_strs):
+        miss.append("バージョン")
     if len([h for h in header if re.sub(r"[;=\-\s]", "", h)]) < 2:
-        R.add(WARN, "B2", "ファイルの先頭の説明", "先頭のコメントに 名前・使い方の説明 が見当たりません。" + ver_note)
+        miss.append("名前・使い方の説明")
+    if miss:
+        R.add(WARN, "B2", "ファイルの先頭の説明", "先頭のコメントに " + "・".join(miss) + " が見当たりません。")
     else:
-        R.add(OK, "B2", "ファイルの先頭の説明", ("名前・バージョン・説明があります。" if has_ver else "名前・説明があります。") + ver_note)
+        R.add(OK, "B2", "ファイルの先頭の説明", "名前・バージョン・説明があります。")
 
     # ---------------- B3 読み込んだときのメッセージ ----------------
     top_msgs = [a for t in top if head(t) in ("PRINC", "PROMPT", "PRINT", "PRIN1") or (head(t) not in ("DEFUN",) and head(t))
