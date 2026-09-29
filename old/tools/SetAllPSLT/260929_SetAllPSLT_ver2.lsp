@@ -11,8 +11,9 @@
 ;;----------------------------------------------------------------------------;;
 ;; SetAllPSLT ver2（2026-09-29）
 ;;   ・途中で Esc・エラーになったとき、Undo グループを閉じ、元のレイアウトと CMDECHO に戻すようにした
+;;   ・ショートカット SAP を追加した（SETALLPSLT もそのまま使えます）
 ;;   ・読み込んだときにコマンド名を表示するようにした
-;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 から変わりません。
+;;   ※ver1 のコマンド名・質問の順番・処理の結果は変わりません。
 
 (defun c:SetAllPSLT (/ *error* curLayout lay val oldcmdecho sp-undo)
 
@@ -78,5 +79,7 @@
   (princ)
 )
 
-(princ "\n[SetAllPSLT ver2] 読み込み完了  SETALLPSLT＝全レイアウトの PSLTSCALE を一括変更")
+(defun c:SAP () (c:SetAllPSLT))   ; ショートカット
+
+(princ "\n[SetAllPSLT ver2] 読み込み完了  SETALLPSLT（SAP）＝全レイアウトの PSLTSCALE を一括変更")
 (princ)

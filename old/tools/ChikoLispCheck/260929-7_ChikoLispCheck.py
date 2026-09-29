@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-VERSION = "1.0.7"
+VERSION = "1.0.6"
 
 OK, WARN, NG = "○", "△", "×"
 
@@ -496,8 +496,7 @@ def check_file(path):
     if not mains:
         pass
     elif nosc:
-        R.add(WARN, "C1", "ショートカットがあるか", "ショートカットがありません：" + "、".join(nosc) +
-              "。新しく作るときは短く覚えやすい別名を付けてください（公開済みのものは、無いままでも可）。")
+        R.add(NG, "C1", "ショートカットがあるか", "ショートカットがありません：" + "、".join(nosc) + "。短く覚えやすい別名を作ってください。")
     else:
         R.add(OK, "C1", "ショートカットがあるか", "、".join(f"{m}（{'・'.join(s) or '短い名前'}）" for m, s in pairs))
 
