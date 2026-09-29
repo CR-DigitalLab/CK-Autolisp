@@ -1,0 +1,5 @@
+# Python が自動で作る一時ファイル
+__pycache__/
+*.pyc
+# lispcheck の出力
+lispcheck_out/
