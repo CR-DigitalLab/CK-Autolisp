@@ -11,6 +11,9 @@
 ;;----------------------------------------------------------------------------;;
 ;; RANDOMBNAME ver2（2026-09-30）
 ;;   ・途中で Esc・エラーになったときの、CMDECHO の復元と Undo グループの終了を追加
+;;   ・名前変更のオプションに「_」を追加（英語版以外の AutoCAD でも動くように）
+;;   ・読み込み時にコマンド名を表示
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 
 (defun c:RANDOMBNAME (/ *error* charset seed rand-val GetRandomString ss n i ent blk-name unique-names new-name count prefix total-len rand-len old-cmdecho rb-undo)
 

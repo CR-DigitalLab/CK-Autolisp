@@ -11,7 +11,9 @@
 ;;----------------------------------------------------------------------------;;
 ;; XForce ver2（2026-09-30）
 ;;   ・分解の途中でエラーになったときの、Undo グループの終了を追加
+;;   ・読み込み時にコマンド名を表示
 ;;   ※IJCAD には非対応
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:Xforce (/ *error* doc layers ss i ent obj layName layObj blkName blkDef newObjsArr newObjsList finalSS x skipCount msg xf-undo)
   (vl-load-com)
   

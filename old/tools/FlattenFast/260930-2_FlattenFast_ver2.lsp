@@ -12,6 +12,8 @@
 ;; FlattenFast ver2（2026-09-30）
 ;;   ・Undo グループを追加（実行後の U 1回で実行前に戻る）
 ;;   ・Esc で中止したときの「Error: Function cancelled」の表示を省略
+;;   ・読み込み時にコマンド名を表示
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:FLATTENFAST( / *error* old_osmode old_cmdecho ss i en edata flatten-ent ff-undo)
   
   ;; --- エラーハンドラ ---

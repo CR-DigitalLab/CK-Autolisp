@@ -12,6 +12,8 @@
 ;; ZeroByLayer ver2（2026-09-30）
 ;;   ・終了時の CMDECHO を、「1」固定から実行前の値に変更（CMDECHO を 0 にしている人の設定を変えないため）
 ;;   ・途中でエラーになったときの、Undo グループの終了と CMDECHO の復元を追加
+;;   ・読み込み時にコマンド名を表示
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:ZeroByLayer ( / *error* old-cmdecho zb-undo)
 
   ;; エラー・Esc のときの後始末（Undo グループを閉じ、CMDECHO を元に戻す）

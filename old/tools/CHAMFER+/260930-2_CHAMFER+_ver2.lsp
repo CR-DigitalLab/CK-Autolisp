@@ -11,6 +11,9 @@
 ;;----------------------------------------------------------------------------;;
 ;; CHAMFER+ ver2（2026-09-30）
 ;;   ・面取りの途中で Esc・エラーになったときも、Undo グループを確実に終了
+;;   ・読み込み時にコマンド名を表示
+;;   ・作成時のメモと、使っていないコードのコメントを整理
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:CHAMFER+ ( / *error* old_cmdecho curA curB curFace sel userLen calcDist loop defFaceWidth cf-undo)
   (defun *error* (msg)
     (if old_cmdecho (setvar "CMDECHO" old_cmdecho))

@@ -11,7 +11,10 @@
 ;;----------------------------------------------------------------------------;;
 ;; RegionToPL ver2（2026-09-30）
 ;;   ・途中で Esc・エラーになったときの、Undo グループの終了と PEDITACCEPT の復元を追加
+;;   ・Undo のオプションに「_」を追加（英語版以外の AutoCAD でも動くように）
 ;;   ・変換した個数を表示
+;;   ・読み込み時にコマンド名を表示
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:RegionToPL ( / *error* ss si i ename last_ent exploded_ss next_ent first_ent is_spline rp-undo n-done)
 
   ;; エラー・Esc のときの後始末（Undo グループを閉じ、PEDITACCEPT を元に戻す）

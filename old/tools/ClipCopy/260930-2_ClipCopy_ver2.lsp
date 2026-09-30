@@ -12,6 +12,9 @@
 ;; ClipCopy ver2（2026-09-30）
 ;;   ・Undo グループを追加（実行後の U 1回で実行前に戻る）
 ;;   ・途中でエラーになったとき、自動で実行前の状態に戻す処理を追加
+;;   ・選択の書き方を「_C」に変更（英語版以外の AutoCAD でも確実に動くように）
+;;   ・読み込み時にコマンド名を表示
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:ClipCopy ( / *error* p1 p2 basePt ss blkName blkRef oldOsmode oldAttReq oldCmdecho minX minY maxX maxY dx dy zp1 zp2 cc-undo cc-mid )
   
   ;; エラー処理

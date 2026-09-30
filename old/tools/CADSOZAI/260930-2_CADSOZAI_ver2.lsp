@@ -4,6 +4,7 @@
 ;;------------------------------------------------------------------------------------;;
 ;; CADSOZAI ver2（2026-09-30）
 ;;   ・文字コードを ANSI（Shift-JIS）に変更（UTF-8 では AutoCAD のバージョンによって日本語が文字化けするため）
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:CADSOZAI ()
   (command "_.browser" "https://cad-freed-rawingsamples.com/sitemaps/")
   (princ) 

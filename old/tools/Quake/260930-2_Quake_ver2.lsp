@@ -12,6 +12,8 @@
 ;; Quake ver2（2026-09-30）
 ;;   ・取得できたときだけ「正常に完了しました」を表示
 ;;   ・エラー処理の書き方を修正
+;;   ・読み込み時にコマンド名を表示
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (defun c:Quake ( / *error* old-cmdecho url httpObj sendResult status response chunks max-disp i anm at mag maxi decode-unicode get-val split-by merge-data merged-list sorted-list item ok)
   (vl-load-com)
   

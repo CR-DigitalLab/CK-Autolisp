@@ -11,6 +11,7 @@
 ;;----------------------------------------------------------------------------;;
 ;; CopyBlock ver2（2026-09-30）
 ;;   ・エラー処理の書き方を修正
+;;   ※コマンド名・ショートカット・質問の順番・処理の結果は ver1 と同じ
 (vl-load-com)
 
 (defun c:copyblock ( / *error* doc ent edata vlaEnt oldName defName inc newName blks 

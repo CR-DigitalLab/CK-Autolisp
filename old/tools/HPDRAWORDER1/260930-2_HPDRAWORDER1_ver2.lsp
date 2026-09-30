@@ -22,6 +22,7 @@
 
 ;;; HPDRAWORDER1 ver2（2026-09-30）
 ;;;   ・文字コードを ANSI（Shift-JIS）に変更（UTF-8 では AutoCAD のバージョンによって日本語が文字化けするため）
+;;;   ※動き（図面を開くたびに HPDRAWORDER を 1 にする）は ver1 と同じ
 
 (if (getvar "HPDRAWORDER")
   (setvar "HPDRAWORDER" 1)
