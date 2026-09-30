@@ -37,6 +37,6 @@ def finish(doc, path, n):
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Load_All_Lsp_test.dxf")
 doc = new_doc()
-x, y = header(doc, 0, "テスト用フォルダで読み込む", "「テスト用フォルダ」に Load_All_Lsp_ver2.lsp をコピーして「Load_all_lsp.lsp」に名前を変え、APPLOAD で読み込む → A・C は「読み込み完了」、B は「読み込み失敗: B_わざとエラー.lsp（…）」。")
+x, y = header(doc, 0, "テスト用フォルダで読み込む", "「テスト用フォルダ」に ver2 フォルダの Load_All_Lsp.lsp をコピーし（テスト用フォルダをサポートファイルの検索パスに入れておく）、APPLOAD で読み込む → A・C は「読み込み完了」、B は「読み込み失敗: B_わざとエラー.lsp（…）」。")
 x, y = header(doc, 1, "失敗のあとも続きを読む", "TESTA と TESTC のどちらのコマンドも使える（ver1 は B で止まり、C が読み込まれなかった）。")
 finish(doc, OUT, 2)

@@ -13,7 +13,7 @@ AutoCAD がない環境（Linux / クラウド / CI）で AutoLISP (.lsp) を実
   python lispcheck.py repl --dxf in.dxf     … 対話実行
 依存: Python 3.8+ のみ（PNG出力は matplotlib があれば使用）
 """
-VERSION = '0.1.10'
+VERSION = '0.1.11'
 
 import sys, os, re, math, json, time, argparse, threading, datetime, zlib, base64, io, functools
 
@@ -4988,6 +4988,12 @@ def resolve_path(I, name, must_exist=True):
     for c in cands:
         if os.path.exists(c):
             return c
+    for c in cands:                            # Windows と同じく、大文字・小文字を区別せずに探す
+        d, f = os.path.split(c)
+        if f and os.path.isdir(d or '.'):
+            for x in os.listdir(d or '.'):
+                if x.lower() == f.lower():
+                    return os.path.join(d, x)
     return None
 
 

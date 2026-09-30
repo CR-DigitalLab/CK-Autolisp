@@ -493,7 +493,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461313.9427430555
+2461314.1390277776
   9
 $TDUCREATE
  40
@@ -501,7 +501,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461313.9427430555
+2461314.1390277776
   9
 $TDUUPDATE
  40
@@ -933,11 +933,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{7116B342-CA82-41EC-9A1A-A173679A466D}
+{37461222-38CA-4638-8084-B75F056E1AD8}
   9
 $VERSIONGUID
   2
-{B3159B2B-F48B-48DD-B388-7495EE291FB8}
+{FE710945-B3B8-441F-88CE-E369C2DC6FB3}
   9
 $EXTNAMES
 290
@@ -1327,9 +1327,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1343,9 +1343,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -5397,7 +5397,7 @@ AcDbMText
  71
 1
   1
-期待：「テスト用フォルダ」に Load_All_Lsp_ver2.lsp をコピーして「Load_all_lsp.lsp」に名前を変え、APPLOAD で読み込む → A・C は「読み込み完了」、B は「読み込み失敗: B_わざとエラー.lsp（…）」。
+期待：「テスト用フォルダ」に ver2 フォルダの Load_All_Lsp.lsp をコピーし（テスト用フォルダをサポートファイルの検索パスに入れておく）、APPLOAD で読み込む → A・C は「読み込み完了」、B は「読み込み失敗: B_わざとエラー.lsp（…）」。
   7
 TEST_JP
   0
@@ -6595,7 +6595,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-09-29T22:37:33.255884+00:00
+1.4.4 @ 2026-09-30T03:20:12.670087+00:00
   0
 VISUALSTYLE
   5
@@ -13157,7 +13157,7 @@ DictionaryVariables
 280
 0
   1
-1.4.4 @ 2026-09-29T22:37:33.260400+00:00
+1.4.4 @ 2026-09-30T03:20:12.682643+00:00
   0
 ENDSEC
   0
