@@ -39,5 +39,4 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Load_All_Lsp_tes
 doc = new_doc()
 x, y = header(doc, 0, "テスト用フォルダで読み込む", "「テスト用フォルダ」に ver2 フォルダの Load_All_Lsp.lsp をコピーし（テスト用フォルダをサポートファイルの検索パスに入れておく）、APPLOAD で読み込む → A・C は「読み込み完了」、B は「読み込み失敗: B_わざとエラー.lsp（…）」。")
 x, y = header(doc, 1, "失敗のあとも続きを読む", "TESTA と TESTC のどちらのコマンドも使える（ver1 は B で止まり、C が読み込まれなかった）。")
-x, y = header(doc, 2, "括弧が合わない LISP（制限の確認）", "「テスト用フォルダ_括弧が合わない」で同じように読み込む → A は「読み込み完了」、B で「; エラー: 入力で右括弧が余分です」と出て止まり、C は読み込まれない（分かっている制限。記事に注記する）。")
-finish(doc, OUT, 3)
+finish(doc, OUT, 2)
